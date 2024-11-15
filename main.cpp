@@ -55,7 +55,7 @@ void ParseCells2 (Cell *cellHead, const unsigned sourceActivity)
   for (unsigned i=0; i<activityRandom; i++)
     {
       photonInitialPosition=cellHead->GetInitialPosition (Co60PDF ());
-      // photonInitialPosition.print();
+      photonInitialPosition.print();
       SurfaceTracking(photonInitialPosition, cellHead);
     }
 }
