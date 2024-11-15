@@ -1,9 +1,11 @@
 #ifndef CELL_H
 #define CELL_H
 
+#include <string>
 #include "Surface.h"
-#include "Coordinate.h"
 #include "Material.h"
+
+using std::string;
 
 class Cell
 {

@@ -1,6 +1,8 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
+#include "Coordinate.h"
+
 class Surface
 {
 public:
@@ -13,6 +15,7 @@ public:
     if (SurfaceEquation (p)<=0) return 1;
     return 0;
   }
+  virtual ~Surface(){}
 };
 
 class Cylinder: public Surface
