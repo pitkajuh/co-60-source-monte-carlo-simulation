@@ -57,12 +57,13 @@ public:
   // {
   //   return GetInitialPosition ()+RandomEmissionDirection ()*(-1/linearAttenuationCoefficient)*log (RNG (0, 1));
   // }
-  CellCylinderTruncatedZ (const string &name1, Surface *c, Surface *wallZPos, Surface *wallZNeg, Material *m)
+  // CellCylinderTruncatedZ (const string &name1, Surface *c, Surface *wallZPos, Surface *wallZNeg, Material *m)
+  CellCylinderTruncatedZ (const string &name1, const double radius, const double wallZPos, const double wallZNeg, Material *m)
   {
     name=name1;
-    surface=c;
-    wallZNegativeC=wallZNeg;
-    wallZPositiveC=wallZPos;
+    surface=new Cylinder(radius);
+    wallZNegativeC=new PlaneZ(wallZNeg);
+    wallZPositiveC=new PlaneZ(wallZPos);
     material=m;
   }
   const bool CellTest (const Coordinate &p)
@@ -105,16 +106,16 @@ public:
     isInCell=!wallXNegative->SurfaceTest (p) and wallXPositive->SurfaceTest (p) and wallYPositive->SurfaceTest (p) and !wallYNegative->SurfaceTest (p) and wallZPositive->SurfaceTest (p) and !wallZNegative->SurfaceTest (p);
     return GetBoolean ();
   }
-  CellBox3D (const string &name1, Surface *w1, Surface *w2, Surface *w3, Surface *w4, Surface *w5, Surface *w6, Material *m)
+  CellBox3D (const string &name1, const double w1, const double w2, const double w3, const double w4, const double w5, const double w6, Material *m)
   {
     material=m;
     name=name1;
-    wallXNegative=w1;
-    wallXPositive=w2;
-    wallYPositive=w3;
-    wallYNegative=w4;
-    wallZPositive=w5;
-    wallZNegative=w6;
+    wallXNegative=new PlaneX(w1);
+    wallXPositive=new PlaneX(w2);
+    wallYPositive=new PlaneY(w3);
+    wallYNegative=new PlaneY(w4);
+    wallZPositive=new PlaneZ(w5);
+    wallZNegative=new PlaneZ(w6);
   }
   ~CellBox3D ()
   {

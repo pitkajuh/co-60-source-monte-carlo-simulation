@@ -104,33 +104,16 @@ int main ()
   const double zMin=-0.665;
   const double zMax=0.665;
   const unsigned sourceActivity=100;
-  Surface *S1=new Cylinder (0.412);
-  Surface *S2=new Cylinder (0.475);
-  Surface *S22=new Cylinder (0.5);
-  Surface *S3=new PlaneX (-0.665);
-  Surface *S4=new PlaneX (0.665);
-  Surface *S5=new PlaneY (-0.665);
-  Surface *S6=new PlaneY (0.665);
-  Surface *S7=new PlaneZ (0.665);
-  Surface *S71=new PlaneZ (0.665);
-  Surface *S8=new PlaneZ (-0.665);
-  Surface *S81=new PlaneZ (-0.665);
-
-  Surface *S77=new PlaneZ (0.665);
-  Surface *S88=new PlaneZ (-0.665);
-
-  Surface *S9=new PlaneZ (0.2);
-  Surface *S10=new PlaneZ (0);
 
   Material *steel1=new Steel (7.874);
   Material *steel2=new Steel (7.874);
   Material *steel3=new Steel (7.874);
   Material *steel4=new Steel (7.874);
 
-  Cell *source=new CellCylinderTruncatedZ ("Source", S1, S9, S10, steel1);
-  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", S2, S7, S81, steel2);
-  Cell *moderator=new CellCylinderTruncatedZ ("Moderator", S22, S77, S88, steel3);
-  Cell *coolant=new CellBox3D ("Coolant", S3, S4, S6, S5, S71, S8, steel4);
+  Cell *source=new CellCylinderTruncatedZ ("Source", 0.412, 0.2, 0, steel1);
+  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 0.475, 0.665, -0.665, steel2);
+  Cell *moderator=new CellCylinderTruncatedZ ("Moderator", 0.5, 0.665, -0.665, steel3);
+  Cell *coolant=new CellBox3D ("Coolant", -0.665, 0.665, 0.665, -0.665, 0.665, -0.665, steel4);
 
   source->next=cladding;
   cladding->next=moderator;
