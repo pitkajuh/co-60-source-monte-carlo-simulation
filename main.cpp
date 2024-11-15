@@ -33,34 +33,34 @@ double Co60PDF ()
   return 1.332;
 }
 
-void ParseCells2 (Cell *cellHead, const int sourceActivity)
+void SurfaceTracking(const Coordinate &photonInitialPosition, Cell *cellHead)
 {
   Cell *current=cellHead;
-  bool b=0;
-  // Coordinate photonInitialPosition=cellHead->GetInitialPosition (Co60PDF ());
-  // photonInitialPosition.print ();
-  // std::cout<<current->name<<" "<<b<<'\n';
-  const int activityRandom=PoissonRNG (sourceActivity, 1);
-  Coordinate photonInitialPosition;
+  bool collision=0;
 
-  for (int i=0; i<activityRandom; i++)
+  while (current!=nullptr and !collision)
     {
-      photonInitialPosition=cellHead->GetInitialPosition (Co60PDF ());
-      // photonInitialPosition.print ();
-
-      while (current!=nullptr and !b)
-	{
-	  b=current->CellTest (photonInitialPosition);
-	  std::cout<<current->name<<" "<<b<<'\n';
-	  current=current->next;
-	}
-      // if !b, initialize surface tracking
+      collision=current->CellTest (photonInitialPosition);
+      std::cout<<current->name<<" "<<collision<<'\n';
+      current=current->next;
     }
-  // delete current;
   cout<<" "<<'\n';
 }
 
-void GetCount (Cell *cellHead, const double volume, const int N)
+void ParseCells2 (Cell *cellHead, const unsigned sourceActivity)
+{
+  const unsigned activityRandom=PoissonRNG (sourceActivity, 1);
+  Coordinate photonInitialPosition;
+
+  for (unsigned i=0; i<activityRandom; i++)
+    {
+      photonInitialPosition=cellHead->GetInitialPosition (Co60PDF ());
+      // photonInitialPosition.print();
+      SurfaceTracking(photonInitialPosition, cellHead);
+    }
+}
+
+void GetCount (Cell *cellHead, const double volume, const unsigned N)
 {
   Cell *current=cellHead;
   double total=0;
@@ -76,9 +76,9 @@ void GetCount (Cell *cellHead, const double volume, const int N)
   cout<<"Total volume "<<total<<", "<<volume<<"\n";
 }
 
-void MonteCarlo (const int N, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, Cell *cell, const int sourceActivity)
+void MonteCarlo (const unsigned N, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, Cell *cell, const unsigned sourceActivity)
 {
-  int n=0;
+  unsigned n=0;
   // Coordinate p;
   const double volume=(xMax-xMin)*(yMax-yMin)*(zMax-zMin);
 
@@ -96,14 +96,14 @@ void MonteCarlo (const int N, const double xMin, const double xMax, const double
 
 int main ()
 {
-  const int N=10;
+  const unsigned N=10;
   const double xMin=-0.665;
   const double xMax=0.665;
   const double yMin=-0.665;
   const double yMax=0.665;
   const double zMin=-0.665;
   const double zMax=0.665;
-  const int sourceActivity=100;
+  const unsigned sourceActivity=100;
   Surface *S1=new Cylinder (0.412);
   Surface *S2=new Cylinder (0.475);
   Surface *S22=new Cylinder (0.5);

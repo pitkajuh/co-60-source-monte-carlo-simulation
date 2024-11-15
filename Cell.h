@@ -50,7 +50,8 @@ public:
     const double z=(wallZPositiveC->value-wallZNegativeC->value)*RNG (0, 1);
     Coordinate coordinateCylinder;
     coordinateCylinder.Set (surface->value*cos (azimuthalAngle), surface->value*sin (azimuthalAngle), z);
-    return coordinateCylinder+RandomEmissionDirection ()*(-1/material->GetMu (energy))*log (RNG (0, 1));
+    // return coordinateCylinder+RandomEmissionDirection ()*(-1/material->GetMu (energy))*log (RNG (0, 1));
+    return coordinateCylinder;
   }
   // Coordinate GetPhotonPosition (const Coordinate &from, const Coordinate &to)
   // {
