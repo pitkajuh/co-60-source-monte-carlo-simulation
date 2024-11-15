@@ -28,7 +28,7 @@ void ParseCells (Cell *cellHead, const Coordinate &p)
 
 double Co60PDF ()
 {
-  // Probability distribution function of Co-60 gamma energies.
+  // Probability distribution function of Co-60 gamma energies (MeV).
   if (RNG (0, 1)<=0.85) return 1.173;
   return 1.332;
 }
