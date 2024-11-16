@@ -110,9 +110,12 @@ int main ()
   Material *steel3=new Steel (7.874);
   Material *steel4=new Steel (7.874);
 
-  Cell *source=new CellCylinderTruncatedZ ("Source", 0.412, 0.2, 0, steel1);
-  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 0.475, 0.665, -0.665, steel2);
-  Cell *moderator=new CellCylinderTruncatedZ ("Moderator", 0.5, 0.665, -0.665, steel3);
+  Coordinate centeredAt;
+  centeredAt.Set(0, 0, 0);
+
+  Cell *source=new CellCylinderTruncatedZ ("Source", 0.412, 0.2, 0, steel1, centeredAt);
+  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 0.475, 0.665, -0.665, steel2, centeredAt);
+  Cell *moderator=new CellCylinderTruncatedZ ("Moderator", 0.5, 0.665, -0.665, steel3, centeredAt);
   Cell *coolant=new CellBox3D ("Coolant", -0.665, 0.665, 0.665, -0.665, 0.665, -0.665, steel4);
 
   source->next=cladding;

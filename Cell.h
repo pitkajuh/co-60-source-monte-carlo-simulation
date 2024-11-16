@@ -58,10 +58,10 @@ public:
   //   return GetInitialPosition ()+RandomEmissionDirection ()*(-1/linearAttenuationCoefficient)*log (RNG (0, 1));
   // }
   // CellCylinderTruncatedZ (const string &name1, Surface *c, Surface *wallZPos, Surface *wallZNeg, Material *m)
-  CellCylinderTruncatedZ (const string &name1, const double radius, const double wallZPos, const double wallZNeg, Material *m)
+  CellCylinderTruncatedZ (const string &name1, const double radius, const double wallZPos, const double wallZNeg, Material *m, const Coordinate &centeredAt)
   {
     name=name1;
-    surface=new Cylinder(radius);
+    surface=new Cylinder(radius, centeredAt);
     wallZNegativeC=new PlaneZ(wallZNeg);
     wallZPositiveC=new PlaneZ(wallZPos);
     material=m;
