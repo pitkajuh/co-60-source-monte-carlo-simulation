@@ -8,6 +8,7 @@ class Surface
 {
 public:
   double value;
+  // For general quadratic surface S(x, y, z)=Ax^2+By^2+Cz^2+Dxy+Eyz+F zx+Gx+Hy+Iz+J
   double A=0;
   double B=0;
   double C=0;
@@ -21,6 +22,7 @@ public:
   double L=0;
   double M=0;
   double K=0;
+
   virtual const double SurfaceEquation (const Coordinate &p)=0;
   virtual const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)=0;
   const double Distance(const Coordinate &positionAt, const Coordinate &directionTo)
