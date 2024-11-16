@@ -83,7 +83,7 @@ public:
   {
     value=v;
     G=1;
-    J=1;
+    J=-1;
   }
   const double SurfaceEquation (const Coordinate &p){return p.x-value;}
   const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
@@ -99,7 +99,7 @@ public:
   {
     value=v;
     H=1;
-    J=1;
+    J=-1;
   }
   const double SurfaceEquation (const Coordinate &p){return p.y-value;}
   const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
@@ -115,7 +115,7 @@ public:
   {
     value=v;
     I=1;
-    J=1;
+    J=-1;
   }
   const double SurfaceEquation (const Coordinate &p){return p.z-value;}
   const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
