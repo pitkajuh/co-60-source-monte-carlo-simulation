@@ -33,9 +33,10 @@ double Co60PDF ()
   return 1.332;
 }
 
-void SurfaceTracking(const Coordinate &photonInitialPosition, Cell *cellHead)
+void SurfaceTracking(Coordinate &photonInitialPosition, Cell *cellHead)
 {
   Coordinate direction;
+  Coordinate positionNew;
   Cell *current=cellHead;
   bool collision=0;
   double distance=0;
@@ -43,15 +44,26 @@ void SurfaceTracking(const Coordinate &photonInitialPosition, Cell *cellHead)
 
   while (current!=nullptr and !collision)
     {
-      collision=current->CellTest (photonInitialPosition);
       direction=RandomEmissionDirection();
+
+      // photonInitialPosition.print();
+      // positionNew=photonInitialPosition+direction*(-1/current->material->GetMu (Co60PDF()))*log (RNG (0, 1));
+
+      // positionNew=direction*(-1/current->material->GetMu (Co60PDF()))*log (RNG (0, 1));
+      // positionNew.print();
+
+      positionNew=photonInitialPosition+direction*(-1/current->material->GetMu (Co60PDF()))*log (RNG (0, 1));
+      // positionNew.print();
+
+      collision=current->CellTest (positionNew);
+
       // direction.print();
-      distance=current->CellDistanceTest (photonInitialPosition, direction);
+      distance=current->CellDistanceTest (positionNew, direction);
       // collision=current->CellTest (photonInitialPosition);
-      std::cout<<current->name<<" "<<collision<<" "<<distance<<'\n';
+      // std::cout<<current->name<<" "<<collision<<" "<<distance<<'\n';
       current=current->next;
     }
-  cout<<" "<<'\n';
+  // cout<<" "<<'\n';
 }
 
 void ParseCells2 (Cell *cellHead, const unsigned sourceActivity)
@@ -76,7 +88,8 @@ void GetCount (Cell *cellHead, const double volume, const unsigned N)
   while (current!=nullptr)
     {
       vol=(double) current->hits*volume/N;
-      cout<<current->name<<" "<<vol<<'\n';
+      // cout<<current->name<<" "<<vol<<" "<<current->hits<<'\n';
+      cout<<current->name<<" "<<current->hits<<'\n';
       total+=vol;
       current=current->next;
     }
@@ -103,7 +116,7 @@ void MonteCarlo (const unsigned N, const double xMin, const double xMax, const d
 
 int main ()
 {
-  const unsigned N=10;
+  const unsigned N=100;
   const double xMin=-0.665;
   const double xMax=0.665;
   const double yMin=-0.665;
@@ -120,14 +133,15 @@ int main ()
   Coordinate centeredAt;
   centeredAt.Set(0, 0, 0);
 
-  Cell *source=new CellCylinderTruncatedZ ("Source", 0.412, 0.2, 0, steel1, centeredAt);
-  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 0.475, 0.665, -0.665, steel2, centeredAt);
-  Cell *moderator=new CellCylinderTruncatedZ ("Moderator", 0.5, 0.665, -0.665, steel3, centeredAt);
-  Cell *coolant=new CellBox3D ("Coolant", -0.665, 0.665, 0.665, -0.665, 0.665, -0.665, steel4);
+  Cell *source=new CellCylinderTruncatedZ ("Source", 0.412e-2, 0.2e-2, 0, steel1, centeredAt);
+  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 0.475e-2, 0.665e-2, -0.665e-2, steel2, centeredAt);
+  Cell *moderator=new CellCylinderTruncatedZ ("Moderator", 0.5e-2, 0.665e-2, -0.665e-2, steel3, centeredAt);
+  Cell *coolant=new CellBox3D ("Coolant", -0.665e-2, 0.665e-2, 0.665e-2, -0.665e-2, 0.665e-2, -0.665e-2, steel4);
 
   source->next=cladding;
   cladding->next=moderator;
   moderator->next=coolant;
+
   MonteCarlo (N, xMin, xMax, yMin, yMax, zMin, zMax, source, sourceActivity);
   delete source;
   return 0;
