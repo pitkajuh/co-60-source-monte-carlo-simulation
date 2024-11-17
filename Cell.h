@@ -29,6 +29,7 @@ public:
   virtual Coordinate GetInitialPosition (const double energy)=0;
   // virtual Coordinate GetPhotonPosition (const Coordinate &from, const Coordinate &to)=0;
   virtual const bool CellTest (const Coordinate &p)=0;
+  virtual const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)=0;
   virtual ~Cell ()
   {
     delete material;
@@ -71,6 +72,17 @@ public:
     isInCell=surface->SurfaceTest (p) and !wallZNegativeC->SurfaceTest (p) and wallZPositiveC->SurfaceTest (p);
     return GetBoolean ();
   }
+  const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
+  {
+    const double distanceCylinder=surface->Distance(positionAt, directionTo);
+    const double distanceZNegative=wallZNegativeC->Distance(positionAt, directionTo);
+    const double distanceZPositive=wallZPositiveC->Distance(positionAt, directionTo);
+    const double distances[3]={distanceCylinder, distanceZNegative, distanceZPositive};
+    double distance=0;
+
+    for(const auto &i: distances){if(i>distance) distance=i;}
+    return distance;
+  }
   ~CellCylinderTruncatedZ ()
   {
     delete wallZNegativeC;
@@ -105,6 +117,21 @@ public:
   {
     isInCell=!wallXNegative->SurfaceTest (p) and wallXPositive->SurfaceTest (p) and wallYPositive->SurfaceTest (p) and !wallYNegative->SurfaceTest (p) and wallZPositive->SurfaceTest (p) and !wallZNegative->SurfaceTest (p);
     return GetBoolean ();
+  }
+  const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
+  {
+    const double distanceWallXNegative=wallXNegative->Distance(positionAt, directionTo);
+    const double distanceWallXPositive=wallXPositive->Distance(positionAt, directionTo);
+    const double distanceWallYPositive=wallYPositive->Distance(positionAt, directionTo);
+    const double distanceWallYNegative=wallYNegative->Distance(positionAt, directionTo);
+    const double distanceWallZNegative=wallZNegative->Distance(positionAt, directionTo);
+    const double distanceWallZPositive=wallZPositive->Distance(positionAt, directionTo);
+    const double distances[6]={distanceWallXNegative, distanceWallXPositive, distanceWallYPositive,
+			                              distanceWallYNegative, distanceWallZNegative, distanceWallZPositive};
+    double distance=0;
+
+    for(const auto &i: distances){if(i>distance) distance=i;}
+    return distance;
   }
   CellBox3D (const string &name1, const double w1, const double w2, const double w3, const double w4, const double w5, const double w6, Material *m)
   {

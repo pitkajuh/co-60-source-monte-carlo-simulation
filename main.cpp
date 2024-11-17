@@ -37,10 +37,12 @@ void SurfaceTracking(const Coordinate &photonInitialPosition, Cell *cellHead)
 {
   Cell *current=cellHead;
   bool collision=0;
+  // bool direction=0;
 
   while (current!=nullptr and !collision)
     {
       collision=current->CellTest (photonInitialPosition);
+      // collision=current->CellTest (photonInitialPosition);
       std::cout<<current->name<<" "<<collision<<'\n';
       current=current->next;
     }

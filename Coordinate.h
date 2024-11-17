@@ -1,6 +1,8 @@
 #ifndef COORDINATE_H
 #define COORDINATE_H
 
+#include <cmath>
+
 struct Coordinate
 {
 public:
@@ -11,6 +13,7 @@ public:
   {
     std::cout<<x<<" "<<y<<" "<<z<<'\n';
   }
+  double GetLength(){return pow(x*x+y*y+z*z, 0.5);}
   void Set (const double xValue, const double yValue, const double zValue)
   {
     x=xValue;

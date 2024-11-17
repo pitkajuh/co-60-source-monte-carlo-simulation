@@ -1,7 +1,6 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
-#include <cmath>
 #include "Coordinate.h"
 
 class Surface
@@ -25,14 +24,17 @@ public:
 
   virtual const double SurfaceEquation (const Coordinate &p)=0;
   virtual const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)=0;
-  const double Distance(const Coordinate &positionAt, const Coordinate &directionTo)
+  const double Distance(const Coordinate &positionAt, Coordinate &directionTo)
   {
-    const double u=directionTo.x;
-    const double v=directionTo.y;
-    const double w=directionTo.z;
     const double x=positionAt.x;
     const double y=positionAt.y;
     const double z=positionAt.z;
+    // Direction vector by using direction cosine.
+    const double size=directionTo.GetLength();
+    const double u=directionTo.x/size;
+    const double v=directionTo.y/size;
+    const double w=directionTo.z/size;
+
     K=A*x*x+B*y*y+C*z*z+D*x*y+E*y*z+F*x*z+G*x+H*y+I*z+J;
     L=2*(A*u*x+B*v*y+C*w*z)+D*(v*x+u*y)+E*(w*y+v*z)+F*(w*x+u*z)+G*u+H*v+I*w;
     M=A*u*u+B*v*v+C*w*w+D*u*v+E*v*w+F*u*w;
@@ -69,13 +71,21 @@ public:
     centeredAt=at;
     A=1;
     B=1;
-    J=-1;
+    J=-v*v;
   }
   const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
   {
     return 0;
   }
-  const double SurfaceEquation (const Coordinate &p){return (p.y-centeredAt.y)*(p.y-centeredAt.y)+(p.x-centeredAt.x)*(p.x-centeredAt.x)-value*value;}
+  const double SurfaceEquation (const Coordinate &p)
+  {
+    const double x=p.x;
+    const double x0=centeredAt.x;
+    const double y=p.y;
+    const double y0=centeredAt.y;
+    // Equation should be A*(x-x0)*(x-x0)+B*(y-y0)*(y-y0)+J, but A and B are omitted because they are 1.
+    return (x-x0)*(x-x0)+(y-y0)*(y-y0)+J;
+  }
 };
 
 class PlaneX: public Surface
@@ -85,9 +95,9 @@ public:
   {
     value=v;
     G=1;
-    J=-1;
+    J=-v;
   }
-  const double SurfaceEquation (const Coordinate &p){return p.x-value;}
+  const double SurfaceEquation (const Coordinate &p){return p.x+J;}
   const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
   {
     return 0;
@@ -101,9 +111,9 @@ public:
   {
     value=v;
     H=1;
-    J=-1;
+    J=-v;
   }
-  const double SurfaceEquation (const Coordinate &p){return p.y-value;}
+  const double SurfaceEquation (const Coordinate &p){return p.y+J;}
   const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
   {
     return 0;
@@ -117,9 +127,9 @@ public:
   {
     value=v;
     I=1;
-    J=-1;
+    J=-v;
   }
-  const double SurfaceEquation (const Coordinate &p){return p.z-value;}
+  const double SurfaceEquation (const Coordinate &p){return p.z+J;}
   const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
   {
     return 0;
