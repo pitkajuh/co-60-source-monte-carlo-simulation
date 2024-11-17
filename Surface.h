@@ -25,45 +25,7 @@ public:
   double K=0;
 
   virtual const double SurfaceEquation (const Coordinate &p)=0;
-  virtual const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)=0;
-  const double Distance(const Coordinate &positionAt, Coordinate &directionTo)
-  {
-    const double x=positionAt.x;
-    const double y=positionAt.y;
-    const double z=positionAt.z;
-    // Direction vector by using direction cosine.
-    const double size=directionTo.GetLength();
-    const double u=directionTo.x/size;
-    const double v=directionTo.y/size;
-    const double w=directionTo.z/size;
-
-    // cout<<A<<"*"<<x<<"*"<<x<<"+"<<B<<"*"<<y<<"*"<<y<<"+"<<C<<"*"<<z<<"*"<<z<<"+"<<D<<"*"<<x<<"*"<<y<<"+"<<E<<"*"<<y<<"*"<<z<<"+"<<F<<"*"<<x<<"*"<<z<<"+"<<G<<"*"<<x<<"+"<<H<<"*"<<y<<"+"<<I<<"*"<<z<<"+"<<J<<'\n';
-    // cout<<2<<"*"<<"("<<A<<"*"<<u<<"*"<<x<<"+"<<B<<"*"<<v<<"*"<<y<<"+"<<C<<"*"<<w<<"*"<<z<<")+"<<D<<"*"<<"("<<v<<"*"<<x<<"+"<<u<<"*"<<y<<")+"<<E<<"*"<<"("<<w<<"*"<<y<<"+"<<v<<"*"<<z<<")+"<<F<<"*"<<"("<<w<<"*"<<x<<"+"<<u<<"*"<<z<<")+"<<G<<"*"<<u<<"+"<<H<<"*"<<v<<"+"<<I<<"*"<<w<<'\n';
-    // cout<<A<<"*"<<u<<"*"<<u<<"+"<<B<<"*"<<v<<"*"<<v<<"+"<<C<<"*"<<w<<"*"<<w<<"+"<<D<<"*"<<u<<"*"<<v<<"+"<<E<<"*"<<v<<"*"<<w<<"+"<<F<<"*"<<u<<"*"<<w<<'\n';
-
-    // cout<<A<<"*"<<x<<"*"<<x<<"+"<<B<<"*"<<y<<"*"<<y<<"+"<<C<<"*"<<z<<"*"<<z<<"+"<<D<<"*"<<x<<"*"<<y<<"+"<<E<<"*"<<y<<"*"<<z<<"+"<<F<<"*"<<x<<"*"<<z<<"+"<<G<<"*"<<x<<"+"<<H<<"*"<<y<<"+"<<I<<"*"<<z<<"+"<<J<<'\n';
-    // cout<<2<<"*"<<"("<<A<<"*"<<u<<"*"<<x<<"+"<<B<<"*"<<v<<"*"<<y<<"+"<<C<<"*"<<w<<"*"<<z<<")+"<<D<<"*"<<"("<<v<<"*"<<x<<"+"<<u<<"*"<<y<<")+"<<E<<"*"<<"("<<w<<"*"<<y<<"+"<<v<<"*"<<z<<")+"<<F<<"*"<<"("<<w<<"*"<<x<<"+"<<u<<"*"<<z<<")+"<<G<<"*"<<u<<"+"<<H<<"*"<<v<<"+"<<I<<"*"<<w<<'\n';
-    // cout<<A*u*u<<"+"<<B*v*v<<"+"<<C*w*w<<"+"<<D*u*v<<"+"<<E*v*w<<"+"<<F*u*w<<'\n';
-
-    K=A*x*x+B*y*y+C*z*z+D*x*y+E*y*z+F*x*z+G*x+H*y+I*z+J;
-    L=2*(A*u*x+B*v*y+C*w*z)+D*(v*x+u*y)+E*(w*y+v*z)+F*(w*x+u*z)+G*u+H*v+I*w;
-    M=A*u*u+B*v*v+C*w*w+D*u*v+E*v*w+F*u*w;
-    // M=A*u*u+B*v*v+C*w*w+D*u*v+E*v*w+F*u*w+G*u+H*v+I*w+J;
-    cout<<M<<'\n';
-    const double inSqrt=L*L-4*M*K;
-
-    // No solution exists, the surface is away from line-of-sight.
-    if(inSqrt<0 or M==0) return 0;
-
-    const double sqrtValue=pow(inSqrt, 0.5);
-    const double optionPositive=(-L+sqrtValue)/(2*M);
-    const double optionNegative=(-L-sqrtValue)/(2*M);
-
-    // No solution exists, the surface is away from line-of-sight.
-    if(optionPositive<0 and optionNegative<0) return 0;
-    else if(optionPositive>0 and optionNegative<0) return optionPositive;
-    else return optionNegative;
-  }
+  virtual const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)=0;
   const bool SurfaceTest (const Coordinate &p)
   {
     // Return true if the point is inside (<0) or on (==0) the surface.
@@ -85,9 +47,34 @@ public:
     B=1;
     J=-v*v;
   }
-  const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
+  const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
-    return 0;
+    const double x=positionAt.x;
+    const double y=positionAt.y;
+    const double x0=centeredAt.x;
+    const double y0=centeredAt.y;
+    // Direction vector by using direction cosine.
+    const double size=directionTo.GetLength();
+    const double u=directionTo.x/size;
+    const double v=directionTo.y/size;
+
+    K=(x-x0)*(x-x0)+(y-y0)*(y-y0)+J;
+    L=2*(u*(x-x0)+v*(y-y0));
+    M=u*u+v*v;
+
+    const double inSqrt=L*L-4*M*K;
+
+    // No solution exists, the surface is away from line-of-sight.
+    if(inSqrt<0 or M==0) return -1;
+
+    const double sqrtValue=pow(inSqrt, 0.5);
+    const double optionPositive=(-L+sqrtValue)/(2*M);
+    const double optionNegative=(-L-sqrtValue)/(2*M);
+
+    // No solution exists, the surface is away from line-of-sight.
+    if(optionPositive<0 and optionNegative<0) return -1;
+    else if(optionPositive>0 and optionNegative<0) return optionPositive;
+    else return optionNegative;
   }
   const double SurfaceEquation (const Coordinate &p)
   {
@@ -110,9 +97,17 @@ public:
     J=-v;
   }
   const double SurfaceEquation (const Coordinate &p){return p.x+J;}
-  const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
+  const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
-    return 0;
+    const double x=positionAt.x;
+    const double size=directionTo.GetLength();
+    const double u=directionTo.x/size;
+    const double numerator=G*x+J;
+    const double denominator=G*u;
+
+    if(denominator==0) return -1;
+
+    return -numerator/denominator;
   }
 };
 
@@ -126,9 +121,17 @@ public:
     J=-v;
   }
   const double SurfaceEquation (const Coordinate &p){return p.y+J;}
-  const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
+  const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
-    return 0;
+    const double y=positionAt.y;
+    const double size=directionTo.GetLength();
+    const double v=directionTo.y/size;
+    const double numerator=H*y+J;
+    const double denominator=H*v;
+
+    if(denominator==0) return -1;
+
+    return -numerator/denominator;
   }
 };
 
@@ -142,9 +145,17 @@ public:
     J=-v;
   }
   const double SurfaceEquation (const Coordinate &p){return p.z+J;}
-  const double SurfaceDistance(const Coordinate &positionAt, const Coordinate &directionTo)
+  const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
-    return 0;
+    const double z=positionAt.z;
+    const double size=directionTo.GetLength();
+    const double w=directionTo.z/size;
+    const double numerator=I*z+J;
+    const double denominator=I*w;
+
+    if(denominator==0) return -1;
+
+    return -numerator/denominator;
   }
 };
 

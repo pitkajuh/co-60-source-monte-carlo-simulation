@@ -27,7 +27,6 @@ public:
     return 0;
   }
   virtual Coordinate GetInitialPosition (const double energy)=0;
-  // virtual Coordinate GetPhotonPosition (const Coordinate &from, const Coordinate &to)=0;
   virtual const bool CellTest (const Coordinate &p)=0;
   virtual const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)=0;
   virtual ~Cell ()
@@ -54,11 +53,6 @@ public:
     // return coordinateCylinder+RandomEmissionDirection ()*(-1/material->GetMu (energy))*log (RNG (0, 1));
     return coordinateCylinder;
   }
-  // Coordinate GetPhotonPosition (const Coordinate &from, const Coordinate &to)
-  // {
-  //   return GetInitialPosition ()+RandomEmissionDirection ()*(-1/linearAttenuationCoefficient)*log (RNG (0, 1));
-  // }
-  // CellCylinderTruncatedZ (const string &name1, Surface *c, Surface *wallZPos, Surface *wallZNeg, Material *m)
   CellCylinderTruncatedZ (const string &name1, const double radius, const double wallZPos, const double wallZNeg, Material *m, const Coordinate &centeredAt)
   {
     name=name1;
@@ -74,9 +68,9 @@ public:
   }
   const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
   {
-    const double distanceCylinder=surface->Distance(positionAt, directionTo);
-    const double distanceZNegative=wallZNegativeC->Distance(positionAt, directionTo);
-    const double distanceZPositive=wallZPositiveC->Distance(positionAt, directionTo);
+    const double distanceCylinder=surface->SurfaceDistance(positionAt, directionTo);
+    const double distanceZNegative=wallZNegativeC->SurfaceDistance(positionAt, directionTo);
+    const double distanceZPositive=wallZPositiveC->SurfaceDistance(positionAt, directionTo);
     const double distances[3]={distanceCylinder, distanceZNegative, distanceZPositive};
     double distance=0;
 
@@ -107,12 +101,6 @@ public:
     Coordinate c;
     return c;
   }
-  // Coordinate GetPhotonPosition (const Coordinate &from, const Coordinate &to)
-  // {
-  //   // TODO
-  //   Coordinate c;
-  //   return c;
-  // }
   const bool CellTest (const Coordinate &p)
   {
     isInCell=!wallXNegative->SurfaceTest (p) and wallXPositive->SurfaceTest (p) and wallYPositive->SurfaceTest (p) and !wallYNegative->SurfaceTest (p) and wallZPositive->SurfaceTest (p) and !wallZNegative->SurfaceTest (p);
@@ -120,12 +108,12 @@ public:
   }
   const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
   {
-    const double distanceWallXNegative=wallXNegative->Distance(positionAt, directionTo);
-    const double distanceWallXPositive=wallXPositive->Distance(positionAt, directionTo);
-    const double distanceWallYPositive=wallYPositive->Distance(positionAt, directionTo);
-    const double distanceWallYNegative=wallYNegative->Distance(positionAt, directionTo);
-    const double distanceWallZNegative=wallZNegative->Distance(positionAt, directionTo);
-    const double distanceWallZPositive=wallZPositive->Distance(positionAt, directionTo);
+    const double distanceWallXNegative=wallXNegative->SurfaceDistance(positionAt, directionTo);
+    const double distanceWallXPositive=wallXPositive->SurfaceDistance(positionAt, directionTo);
+    const double distanceWallYPositive=wallYPositive->SurfaceDistance(positionAt, directionTo);
+    const double distanceWallYNegative=wallYNegative->SurfaceDistance(positionAt, directionTo);
+    const double distanceWallZNegative=wallZNegative->SurfaceDistance(positionAt, directionTo);
+    const double distanceWallZPositive=wallZPositive->SurfaceDistance(positionAt, directionTo);
     const double distances[6]={distanceWallXNegative, distanceWallXPositive, distanceWallYPositive,
 			                              distanceWallYNegative, distanceWallZNegative, distanceWallZPositive};
     double distance=0;
