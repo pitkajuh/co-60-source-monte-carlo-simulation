@@ -37,33 +37,32 @@ void SurfaceTracking(Coordinate &photonInitialPosition, Cell *cellHead)
 {
   Coordinate direction;
   Coordinate positionNew;
+  Cell *source=cellHead;
   Cell *current=cellHead;
   bool collision=0;
   double distance=0;
-  // bool direction=0;
+  direction=RandomEmissionDirection();
+    positionNew=photonInitialPosition;
+  positionNew=photonInitialPosition+direction*(-1/source->material->GetMu (Co60PDF()))*log (RNG (0, 1));
 
   while (current!=nullptr and !collision)
     {
-      direction=RandomEmissionDirection();
+      // direction=RandomEmissionDirection();
 
-      // photonInitialPosition.print();
+
+
       // positionNew=photonInitialPosition+direction*(-1/current->material->GetMu (Co60PDF()))*log (RNG (0, 1));
-
-      // positionNew=direction*(-1/current->material->GetMu (Co60PDF()))*log (RNG (0, 1));
-      // positionNew.print();
-
-      positionNew=photonInitialPosition+direction*(-1/current->material->GetMu (Co60PDF()))*log (RNG (0, 1));
       // positionNew.print();
 
       collision=current->CellTest (positionNew);
 
-      // direction.print();
+
       distance=current->CellDistanceTest (positionNew, direction);
-      // collision=current->CellTest (photonInitialPosition);
-      // std::cout<<current->name<<" "<<collision<<" "<<distance<<'\n';
+
+      std::cout<<current->name<<" "<<collision<<" "<<distance<<'\n';
       current=current->next;
     }
-  // cout<<" "<<'\n';
+  cout<<" "<<'\n';
 }
 
 void ParseCells2 (Cell *cellHead, const unsigned sourceActivity)
@@ -128,19 +127,16 @@ int main ()
   Material *steel1=new Steel (7.874);
   Material *steel2=new Steel (7.874);
   Material *steel3=new Steel (7.874);
-  Material *steel4=new Steel (7.874);
 
   Coordinate centeredAt;
   centeredAt.Set(0, 0, 0);
 
-  Cell *source=new CellCylinderTruncatedZ ("Source", 0.412e-2, 0.2e-2, 0, steel1, centeredAt);
-  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 0.475e-2, 0.665e-2, -0.665e-2, steel2, centeredAt);
-  Cell *moderator=new CellCylinderTruncatedZ ("Moderator", 0.5e-2, 0.665e-2, -0.665e-2, steel3, centeredAt);
-  Cell *coolant=new CellBox3D ("Coolant", -0.665e-2, 0.665e-2, 0.665e-2, -0.665e-2, 0.665e-2, -0.665e-2, steel4);
+  Cell *source=new CellCylinderTruncatedZ ("Source", 2e-2, 2e-2, -2e-2, steel1, centeredAt);
+  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 6e-2, 6e-2, -6e-2, steel2, centeredAt);
+  Cell *outside=new CellBox3D ("Outside world", -1, 1, 1, -1, 1, -1, steel3);
 
   source->next=cladding;
-  cladding->next=moderator;
-  moderator->next=coolant;
+  cladding->next=outside;
 
   MonteCarlo (N, xMin, xMax, yMin, yMax, zMin, zMax, source, sourceActivity);
   delete source;

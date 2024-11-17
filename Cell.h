@@ -19,7 +19,7 @@ public:
 
   const bool GetBoolean ()
   {
-    if (isInCell )
+    if(isInCell )
       {
 	hits++;
 	return 1;
@@ -46,10 +46,11 @@ public:
   Coordinate GetInitialPosition (const double energy)
   {
     // Get a random location for photon emission on the cylindrical surface, its direction and where it lands.
+    const double radius=surface->value*pow(RNG(0, 1), 0.5);
     const double azimuthalAngle=2*M_PI*RNG (0, 1);
-    const double z=(wallZPositiveC->value-wallZNegativeC->value)*RNG (0, 1);
+    const double z=wallZNegativeC->value+(wallZPositiveC->value-wallZNegativeC->value)*RNG (0, 1);
     Coordinate coordinateCylinder;
-    coordinateCylinder.Set (surface->value*cos (azimuthalAngle), surface->value*sin (azimuthalAngle), z);
+    coordinateCylinder.Set (radius*cos (azimuthalAngle), radius*sin (azimuthalAngle), z);
     // return coordinateCylinder+RandomEmissionDirection ()*(-1/material->GetMu (energy))*log (RNG (0, 1));
     return coordinateCylinder;
   }
@@ -71,8 +72,8 @@ public:
     const double distanceCylinder=surface->SurfaceDistance(positionAt, directionTo);
     const double distanceZNegative=wallZNegativeC->SurfaceDistance(positionAt, directionTo);
     const double distanceZPositive=wallZPositiveC->SurfaceDistance(positionAt, directionTo);
-    const double distances[3]={distanceCylinder, distanceZNegative, distanceZPositive};
-    double distance=0;
+    const double distances[2]={distanceZNegative, distanceZPositive};
+    double distance=distanceCylinder;
 
     for(const auto &i: distances){if(i>distance) distance=i;}
     return distance;
@@ -114,9 +115,9 @@ public:
     const double distanceWallYNegative=wallYNegative->SurfaceDistance(positionAt, directionTo);
     const double distanceWallZNegative=wallZNegative->SurfaceDistance(positionAt, directionTo);
     const double distanceWallZPositive=wallZPositive->SurfaceDistance(positionAt, directionTo);
-    const double distances[6]={distanceWallXNegative, distanceWallXPositive, distanceWallYPositive,
+    const double distances[5]={distanceWallXPositive, distanceWallYPositive,
 			                              distanceWallYNegative, distanceWallZNegative, distanceWallZPositive};
-    double distance=0;
+    double distance=distanceWallXNegative;
 
     for(const auto &i: distances){if(i>distance) distance=i;}
     return distance;
