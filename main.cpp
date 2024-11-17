@@ -35,15 +35,20 @@ double Co60PDF ()
 
 void SurfaceTracking(const Coordinate &photonInitialPosition, Cell *cellHead)
 {
+  Coordinate direction;
   Cell *current=cellHead;
   bool collision=0;
+  double distance=0;
   // bool direction=0;
 
   while (current!=nullptr and !collision)
     {
       collision=current->CellTest (photonInitialPosition);
+      direction=RandomEmissionDirection();
+      // direction.print();
+      distance=current->CellDistanceTest (photonInitialPosition, direction);
       // collision=current->CellTest (photonInitialPosition);
-      std::cout<<current->name<<" "<<collision<<'\n';
+      std::cout<<current->name<<" "<<collision<<" "<<distance<<'\n';
       current=current->next;
     }
   cout<<" "<<'\n';
@@ -57,7 +62,7 @@ void ParseCells2 (Cell *cellHead, const unsigned sourceActivity)
   for (unsigned i=0; i<activityRandom; i++)
     {
       photonInitialPosition=cellHead->GetInitialPosition (Co60PDF ());
-      photonInitialPosition.print();
+      // photonInitialPosition.print();
       SurfaceTracking(photonInitialPosition, cellHead);
     }
 }

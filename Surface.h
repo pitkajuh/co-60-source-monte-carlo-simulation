@@ -2,6 +2,8 @@
 #define SURFACE_H
 
 #include "Coordinate.h"
+#include <iostream>
+using std::cout;
 
 class Surface
 {
@@ -35,22 +37,32 @@ public:
     const double v=directionTo.y/size;
     const double w=directionTo.z/size;
 
+    // cout<<A<<"*"<<x<<"*"<<x<<"+"<<B<<"*"<<y<<"*"<<y<<"+"<<C<<"*"<<z<<"*"<<z<<"+"<<D<<"*"<<x<<"*"<<y<<"+"<<E<<"*"<<y<<"*"<<z<<"+"<<F<<"*"<<x<<"*"<<z<<"+"<<G<<"*"<<x<<"+"<<H<<"*"<<y<<"+"<<I<<"*"<<z<<"+"<<J<<'\n';
+    // cout<<2<<"*"<<"("<<A<<"*"<<u<<"*"<<x<<"+"<<B<<"*"<<v<<"*"<<y<<"+"<<C<<"*"<<w<<"*"<<z<<")+"<<D<<"*"<<"("<<v<<"*"<<x<<"+"<<u<<"*"<<y<<")+"<<E<<"*"<<"("<<w<<"*"<<y<<"+"<<v<<"*"<<z<<")+"<<F<<"*"<<"("<<w<<"*"<<x<<"+"<<u<<"*"<<z<<")+"<<G<<"*"<<u<<"+"<<H<<"*"<<v<<"+"<<I<<"*"<<w<<'\n';
+    // cout<<A<<"*"<<u<<"*"<<u<<"+"<<B<<"*"<<v<<"*"<<v<<"+"<<C<<"*"<<w<<"*"<<w<<"+"<<D<<"*"<<u<<"*"<<v<<"+"<<E<<"*"<<v<<"*"<<w<<"+"<<F<<"*"<<u<<"*"<<w<<'\n';
+
+    // cout<<A<<"*"<<x<<"*"<<x<<"+"<<B<<"*"<<y<<"*"<<y<<"+"<<C<<"*"<<z<<"*"<<z<<"+"<<D<<"*"<<x<<"*"<<y<<"+"<<E<<"*"<<y<<"*"<<z<<"+"<<F<<"*"<<x<<"*"<<z<<"+"<<G<<"*"<<x<<"+"<<H<<"*"<<y<<"+"<<I<<"*"<<z<<"+"<<J<<'\n';
+    // cout<<2<<"*"<<"("<<A<<"*"<<u<<"*"<<x<<"+"<<B<<"*"<<v<<"*"<<y<<"+"<<C<<"*"<<w<<"*"<<z<<")+"<<D<<"*"<<"("<<v<<"*"<<x<<"+"<<u<<"*"<<y<<")+"<<E<<"*"<<"("<<w<<"*"<<y<<"+"<<v<<"*"<<z<<")+"<<F<<"*"<<"("<<w<<"*"<<x<<"+"<<u<<"*"<<z<<")+"<<G<<"*"<<u<<"+"<<H<<"*"<<v<<"+"<<I<<"*"<<w<<'\n';
+    // cout<<A*u*u<<"+"<<B*v*v<<"+"<<C*w*w<<"+"<<D*u*v<<"+"<<E*v*w<<"+"<<F*u*w<<'\n';
+
     K=A*x*x+B*y*y+C*z*z+D*x*y+E*y*z+F*x*z+G*x+H*y+I*z+J;
     L=2*(A*u*x+B*v*y+C*w*z)+D*(v*x+u*y)+E*(w*y+v*z)+F*(w*x+u*z)+G*u+H*v+I*w;
     M=A*u*u+B*v*v+C*w*w+D*u*v+E*v*w+F*u*w;
+    // M=A*u*u+B*v*v+C*w*w+D*u*v+E*v*w+F*u*w+G*u+H*v+I*w+J;
+    cout<<M<<'\n';
     const double inSqrt=L*L-4*M*K;
 
     // No solution exists, the surface is away from line-of-sight.
     if(inSqrt<0 or M==0) return 0;
 
     const double sqrtValue=pow(inSqrt, 0.5);
-    const double optionPositive=-L+sqrtValue;
-    const double optionNegative=-L-sqrtValue;
+    const double optionPositive=(-L+sqrtValue)/(2*M);
+    const double optionNegative=(-L-sqrtValue)/(2*M);
 
     // No solution exists, the surface is away from line-of-sight.
     if(optionPositive<0 and optionNegative<0) return 0;
-    else if(optionPositive>0 and optionNegative<0) return optionPositive/(2*M);
-    else return optionNegative/(2*M);
+    else if(optionPositive>0 and optionNegative<0) return optionPositive;
+    else return optionNegative;
   }
   const bool SurfaceTest (const Coordinate &p)
   {

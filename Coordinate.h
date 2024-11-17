@@ -9,11 +9,12 @@ public:
   double x;
   double y;
   double z;
+
+  double GetLength(){return pow(x*x+y*y+z*z, 0.5);}
   void print ()
   {
-    std::cout<<x<<" "<<y<<" "<<z<<'\n';
+    std::cout<<x<<" "<<y<<" "<<z<<" size "<<GetLength()<<'\n';
   }
-  double GetLength(){return pow(x*x+y*y+z*z, 0.5);}
   void Set (const double xValue, const double yValue, const double zValue)
   {
     x=xValue;
@@ -43,12 +44,12 @@ const Coordinate GenerateRandom (const double xMin, const double xMax, const dou
 
 Coordinate RandomEmissionDirection ()
 {
-  // Get random direction for isotropic source using spherical coordinates.
+  // Create an unit vector pointing in random direction using spherical coordinates.
   const double azimuthalAngle=2*M_PI*RNG (0, 1);
   const double polarAngle=M_PI*RNG (0, 1);
-  Coordinate unitVector;
-  unitVector.Set (cos (azimuthalAngle)*sin (polarAngle), sin (azimuthalAngle)*sin (polarAngle), cos (polarAngle));
-  return unitVector;
+  Coordinate direction;
+  direction.Set (cos (azimuthalAngle)*sin (polarAngle), sin (azimuthalAngle)*sin (polarAngle), cos (polarAngle));
+  return direction;
 }
 
 #endif
