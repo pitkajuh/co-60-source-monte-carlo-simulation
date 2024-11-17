@@ -41,7 +41,7 @@ public:
     const double inSqrt=L*L-4*M*K;
 
     // No solution exists, the surface is away from line-of-sight.
-    if(inSqrt<0) return 0;
+    if(inSqrt<0 or M==0) return 0;
 
     const double sqrtValue=pow(inSqrt, 0.5);
     const double optionPositive=-L+sqrtValue;
