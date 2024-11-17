@@ -102,12 +102,11 @@ public:
     const double x=positionAt.x;
     const double size=directionTo.GetLength();
     const double u=directionTo.x/size;
-    const double numerator=G*x+J;
-    const double denominator=G*u;
+    const double numerator=x+J;
 
-    if(denominator==0) return -1;
+    if(u==0) return -1;
 
-    return -numerator/denominator;
+    return -numerator/u;
   }
 };
 
@@ -126,12 +125,11 @@ public:
     const double y=positionAt.y;
     const double size=directionTo.GetLength();
     const double v=directionTo.y/size;
-    const double numerator=H*y+J;
-    const double denominator=H*v;
+    const double numerator=y+J;
 
-    if(denominator==0) return -1;
+    if(v==0) return -1;
 
-    return -numerator/denominator;
+    return -numerator/v;
   }
 };
 
@@ -150,12 +148,11 @@ public:
     const double z=positionAt.z;
     const double size=directionTo.GetLength();
     const double w=directionTo.z/size;
-    const double numerator=I*z+J;
-    const double denominator=I*w;
+    const double numerator=z+J;
 
-    if(denominator==0) return -1;
+    if(w==0) return -1;
 
-    return -numerator/denominator;
+    return -numerator/w;
   }
 };
 
