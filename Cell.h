@@ -26,7 +26,7 @@ public:
       }
     return 0;
   }
-  virtual Coordinate GetInitialPosition (const double energy)=0;
+  virtual Coordinate GetInitialPosition ()=0;
   virtual const bool CellTest (const Coordinate &p)=0;
   virtual const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)=0;
   virtual ~Cell ()
@@ -43,15 +43,14 @@ public:
   Surface *wallZNegativeC=nullptr;
   Surface *wallZPositiveC=nullptr;
 
-  Coordinate GetInitialPosition (const double energy)
+  Coordinate GetInitialPosition ()
   {
     // Get a random location for photon emission on the cylindrical surface, its direction and where it lands.
-    const double radius=surface->value*pow(RNG(0, 1), 0.5);
+    const double radial=surface->value*pow(RNG(0, 1), 0.5);
     const double azimuthalAngle=2*M_PI*RNG (0, 1);
     const double z=wallZNegativeC->value+(wallZPositiveC->value-wallZNegativeC->value)*RNG (0, 1);
     Coordinate coordinateCylinder;
-    coordinateCylinder.Set (radius*cos (azimuthalAngle), radius*sin (azimuthalAngle), z);
-    // return coordinateCylinder+RandomEmissionDirection ()*(-1/material->GetMu (energy))*log (RNG (0, 1));
+    coordinateCylinder.Set (radial*cos (azimuthalAngle), radial*sin (azimuthalAngle), z);
     return coordinateCylinder;
   }
   CellCylinderTruncatedZ (const string &name1, const double radius, const double wallZPos, const double wallZNeg, Material *m, const Coordinate &centeredAt)
@@ -96,7 +95,7 @@ public:
   Surface *wallZNegative=nullptr;
   Surface *wallZPositive=nullptr;
 
-  Coordinate GetInitialPosition (const double energy)
+  Coordinate GetInitialPosition ()
   {
     // TODO
     Coordinate c;

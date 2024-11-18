@@ -35,30 +35,20 @@ double Co60PDF ()
 
 void SurfaceTracking(Coordinate &photonInitialPosition, Cell *cellHead)
 {
-  Coordinate direction;
-  Coordinate positionNew;
-  Cell *source=cellHead;
+  Coordinate direction=RandomEmissionDirection();
+  Coordinate positionNew=photonInitialPosition+direction*(-1/cellHead->material->GetMu (Co60PDF()))*log (RNG (0, 1));
   Cell *current=cellHead;
   bool collision=0;
   double distance=0;
-  direction=RandomEmissionDirection();
-    positionNew=photonInitialPosition;
-  positionNew=photonInitialPosition+direction*(-1/source->material->GetMu (Co60PDF()))*log (RNG (0, 1));
+  // direction=RandomEmissionDirection();
+  // positionNew=photonInitialPosition;
+  // positionNew=photonInitialPosition+direction*(-1/source->material->GetMu (Co60PDF()))*log (RNG (0, 1));
+  positionNew.print();
 
   while (current!=nullptr and !collision)
     {
-      // direction=RandomEmissionDirection();
-
-
-
-      // positionNew=photonInitialPosition+direction*(-1/current->material->GetMu (Co60PDF()))*log (RNG (0, 1));
-      // positionNew.print();
-
       collision=current->CellTest (positionNew);
-
-
       distance=current->CellDistanceTest (positionNew, direction);
-
       std::cout<<current->name<<" "<<collision<<" "<<distance<<'\n';
       current=current->next;
     }
@@ -72,7 +62,7 @@ void ParseCells2 (Cell *cellHead, const unsigned sourceActivity)
 
   for (unsigned i=0; i<activityRandom; i++)
     {
-      photonInitialPosition=cellHead->GetInitialPosition (Co60PDF ());
+      photonInitialPosition=cellHead->GetInitialPosition ();
       // photonInitialPosition.print();
       SurfaceTracking(photonInitialPosition, cellHead);
     }
@@ -115,7 +105,7 @@ void MonteCarlo (const unsigned N, const double xMin, const double xMax, const d
 
 int main ()
 {
-  const unsigned N=100;
+  const unsigned N=10;
   const double xMin=-0.665;
   const double xMax=0.665;
   const double yMin=-0.665;

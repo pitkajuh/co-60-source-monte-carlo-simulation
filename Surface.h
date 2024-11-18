@@ -73,7 +73,8 @@ public:
 
     // No solution exists, the surface is away from line-of-sight.
     if(optionPositive<0 and optionNegative<0) return -1;
-    else if(optionPositive>0 and optionNegative<0) return optionPositive;
+    // else if(optionPositive>0 and optionNegative<0) return optionPositive;
+    else if(optionPositive>0 and optionNegative<0 and optionPositive>optionNegative) return optionPositive;
     else return optionNegative;
   }
   const double SurfaceEquation (const Coordinate &p)

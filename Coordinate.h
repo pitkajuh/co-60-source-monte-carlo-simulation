@@ -44,7 +44,7 @@ const Coordinate GenerateRandom (const double xMin, const double xMax, const dou
 
 Coordinate RandomEmissionDirection ()
 {
-  // Create an unit vector pointing in random direction using spherical coordinates.
+  // Create an unit vector pointing in random direction using spherical coordinates. The radius of the sphere is not sampled because the sampling is done from the origin of the sphere.
   const double azimuthalAngle=2*M_PI*RNG (0, 1);
   const double polarAngle=M_PI*RNG (0, 1);
   Coordinate direction;
