@@ -8,6 +8,7 @@
 #include "Material.h"
 #include "Cell.h"
 #include "Coordinate.h"
+#include "RadioNuclide.h"
 
 using std::string;
 using std::cout;
@@ -26,17 +27,10 @@ void ParseCells (Cell *cellHead, const Coordinate &p)
     }
 }
 
-double Co60PDF ()
-{
-  // Probability distribution function of Co-60 gamma energies (MeV).
-  if (RNG (0, 1)<=0.85) return 1.173;
-  return 1.332;
-}
-
-void SurfaceTracking(Coordinate &photonInitialPosition, Cell *cellHead)
+void SurfaceTracking(Coordinate &photonInitialPosition, Cell *cellHead, RadioNuclide *radioNuclide)
 {
   Coordinate direction=RandomEmissionDirection();
-  Coordinate positionNew=photonInitialPosition+direction*(-1/cellHead->material->GetMu (Co60PDF()))*log (RNG (0, 1));
+  Coordinate positionNew=photonInitialPosition+direction*(-1/cellHead->material->GetMu (radioNuclide->PDF()))*log (RNG (0, 1));
   Cell *current=cellHead;
   bool collision=0;
   double distance=0;
@@ -55,16 +49,16 @@ void SurfaceTracking(Coordinate &photonInitialPosition, Cell *cellHead)
   cout<<" "<<'\n';
 }
 
-void ParseCells2 (Cell *cellHead, const unsigned sourceActivity)
+void ParseCells2 (Cell *cellHead, RadioNuclide *radioNuclide)
 {
-  const unsigned activityRandom=PoissonRNG (sourceActivity, 1);
+  const unsigned activityRandom=PoissonRNG (radioNuclide->GetActivity(), 1);
   Coordinate photonInitialPosition;
 
   for (unsigned i=0; i<activityRandom; i++)
     {
       photonInitialPosition=cellHead->GetInitialPosition ();
       // photonInitialPosition.print();
-      SurfaceTracking(photonInitialPosition, cellHead);
+      SurfaceTracking(photonInitialPosition, cellHead, radioNuclide);
     }
 }
 
@@ -85,7 +79,7 @@ void GetCount (Cell *cellHead, const double volume, const unsigned N)
   cout<<"Total volume "<<total<<", "<<volume<<"\n";
 }
 
-void MonteCarlo (const unsigned N, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, Cell *cell, const unsigned sourceActivity)
+void MonteCarlo (const unsigned N, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, Cell *cell, RadioNuclide *radioNuclide)
 {
   unsigned n=0;
   // Coordinate p;
@@ -95,7 +89,7 @@ void MonteCarlo (const unsigned N, const double xMin, const double xMax, const d
     {
       // p=GenerateRandom (xMin, xMax, yMin, yMax, zMin, zMax);
       // ParseCells (cell, p);
-      ParseCells2 (cell, sourceActivity);
+      ParseCells2 (cell, radioNuclide);
       n++;
     }
   printf ("---------------------------------------\n");
@@ -128,7 +122,10 @@ int main ()
   source->next=cladding;
   cladding->next=outside;
 
-  MonteCarlo (N, xMin, xMax, yMin, yMax, zMin, zMax, source, sourceActivity);
+  RadioNuclide *co60=new Co60(sourceActivity);
+
+  MonteCarlo (N, xMin, xMax, yMin, yMax, zMin, zMax, source, co60);
   delete source;
+  delete co60;
   return 0;
 }
