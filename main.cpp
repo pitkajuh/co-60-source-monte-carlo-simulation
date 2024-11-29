@@ -112,8 +112,7 @@ int main ()
   Material *steel2=new Steel (7.874);
   Material *steel3=new Steel (7.874);
 
-  Coordinate centeredAt;
-  centeredAt.Set(0, 0, 0);
+  Coordinate centeredAt(0, 0, 0);
 
   Cell *source=new CellCylinderTruncatedZ ("Source", 2e-2, 2e-2, -2e-2, steel1, centeredAt);
   Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 6e-2, 6e-2, -6e-2, steel2, centeredAt);

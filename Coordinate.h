@@ -23,9 +23,7 @@ public:
   }
   Coordinate operator+(const Coordinate &coordinate)
   {
-    Coordinate result;
-    result.Set (x+coordinate.x, y+coordinate.y, z+coordinate.z);
-    return result;
+    return {x+coordinate.x, y+coordinate.y, z+coordinate.z};
   }
   Coordinate operator*(const double v)
   {
@@ -33,13 +31,18 @@ public:
     result.Set (x*v, y*v, z*v);
     return result;
   }
+  Coordinate(){}
+  Coordinate(const double xValue, const double yValue, const double zValue)
+  {
+    x=xValue;
+    y=yValue;
+    z=zValue;
+  }
 };
 
 const Coordinate GenerateRandom (const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax)
 {
-  Coordinate p;
-  p.Set (RNG (xMin, xMax), RNG (yMin, yMax), RNG (zMin, zMax));
-  return p;
+  return {RNG (xMin, xMax), RNG (yMin, yMax), RNG (zMin, zMax)};
 }
 
 Coordinate RandomEmissionDirection ()
@@ -47,9 +50,7 @@ Coordinate RandomEmissionDirection ()
   // Create an unit vector pointing in random direction using spherical coordinates. The radius of the sphere is not sampled because the sampling is done from the origin of the sphere.
   const double azimuthalAngle=2*M_PI*RNG (0, 1);
   const double polarAngle=M_PI*RNG (0, 1);
-  Coordinate direction;
-  direction.Set (cos (azimuthalAngle)*sin (polarAngle), sin (azimuthalAngle)*sin (polarAngle), cos (polarAngle));
-  return direction;
+  return {cos (azimuthalAngle)*sin (polarAngle), sin (azimuthalAngle)*sin (polarAngle), cos (polarAngle)};
 }
 
 #endif

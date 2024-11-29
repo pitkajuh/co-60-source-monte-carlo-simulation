@@ -49,9 +49,7 @@ public:
     const double radial=surface->value*pow(RNG(0, 1), 0.5);
     const double azimuthalAngle=2*M_PI*RNG (0, 1);
     const double z=wallZNegativeC->value+(wallZPositiveC->value-wallZNegativeC->value)*RNG (0, 1);
-    Coordinate coordinateCylinder;
-    coordinateCylinder.Set (radial*cos (azimuthalAngle), radial*sin (azimuthalAngle), z);
-    return coordinateCylinder;
+    return {radial*cos (azimuthalAngle), radial*sin (azimuthalAngle), z};
   }
   CellCylinderTruncatedZ (const string &name1, const double radius, const double wallZPos, const double wallZNeg, Material *m, const Coordinate &centeredAt)
   {
