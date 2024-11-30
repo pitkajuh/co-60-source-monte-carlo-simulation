@@ -82,7 +82,6 @@ void GetCount (Cell *cellHead, const double volume, const unsigned N)
 void MonteCarlo (const unsigned N, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, Cell *cell, RadioNuclide *radioNuclide)
 {
   unsigned n=0;
-  // Coordinate p;
   const double volume=(xMax-xMin)*(yMax-yMin)*(zMax-zMin);
 
   while (n<N)
