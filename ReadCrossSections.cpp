@@ -135,21 +135,17 @@ void GetReactions(ifstream &endf, streampos *&from)
   while(getline(endf, line))
     {
       line2=line.substr(2, MFMT.size());
-      // cout<<line<<'\n';
-      // if(found and line[1]=='=') break;
-      if(line.substr(2, warning.size())==warning and found) break;
-      else if(found and linesSkip==0)
+
+      if(line.substr(2, warning.size())==warning) break;
+      else if(found and linesSkip==0 and line[1]!='=')
 	{
 	  line3=line.substr(2, line.size());
 	  Split(line3, v);
-	  // cout<<line<<'\n';
 	  print(v);
 	  // get MF and MT
 	  v.clear();
-	  // cout<<line3<<";"<<'\n';
-	  // cout<<line<<'\n';
 	}
-      else if(found and linesSkip>0) linesSkip--;
+      else if(found and linesSkip>0 and line[1]!='=') linesSkip--;
       else if(line2==MFMT) found=true;
     }
 }
