@@ -9,6 +9,7 @@
 #include "Cell.h"
 #include "Coordinate.h"
 #include "RadioNuclide.h"
+#include "ReadCrossSections.h"
 
 using std::string;
 using std::cout;
@@ -98,13 +99,13 @@ void MonteCarlo (const unsigned N, const double xMin, const double xMax, const d
 
 int main ()
 {
-  const unsigned N=10;
-  const double xMin=-0.665;
-  const double xMax=0.665;
-  const double yMin=-0.665;
-  const double yMax=0.665;
-  const double zMin=-0.665;
-  const double zMax=0.665;
+  // const unsigned N=10;
+  // const double xMin=-0.665;
+  // const double xMax=0.665;
+  // const double yMin=-0.665;
+  // const double yMax=0.665;
+  // const double zMin=-0.665;
+  // const double zMax=0.665;
   const unsigned sourceActivity=100;
 
   Material *steel1=new Steel (7.874);
@@ -121,8 +122,8 @@ int main ()
   cladding->next=outside;
 
   RadioNuclide *co60=new Co60(sourceActivity);
-
-  MonteCarlo (N, xMin, xMax, yMin, yMax, zMin, zMax, source, co60);
+  GetCrossSection();
+  // MonteCarlo (N, xMin, xMax, yMin, yMax, zMin, zMax, source, co60);
   delete source;
   delete co60;
   return 0;

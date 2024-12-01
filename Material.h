@@ -10,14 +10,14 @@ class Material
 {
 public:
   double density=0; // in g/cm3
-  virtual const double GetMu (const double photonEnergy)=0;
-  virtual ~Material (){}
+  virtual const double GetMu(const double photonEnergy)=0;
+  virtual ~Material(){}
 };
 
 class Steel: public Material
 {
 public:
-  Steel (const double d){density=d;}
+  Steel(const double d){density=d;}
   // Taken from https://physics.nist.gov/PhysRefData/XrayMassCoef/ElemTab/z26.html
   // Energy (MeV), μ/ρ (cm2/g), μ_en/ρ (cm2/g)
   map<double, pair<double, double>> muMap=
@@ -61,14 +61,14 @@ public:
       {1.50000E+01, pair<double, double>(3.092E-02, 2.221E-02)},
       {2.00000E+01, pair<double, double>(3.224E-02, 2.292E-02)},
     };
-  const double GetMu (const double photonEnergy)
+  const double GetMu(const double photonEnergy)
   {
     double energyPrevious=0;
     double energyCurrent=0;
 
-    for (const auto& [energy, mu]: muMap)
+    for(const auto& [energy, mu]: muMap)
       {
-	if (energy>=photonEnergy)
+	if(energy>=photonEnergy)
 	  {
 	    energyCurrent=energy;
 	    break;
@@ -76,7 +76,7 @@ public:
 	energyPrevious=energy;
       }
     // Use linear interpolation to get the mass attenuation value corresponding to photonEnergy and turns it to linear attenuation coefficient. Returns the value in 1/m.
-    return 100*density*(muMap[energyPrevious].first+(photonEnergy-energyPrevious)* (muMap[energyCurrent].first-muMap[energyPrevious].first)/(energyCurrent-energyPrevious));
+    return 100*density*(muMap[energyPrevious].first+(photonEnergy-energyPrevious)*(muMap[energyCurrent].first-muMap[energyPrevious].first)/(energyCurrent-energyPrevious));
   }
 };
 
