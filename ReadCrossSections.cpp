@@ -57,12 +57,11 @@ void ReadENDF(ifstream &endf, streampos *&from, const string &id)
 	  line=line.substr(1, size-idSize-1);
 	  LineSplit(line, v);
 	  // Add vector to map
-	  print(v);
+	  // print(v);
 	  v.clear();
 	  found=true;
 	}
       else if (line2==id) linesSkip--;
-      else cout<<"END"<<'\n';
     }
 }
 
@@ -96,6 +95,37 @@ vector<string> GetMFMT(const string &element, const vector<string> &reactions, c
   return MFMT;
 }
 
+string Split(const string &line)
+{
+  const string line2=line.substr(2, line.size());
+  return line2;
+}
+
+void GetReactions(ifstream &endf, streampos *&from)
+{
+  bool found=false;
+  string line;
+  string line2;
+  string line3;
+  const string MFMT="MF/MT";
+  int linesSkip=3;
+
+  while(getline(endf, line))
+    {
+      line2=line.substr(2, MFMT.size());
+
+      if(found and linesSkip==0)
+	{
+	  // line3=line.substr(2, line.size());
+	  line3=Split(line);
+	  cout<<line3<<'\n';
+	  cout<<line<<'\n';
+	}
+      else if(found and linesSkip>0) linesSkip--;
+      else if(line2==MFMT) found=true;
+    }
+}
+
 void GetCrossSection()
 {
   const vector<string> reactions={"501", "502", "504", "515", "516", "517", "522", "534", "535", "536", "537", "538", "539", "540", "541", "542", "543"};
@@ -105,14 +135,14 @@ void GetCrossSection()
   ifstream steel("./cross-sections/photoat-026_Fe_000.endf");
   streampos *begin=new streampos;
   *begin=0;
-  cout<<*begin<<'\n';
+
   for(const auto &reaction: reactions2)
     {
       cout<<"FIND "<<reaction<<'\n';
+      GetReactions(steel, begin);
       Read(steel, begin, reaction);
       cout<<" "<<'\n';
     }
 
-  cout<<*begin<<'\n';
   delete begin;
 }
