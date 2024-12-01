@@ -64,7 +64,7 @@ void ReadENDF(ifstream &endf, streampos *&from, const string &id)
 	  line=line.substr(1, size-idSize-1);
 	  LineSplit(line, v);
 	  // Add vector to map
-	  // print(v);
+	  print(v);
 	  v.clear();
 	  found=true;
 	}
@@ -90,18 +90,6 @@ void Read(ifstream &endf, streampos *&from, const string &id)
   // return Map;
 }
 
-vector<string> GetMFMT(const string &element, const vector<string> &reactions, const string &MF)
-{
-  vector<string> MFMT;
-
-  for(const auto &reaction: reactions)
-    {
-      MFMT.push_back(element+MF+reaction);
-      // cout<<element+MF+reaction<<'\n';
-    }
-  return MFMT;
-}
-
 void Split(string &line, vector<string> &v)
 {
   const int at=distance(line.begin(), find(line.begin(), line.end(), ' '));
@@ -121,16 +109,20 @@ void Split(string &line, vector<string> &v)
     }
 }
 
-void GetReactions(ifstream &endf, streampos *&from)
+vector<string> GetReactions(ifstream &endf, streampos *&from)
 {
   bool found=false;
   string line;
   string line2;
   string line3;
+  string MF;
+  string MT;
   const string MFMT="MF/MT";
   const string warning="Warning";
   int linesSkip=1;
+  int at;
   vector<string> v;
+  vector<string> result;
 
   while(getline(endf, line))
     {
@@ -141,32 +133,33 @@ void GetReactions(ifstream &endf, streampos *&from)
 	{
 	  line3=line.substr(2, line.size());
 	  Split(line3, v);
-	  print(v);
+	  at=distance(v[0].begin(), find(v[0].begin(), v[0].end(), '/'));
+	  MF=v[0].substr(0, at);
+	  MT=v[0].substr(at+1, v[0].size());
+	  result.push_back(v.back()+v[0].substr(0, at)+v[0].substr(at+1, v[0].size()));
 	  // get MF and MT
+	  cout<<result.back()<<'\n';
 	  v.clear();
 	}
       else if(found and linesSkip>0 and line[1]!='=') linesSkip--;
       else if(line2==MFMT) found=true;
     }
+  return result;
 }
 
 void GetCrossSection()
 {
-  const vector<string> reactions={"501", "502", "504", "515", "516", "517", "522", "534", "535", "536", "537", "538", "539", "540", "541", "542", "543"};
-  const string MF="23";
-  const string element="2600";
-  const vector<string> reactions2=GetMFMT(element, reactions, MF);
   ifstream steel("./cross-sections/photoat-026_Fe_000.endf");
   streampos *begin=new streampos;
   *begin=0;
+  const vector<string> reactions=GetReactions(steel, begin);
 
-  // for(const auto &reaction: reactions2)
-  //   {
-      // cout<<"FIND "<<reaction<<'\n';
-      GetReactions(steel, begin);
-      // Read(steel, begin, reaction);
+  for(const auto &reaction: reactions)
+    {
+      cout<<"FIND "<<reaction<<'\n';
+      Read(steel, begin, reaction);
       cout<<" "<<'\n';
-    // }
+    }
 
   delete begin;
 }
