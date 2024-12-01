@@ -13,6 +13,13 @@ using std::streampos;
 using std::map;
 using std::stod;
 
+void print(const vector<string> &v)
+{
+  string s="";
+  for(const auto &i: v){s=s+";"+i;}
+  cout<<s<<" SIZE "<<v.size()<<'\n';
+}
+
 void print(const vector<double> &v)
 {
   string s="";
@@ -95,10 +102,23 @@ vector<string> GetMFMT(const string &element, const vector<string> &reactions, c
   return MFMT;
 }
 
-string Split(const string &line)
+void Split(string &line, vector<string> &v)
 {
-  const string line2=line.substr(2, line.size());
-  return line2;
+  const int at=distance(line.begin(), find(line.begin(), line.end(), ' '));
+  const int size=line.size();
+
+  if(at>0 and at!=size)
+    {
+      string s2=line.substr(0, at);
+      v.push_back(s2);
+      line=line.substr(at, line.size());
+      Split(line, v);
+    }
+  else if(at==0)
+    {
+      string line3=line.substr(at+1, line.size());
+      Split(line3, v);
+    }
 }
 
 void GetReactions(ifstream &endf, streampos *&from)
@@ -108,18 +128,26 @@ void GetReactions(ifstream &endf, streampos *&from)
   string line2;
   string line3;
   const string MFMT="MF/MT";
-  int linesSkip=3;
+  const string warning="Warning";
+  int linesSkip=1;
+  vector<string> v;
 
   while(getline(endf, line))
     {
       line2=line.substr(2, MFMT.size());
-
-      if(found and linesSkip==0)
+      // cout<<line<<'\n';
+      // if(found and line[1]=='=') break;
+      if(line.substr(2, warning.size())==warning and found) break;
+      else if(found and linesSkip==0)
 	{
-	  // line3=line.substr(2, line.size());
-	  line3=Split(line);
-	  cout<<line3<<'\n';
-	  cout<<line<<'\n';
+	  line3=line.substr(2, line.size());
+	  Split(line3, v);
+	  // cout<<line<<'\n';
+	  print(v);
+	  // get MF and MT
+	  v.clear();
+	  // cout<<line3<<";"<<'\n';
+	  // cout<<line<<'\n';
 	}
       else if(found and linesSkip>0) linesSkip--;
       else if(line2==MFMT) found=true;
@@ -136,13 +164,13 @@ void GetCrossSection()
   streampos *begin=new streampos;
   *begin=0;
 
-  for(const auto &reaction: reactions2)
-    {
-      cout<<"FIND "<<reaction<<'\n';
+  // for(const auto &reaction: reactions2)
+  //   {
+      // cout<<"FIND "<<reaction<<'\n';
       GetReactions(steel, begin);
-      Read(steel, begin, reaction);
+      // Read(steel, begin, reaction);
       cout<<" "<<'\n';
-    }
+    // }
 
   delete begin;
 }
