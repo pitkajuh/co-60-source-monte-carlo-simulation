@@ -115,8 +115,6 @@ vector<string> GetReactions(ifstream &endf, streampos *&from)
   string line;
   string line2;
   string line3;
-  string MF;
-  string MT;
   const string MFMT="MF/MT";
   const string warning="Warning";
   int linesSkip=1;
@@ -134,10 +132,7 @@ vector<string> GetReactions(ifstream &endf, streampos *&from)
 	  line3=line.substr(2, line.size());
 	  Split(line3, v);
 	  at=distance(v[0].begin(), find(v[0].begin(), v[0].end(), '/'));
-	  MF=v[0].substr(0, at);
-	  MT=v[0].substr(at+1, v[0].size());
 	  result.push_back(v.back()+v[0].substr(0, at)+v[0].substr(at+1, v[0].size()));
-	  // get MF and MT
 	  cout<<result.back()<<'\n';
 	  v.clear();
 	}
@@ -147,19 +142,32 @@ vector<string> GetReactions(ifstream &endf, streampos *&from)
   return result;
 }
 
-void GetCrossSection()
+void ParseEndf(ifstream &endf, streampos *&from)
 {
-  ifstream steel("./cross-sections/photoat-026_Fe_000.endf");
-  streampos *begin=new streampos;
-  *begin=0;
-  const vector<string> reactions=GetReactions(steel, begin);
+  const vector<string> reactions=GetReactions(endf, from);
 
   for(const auto &reaction: reactions)
     {
       cout<<"FIND "<<reaction<<'\n';
-      Read(steel, begin, reaction);
+      Read(endf, from, reaction);
       cout<<" "<<'\n';
     }
+}
 
-  delete begin;
+void GetCrossSection()
+{
+  ifstream steel("./cross-sections/photoat-026_Fe_000.endf");
+  ifstream nitrogen("./cross-sections/photoat-007_N_000.endf");
+  ifstream sodium("./cross-sections/photoat-011_Na_000.endf");
+  ifstream titanium("./cross-sections/photoat-022_Ti_000.endf");
+  ifstream iodine("./cross-sections/photoat-053_I_000.endf");
+
+  streampos *from=new streampos;
+  *from=0;
+  // ParseEndf(steel, from);
+  ParseEndf(nitrogen, from);
+  // ParseEndf(sodium, from);
+  // ParseEndf(titanium, from);
+  // ParseEndf(iodine , from);
+  delete from;
 }
