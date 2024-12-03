@@ -83,11 +83,7 @@ void Read(ifstream &endf, streampos *&from, const string &id)
       ReadENDF(endf, from, id);
       delete from;
     }
-  else
-    {
-      ReadENDF(endf, from, id);
-    }
-  // return Map;
+  else ReadENDF(endf, from, id);
 }
 
 void Split(string &line, vector<string> &v)
@@ -97,8 +93,7 @@ void Split(string &line, vector<string> &v)
 
   if(at>0 and at!=size)
     {
-      string s2=line.substr(0, at);
-      v.push_back(s2);
+      v.push_back(line.substr(0, at));
       line=line.substr(at, line.size());
       Split(line, v);
     }
