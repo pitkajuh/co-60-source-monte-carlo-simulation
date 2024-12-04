@@ -52,6 +52,7 @@ void ReadENDF(ifstream &endf, streampos *&from, const string &id)
   int linesSkip=3;
   int size;
   const int idSize=id.size();
+  map<double, vector<double>> ENDFmap;
 
   while(getline(endf, line))
     {
@@ -64,6 +65,7 @@ void ReadENDF(ifstream &endf, streampos *&from, const string &id)
 	  line=line.substr(1, size-idSize-1);
 	  LineSplit(line, v);
 	  // Add vector to map
+	  ENDFmap[v[0]]=v;
 	  print(v);
 	  v.clear();
 	  found=true;
