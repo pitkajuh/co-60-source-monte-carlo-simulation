@@ -69,7 +69,7 @@ void ReadENDF(ifstream &endf, streampos *&from, const string &id)
 	  // Add vector to map
 	  energy=v[0];
 	  v.erase(v.begin()+0);
-	    ENDFmap[energy]=v;
+	  ENDFmap[energy]=v;
 	  print(v);
 	  v.clear();
 	  found=true;
