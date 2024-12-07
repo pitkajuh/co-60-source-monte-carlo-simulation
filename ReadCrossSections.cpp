@@ -43,7 +43,7 @@ void LineSplit(string line, vector<double> &v)
   else if(size>0) v.push_back(stod(line2));
 }
 
-void ReadENDF(ifstream &endf, streampos *&from, const string &id)
+map<double, vector<double>> ReadENDF(ifstream &endf, streampos *&from, const string &id)
 {
   bool found=false;
   double energy;
@@ -76,20 +76,21 @@ void ReadENDF(ifstream &endf, streampos *&from, const string &id)
 	}
       else if (line2==id) linesSkip--;
     }
+  return ENDFmap;
 }
 
 void Read(ifstream &endf, streampos *&from, const string &id)
 {
-  map<double, double> map;
+  map<double, vector<double>> map;
 
   if(from==nullptr)
     {
       from=new streampos;
       *from=0;
-      ReadENDF(endf, from, id);
+      map=ReadENDF(endf, from, id);
       delete from;
     }
-  else ReadENDF(endf, from, id);
+  else map=ReadENDF(endf, from, id);
 }
 
 void Split(string &line, vector<string> &v)
