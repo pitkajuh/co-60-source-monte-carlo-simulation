@@ -79,7 +79,7 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos *&from, const str
   return ENDFmap;
 }
 
-void Read(ifstream &endf, streampos *&from, const string &id)
+map<double, vector<double>> Read(ifstream &endf, streampos *&from, const string &id)
 {
   map<double, vector<double>> map;
 
@@ -91,6 +91,7 @@ void Read(ifstream &endf, streampos *&from, const string &id)
       delete from;
     }
   else map=ReadENDF(endf, from, id);
+  return map;
 }
 
 void Split(string &line, vector<string> &v)
@@ -147,11 +148,12 @@ vector<string> GetReactions(ifstream &endf, streampos *&from)
 void ParseEndf(ifstream &endf, streampos *&from)
 {
   const vector<string> reactions=GetReactions(endf, from);
+  map<double, vector<double>> map;
 
   for(const auto &reaction: reactions)
     {
       cout<<"FIND "<<reaction<<'\n';
-      Read(endf, from, reaction);
+      map=Read(endf, from, reaction);
       cout<<" "<<'\n';
     }
 }
