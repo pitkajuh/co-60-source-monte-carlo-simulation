@@ -32,15 +32,22 @@ void FillVector(vector<double> &v){while(v.size()<6) v.push_back(0);}
 void LineSplit(string line, vector<double> &v)
 {
   const int at=distance(line.begin(), find(line.begin(), line.end(), ' '));
-  const string lineSplit=line.substr(0, at);
-  const string line2=line.substr(at+1, line.size());
-  const int size=line2.size();
 
   if(at==0) FillVector(v);
-  else v.push_back(stod(lineSplit));
+  else
+    {
+      const string lineSplit=line.substr(0, at);
+      v.push_back(stod(lineSplit));
+    }
 
-  if(at!=size) LineSplit(line2, v);
-  else if(size>0) v.push_back(stod(line2));
+  if(line.size()>0)
+    {
+      const string line2=line.substr(at+1, line.size());
+      const int size=line2.size();
+
+      if(at!=size) LineSplit(line2, v);
+      else if(size>0) v.push_back(stod(line2));
+    }
 }
 
 map<double, vector<double>> ReadENDF(ifstream &endf, streampos *&from, const string &id)
@@ -66,11 +73,10 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos *&from, const str
 	{
 	  line=line.substr(1, size-idSize-1);
 	  LineSplit(line, v);
-	  // Add vector to map
 	  energy=v[0];
 	  v.erase(v.begin()+0);
 	  ENDFmap[energy]=v;
-	  print(v);
+	  // print(v);
 	  v.clear();
 	  found=true;
 	}
@@ -168,10 +174,10 @@ void GetCrossSection()
 
   streampos *from=new streampos;
   *from=0;
-  // ParseEndf(steel, from);
+  ParseEndf(steel, from);
   ParseEndf(nitrogen, from);
-  // ParseEndf(sodium, from);
-  // ParseEndf(titanium, from);
-  // ParseEndf(iodine , from);
+  ParseEndf(sodium, from);
+  ParseEndf(titanium, from);
+  ParseEndf(iodine , from);
   delete from;
 }
