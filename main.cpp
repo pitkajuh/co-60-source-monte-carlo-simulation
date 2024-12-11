@@ -15,19 +15,6 @@ using std::string;
 using std::cout;
 using std::map;
 
-void ParseCells(Cell *cellHead, const Coordinate &p)
-{
-  Cell *current=cellHead;
-  bool b=0;
-  // Coordinate photonInitialPosition=cellHead->GetInitialPosition();
-
-  while(current!=nullptr and !b)
-    {
-      b=current->CellTest(p);
-      current=current->next;
-    }
-}
-
 void SurfaceTracking(Coordinate &photonFrom, Coordinate &photonTo, Coordinate &photonDirection, Cell *cellHead, RadioNuclide *radioNuclide)
 {
   Cell *current=cellHead;
@@ -83,8 +70,6 @@ void MonteCarlo(const unsigned time, Cell *cell, RadioNuclide *radioNuclide)
 
   while(t<time)
     {
-      // p=GenerateRandom(xMin, xMax, yMin, yMax, zMin, zMax);
-      // ParseCells(cell, p);
       ParseCells2(cell, radioNuclide, time);
       t++;
     }
