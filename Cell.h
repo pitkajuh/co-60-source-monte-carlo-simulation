@@ -12,14 +12,13 @@ class Cell
 public:
   int hits=0;
   string name;
-  bool isInCell=false;
   Material *material=nullptr;
   Surface *surface=nullptr;
   Cell *next=nullptr;
 
-  const bool GetBoolean()
+  const bool GetBoolean(const bool isInCell)
   {
-    if(isInCell )
+    if(isInCell)
       {
 	hits++;
 	return 1;
@@ -61,8 +60,8 @@ public:
   }
   const bool CellTest(const Coordinate &p)
   {
-    isInCell=surface->SurfaceTest(p) and !wallZNegativeC->SurfaceTest(p) and wallZPositiveC->SurfaceTest(p);
-    return GetBoolean();
+    const bool isInCell=surface->SurfaceTest(p) and !wallZNegativeC->SurfaceTest(p) and wallZPositiveC->SurfaceTest(p);
+    return GetBoolean(isInCell);
   }
   const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
   {
@@ -101,8 +100,8 @@ public:
   }
   const bool CellTest(const Coordinate &p)
   {
-    isInCell=!wallXNegative->SurfaceTest(p) and wallXPositive->SurfaceTest(p) and wallYPositive->SurfaceTest(p) and !wallYNegative->SurfaceTest(p) and wallZPositive->SurfaceTest(p) and !wallZNegative->SurfaceTest(p);
-    return GetBoolean();
+    const bool isInCell=!wallXNegative->SurfaceTest(p) and wallXPositive->SurfaceTest(p) and wallYPositive->SurfaceTest(p) and !wallYNegative->SurfaceTest(p) and wallZPositive->SurfaceTest(p) and !wallZNegative->SurfaceTest(p);
+    return GetBoolean(isInCell);
   }
   const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
   {

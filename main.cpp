@@ -32,15 +32,19 @@ void SurfaceTracking(Coordinate &photonFrom, Coordinate &photonTo, Coordinate &p
 {
   Cell *current=cellHead;
   bool collision=0;
-  double distance=0;
-
-  // positionNew.print();
+  double collisionDistance=0;
+  double pathLength=0;
+  photonFrom.print();
+  photonTo.print();
 
   while(current!=nullptr and !collision)
     {
-      collision=current->CellTest(photonFrom+photonDirection*photonTo);
-      distance=current->CellDistanceTest(photonFrom+photonDirection*photonTo, photonDirection);
-      std::cout<<current->name<<" "<<collision<<" "<<distance<<'\n';
+      collision=current->CellTest(photonFrom+photonTo);
+      collisionDistance=current->CellDistanceTest(photonFrom+photonTo, photonDirection);
+      pathLength=DistanceBetween(photonFrom, photonTo);
+
+      std::cout<<current->name<<" "<<collision<<" distance to surf "<<collisionDistance<<" D="<<pathLength<<'\n';
+
       current=current->next;
     }
   cout<<" "<<'\n';
@@ -51,10 +55,11 @@ void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time
   const unsigned activityRandom=PoissonRNG(radioNuclide->GetActivity(), time);
   Coordinate photonFrom;
   Coordinate photonTo;
-  Coordinate direction=RandomEmissionDirection();
+  Coordinate direction;
 
   for(unsigned i=0; i<activityRandom; i++)
     {
+      direction=RandomEmissionDirection();
       photonFrom=cellHead->GetInitialPosition();
       photonTo=direction*(-1/cellHead->material->GetMu(radioNuclide->PDF()))*log(RNG(0, 1));
       SurfaceTracking(photonFrom, photonTo, direction, cellHead, radioNuclide);
@@ -98,10 +103,12 @@ int main()
   Material *steel3=new Steel(7.874);
 
   Coordinate centeredAt(0, 0, 0);
-
-  Cell *source=new CellCylinderTruncatedZ("Source", 2e-2, 2e-2, -2e-2, steel1, centeredAt);
-  Cell *cladding=new CellCylinderTruncatedZ("Cladding", 6e-2, 6e-2, -6e-2, steel2, centeredAt);
-  Cell *outside=new CellBox3D("Outside world", -1, 1, 1, -1, 1, -1, steel3);
+  const double v1=0.1;
+  const double v2=0.2;
+  const double v3=1;
+  Cell *source=new CellCylinderTruncatedZ("Source", v1, v1, -v1, steel1, centeredAt);
+  Cell *cladding=new CellCylinderTruncatedZ("Cladding", v2, v2, -v2, steel2, centeredAt);
+  Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v3, -v3, steel3);
 
   source->next=cladding;
   cladding->next=outside;
