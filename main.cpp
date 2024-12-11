@@ -15,102 +15,100 @@ using std::string;
 using std::cout;
 using std::map;
 
-void ParseCells (Cell *cellHead, const Coordinate &p)
+void ParseCells(Cell *cellHead, const Coordinate &p)
 {
   Cell *current=cellHead;
   bool b=0;
-  // Coordinate photonInitialPosition=cellHead->GetInitialPosition ();
+  // Coordinate photonInitialPosition=cellHead->GetInitialPosition();
 
-  while (current!=nullptr and !b)
+  while(current!=nullptr and !b)
     {
-      b=current->CellTest (p);
+      b=current->CellTest(p);
       current=current->next;
     }
 }
 
-void SurfaceTracking(Coordinate &photonInitialPosition, Cell *cellHead, RadioNuclide *radioNuclide)
+void SurfaceTracking(Coordinate &photonFrom, Coordinate &photonTo, Coordinate &photonDirection, Cell *cellHead, RadioNuclide *radioNuclide)
 {
-  Coordinate direction=RandomEmissionDirection();
-  Coordinate positionNew=photonInitialPosition+direction*(-1/cellHead->material->GetMu (radioNuclide->PDF()))*log (RNG (0, 1));
   Cell *current=cellHead;
   bool collision=0;
   double distance=0;
-  // direction=RandomEmissionDirection();
-  // positionNew=photonInitialPosition;
-  // positionNew=photonInitialPosition+direction*(-1/source->material->GetMu (Co60PDF()))*log (RNG (0, 1));
-  positionNew.print();
 
-  while (current!=nullptr and !collision)
+  // positionNew.print();
+
+  while(current!=nullptr and !collision)
     {
-      collision=current->CellTest (positionNew);
-      distance=current->CellDistanceTest (positionNew, direction);
+      collision=current->CellTest(photonFrom+photonDirection*photonTo);
+      distance=current->CellDistanceTest(photonFrom+photonDirection*photonTo, photonDirection);
       std::cout<<current->name<<" "<<collision<<" "<<distance<<'\n';
       current=current->next;
     }
   cout<<" "<<'\n';
 }
 
-void ParseCells2 (Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time)
+void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time)
 {
-  const unsigned activityRandom=PoissonRNG (radioNuclide->GetActivity(), time);
-  Coordinate photonInitialPosition;
+  const unsigned activityRandom=PoissonRNG(radioNuclide->GetActivity(), time);
+  Coordinate photonFrom;
+  Coordinate photonTo;
+  Coordinate direction=RandomEmissionDirection();
 
-  for (unsigned i=0; i<activityRandom; i++)
+  for(unsigned i=0; i<activityRandom; i++)
     {
-      photonInitialPosition=cellHead->GetInitialPosition ();
-      // photonInitialPosition.print();
-      SurfaceTracking(photonInitialPosition, cellHead, radioNuclide);
+      photonFrom=cellHead->GetInitialPosition();
+      photonTo=direction*(-1/cellHead->material->GetMu(radioNuclide->PDF()))*log(RNG(0, 1));
+      SurfaceTracking(photonFrom, photonTo, direction, cellHead, radioNuclide);
     }
 }
 
-void GetCount (Cell *cellHead, const unsigned N)
+void GetCount(Cell *cellHead, const unsigned N)
 {
   Cell *current=cellHead;
 
-  while (current!=nullptr)
+  while(current!=nullptr)
     {
       cout<<current->name<<" "<<current->hits<<'\n';
       current=current->next;
     }
 }
 
-void MonteCarlo (const unsigned time, Cell *cell, RadioNuclide *radioNuclide)
+void MonteCarlo(const unsigned time, Cell *cell, RadioNuclide *radioNuclide)
 {
   unsigned t=0;
 
-  while (t<time)
+  while(t<time)
     {
-      // p=GenerateRandom (xMin, xMax, yMin, yMax, zMin, zMax);
-      // ParseCells (cell, p);
-      ParseCells2 (cell, radioNuclide, time);
+      // p=GenerateRandom(xMin, xMax, yMin, yMax, zMin, zMax);
+      // ParseCells(cell, p);
+      ParseCells2(cell, radioNuclide, time);
       t++;
     }
-  printf ("---------------------------------------\n");
+  printf("---------------------------------------\n");
 
-  GetCount (cell, time);
+  GetCount(cell, time);
 }
 
-int main ()
+int main()
 {
-  const unsigned time=10;
+  const unsigned time=1;
   const unsigned sourceActivity=100;
 
-  Material *steel1=new Steel (7.874);
-  Material *steel2=new Steel (7.874);
-  Material *steel3=new Steel (7.874);
+  Material *steel1=new Steel(7.874);
+  Material *steel2=new Steel(7.874);
+  Material *steel3=new Steel(7.874);
 
   Coordinate centeredAt(0, 0, 0);
 
-  Cell *source=new CellCylinderTruncatedZ ("Source", 2e-2, 2e-2, -2e-2, steel1, centeredAt);
-  Cell *cladding=new CellCylinderTruncatedZ ("Cladding", 6e-2, 6e-2, -6e-2, steel2, centeredAt);
-  Cell *outside=new CellBox3D ("Outside world", -1, 1, 1, -1, 1, -1, steel3);
+  Cell *source=new CellCylinderTruncatedZ("Source", 2e-2, 2e-2, -2e-2, steel1, centeredAt);
+  Cell *cladding=new CellCylinderTruncatedZ("Cladding", 6e-2, 6e-2, -6e-2, steel2, centeredAt);
+  Cell *outside=new CellBox3D("Outside world", -1, 1, 1, -1, 1, -1, steel3);
 
   source->next=cladding;
   cladding->next=outside;
 
   RadioNuclide *co60=new Co60(sourceActivity);
   GetCrossSection();
-  MonteCarlo (time, source, co60);
+  MonteCarlo(time, source, co60);
 
   delete source;
   delete co60;

@@ -17,7 +17,7 @@ public:
   Surface *surface=nullptr;
   Cell *next=nullptr;
 
-  const bool GetBoolean ()
+  const bool GetBoolean()
   {
     if(isInCell )
       {
@@ -26,10 +26,10 @@ public:
       }
     return 0;
   }
-  virtual Coordinate GetInitialPosition ()=0;
-  virtual const bool CellTest (const Coordinate &p)=0;
+  virtual Coordinate GetInitialPosition()=0;
+  virtual const bool CellTest(const Coordinate &p)=0;
   virtual const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)=0;
-  virtual ~Cell ()
+  virtual ~Cell()
   {
     delete material;
     delete surface;
@@ -43,15 +43,15 @@ public:
   Surface *wallZNegativeC=nullptr;
   Surface *wallZPositiveC=nullptr;
 
-  Coordinate GetInitialPosition ()
+  Coordinate GetInitialPosition()
   {
     // Get a random location for photon emission on the cylindrical surface, its direction and where it lands.
     const double radial=surface->value*pow(RNG(0, 1), 0.5);
-    const double azimuthalAngle=2*M_PI*RNG (0, 1);
-    const double z=wallZNegativeC->value+(wallZPositiveC->value-wallZNegativeC->value)*RNG (0, 1);
-    return {radial*cos (azimuthalAngle), radial*sin (azimuthalAngle), z};
+    const double azimuthalAngle=2*M_PI*RNG(0, 1);
+    const double z=wallZNegativeC->value+(wallZPositiveC->value-wallZNegativeC->value)*RNG(0, 1);
+    return {radial*cos(azimuthalAngle), radial*sin(azimuthalAngle), z};
   }
-  CellCylinderTruncatedZ (const string &name1, const double radius, const double wallZPos, const double wallZNeg, Material *m, const Coordinate &centeredAt)
+  CellCylinderTruncatedZ(const string &name1, const double radius, const double wallZPos, const double wallZNeg, Material *m, const Coordinate &centeredAt)
   {
     name=name1;
     surface=new Cylinder(radius, centeredAt);
@@ -59,10 +59,10 @@ public:
     wallZPositiveC=new PlaneZ(wallZPos);
     material=m;
   }
-  const bool CellTest (const Coordinate &p)
+  const bool CellTest(const Coordinate &p)
   {
-    isInCell=surface->SurfaceTest (p) and !wallZNegativeC->SurfaceTest (p) and wallZPositiveC->SurfaceTest (p);
-    return GetBoolean ();
+    isInCell=surface->SurfaceTest(p) and !wallZNegativeC->SurfaceTest(p) and wallZPositiveC->SurfaceTest(p);
+    return GetBoolean();
   }
   const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
   {
@@ -75,7 +75,7 @@ public:
     for(const auto &i: distances){if(i>distance) distance=i;}
     return distance;
   }
-  ~CellCylinderTruncatedZ ()
+  ~CellCylinderTruncatedZ()
   {
     delete wallZNegativeC;
     delete wallZPositiveC;
@@ -93,16 +93,16 @@ public:
   Surface *wallZNegative=nullptr;
   Surface *wallZPositive=nullptr;
 
-  Coordinate GetInitialPosition ()
+  Coordinate GetInitialPosition()
   {
     // TODO
     Coordinate c;
     return c;
   }
-  const bool CellTest (const Coordinate &p)
+  const bool CellTest(const Coordinate &p)
   {
-    isInCell=!wallXNegative->SurfaceTest (p) and wallXPositive->SurfaceTest (p) and wallYPositive->SurfaceTest (p) and !wallYNegative->SurfaceTest (p) and wallZPositive->SurfaceTest (p) and !wallZNegative->SurfaceTest (p);
-    return GetBoolean ();
+    isInCell=!wallXNegative->SurfaceTest(p) and wallXPositive->SurfaceTest(p) and wallYPositive->SurfaceTest(p) and !wallYNegative->SurfaceTest(p) and wallZPositive->SurfaceTest(p) and !wallZNegative->SurfaceTest(p);
+    return GetBoolean();
   }
   const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
   {
@@ -119,7 +119,7 @@ public:
     for(const auto &i: distances){if(i>distance) distance=i;}
     return distance;
   }
-  CellBox3D (const string &name1, const double w1, const double w2, const double w3, const double w4, const double w5, const double w6, Material *m)
+  CellBox3D(const string &name1, const double w1, const double w2, const double w3, const double w4, const double w5, const double w6, Material *m)
   {
     material=m;
     name=name1;
@@ -130,7 +130,7 @@ public:
     wallZPositive=new PlaneZ(w5);
     wallZNegative=new PlaneZ(w6);
   }
-  ~CellBox3D ()
+  ~CellBox3D()
   {
     delete wallXNegative;
     delete wallXPositive;

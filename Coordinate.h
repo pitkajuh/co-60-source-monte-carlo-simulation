@@ -21,16 +21,9 @@ public:
     y=yValue;
     z=zValue;
   }
-  Coordinate operator+(const Coordinate &coordinate)
-  {
-    return {x+coordinate.x, y+coordinate.y, z+coordinate.z};
-  }
-  Coordinate operator*(const double v)
-  {
-    Coordinate result;
-    result.Set (x*v, y*v, z*v);
-    return result;
-  }
+  Coordinate operator+(const Coordinate &coordinate){return {x+coordinate.x, y+coordinate.y, z+coordinate.z};}
+  Coordinate operator*(const Coordinate &c){return {x*c.x, y*c.y, z*c.z};}
+  Coordinate operator*(const double v){return {x*v, y*v, z*v};}
   Coordinate(){}
   Coordinate(const double xValue, const double yValue, const double zValue)
   {
