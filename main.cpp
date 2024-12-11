@@ -50,9 +50,9 @@ void SurfaceTracking(Coordinate &photonInitialPosition, Cell *cellHead, RadioNuc
   cout<<" "<<'\n';
 }
 
-void ParseCells2 (Cell *cellHead, RadioNuclide *radioNuclide)
+void ParseCells2 (Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time)
 {
-  const unsigned activityRandom=PoissonRNG (radioNuclide->GetActivity(), 1);
+  const unsigned activityRandom=PoissonRNG (radioNuclide->GetActivity(), time);
   Coordinate photonInitialPosition;
 
   for (unsigned i=0; i<activityRandom; i++)
@@ -63,49 +63,36 @@ void ParseCells2 (Cell *cellHead, RadioNuclide *radioNuclide)
     }
 }
 
-void GetCount (Cell *cellHead, const double volume, const unsigned N)
+void GetCount (Cell *cellHead, const unsigned N)
 {
   Cell *current=cellHead;
-  double total=0;
-  double vol=0;
 
   while (current!=nullptr)
     {
-      vol=(double) current->hits*volume/N;
-      // cout<<current->name<<" "<<vol<<" "<<current->hits<<'\n';
       cout<<current->name<<" "<<current->hits<<'\n';
-      total+=vol;
       current=current->next;
     }
-  cout<<"Total volume "<<total<<", "<<volume<<"\n";
 }
 
-void MonteCarlo (const unsigned N, const double xMin, const double xMax, const double yMin, const double yMax, const double zMin, const double zMax, Cell *cell, RadioNuclide *radioNuclide)
+void MonteCarlo (const unsigned time, Cell *cell, RadioNuclide *radioNuclide)
 {
-  unsigned n=0;
-  const double volume=(xMax-xMin)*(yMax-yMin)*(zMax-zMin);
+  unsigned t=0;
 
-  while (n<N)
+  while (t<time)
     {
       // p=GenerateRandom (xMin, xMax, yMin, yMax, zMin, zMax);
       // ParseCells (cell, p);
-      ParseCells2 (cell, radioNuclide);
-      n++;
+      ParseCells2 (cell, radioNuclide, time);
+      t++;
     }
   printf ("---------------------------------------\n");
 
-  GetCount (cell, volume, N);
+  GetCount (cell, time);
 }
 
 int main ()
 {
-  // const unsigned N=10;
-  // const double xMin=-0.665;
-  // const double xMax=0.665;
-  // const double yMin=-0.665;
-  // const double yMax=0.665;
-  // const double zMin=-0.665;
-  // const double zMax=0.665;
+  const unsigned time=10;
   const unsigned sourceActivity=100;
 
   Material *steel1=new Steel (7.874);
@@ -123,8 +110,10 @@ int main ()
 
   RadioNuclide *co60=new Co60(sourceActivity);
   GetCrossSection();
-  // MonteCarlo (N, xMin, xMax, yMin, yMax, zMin, zMax, source, co60);
+  MonteCarlo (time, source, co60);
+
   delete source;
   delete co60;
+
   return 0;
 }
