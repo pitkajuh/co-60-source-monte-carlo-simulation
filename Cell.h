@@ -60,8 +60,14 @@ public:
   }
   const bool CellTest(const Coordinate &p)
   {
-    const bool isInCell=surface->SurfaceTest(p) and !wallZNegativeC->SurfaceTest(p) and wallZPositiveC->SurfaceTest(p);
-    return GetBoolean(isInCell);
+    // const bool isInCell=surface->SurfaceTest(p) and !wallZNegativeC->SurfaceTest(p) and wallZPositiveC->SurfaceTest(p);
+    const bool b1=surface->SurfaceTest(p) ;
+    const bool b2=!wallZNegativeC->SurfaceTest(p);
+    const bool b3=wallZPositiveC->SurfaceTest(p);
+    // cout<<surface->SurfaceTest(p)<<" "<<!wallZNegativeC->SurfaceTest(p)<<" "<<wallZPositiveC->SurfaceTest(p)<<'\n';
+    cout<<b1<<" "<<b2<<" "<<b3<<'\n';
+    return GetBoolean(b1 and b2 and b3);
+    // return GetBoolean(isInCell);
   }
   const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
   {
@@ -100,8 +106,17 @@ public:
   }
   const bool CellTest(const Coordinate &p)
   {
-    const bool isInCell=!wallXNegative->SurfaceTest(p) and wallXPositive->SurfaceTest(p) and wallYPositive->SurfaceTest(p) and !wallYNegative->SurfaceTest(p) and wallZPositive->SurfaceTest(p) and !wallZNegative->SurfaceTest(p);
-    return GetBoolean(isInCell);
+    // const bool isInCell=!wallXNegative->SurfaceTest(p) and wallXPositive->SurfaceTest(p) and wallYPositive->SurfaceTest(p) and !wallYNegative->SurfaceTest(p) and wallZPositive->SurfaceTest(p) and !wallZNegative->SurfaceTest(p);
+    const bool b1=!wallXNegative->SurfaceTest(p);
+    const bool b2=wallXPositive->SurfaceTest(p) ;
+    const bool b3=!wallYNegative->SurfaceTest(p);
+    const bool b4=wallYPositive->SurfaceTest(p);
+    const bool b5=!wallZNegative->SurfaceTest(p);
+    const bool b6=wallZPositive->SurfaceTest(p);
+    // cout<<!wallXNegative->SurfaceTest(p) <<" "<<wallXPositive->SurfaceTest(p) <<" "<<wallYPositive->SurfaceTest(p) <<" "<<!wallYNegative->SurfaceTest(p) <<" "<< wallZPositive->SurfaceTest(p)<<" "<<!wallZNegative->SurfaceTest(p)<<'\n';
+    cout<<b1<<" "<<b2<<" "<<b3<<" "<<b4<<" "<<b5<<" "<<b6<<'\n';
+    return GetBoolean(b1 and b2 and b3 and b4 and b4 and b5 and b6);
+    // return GetBoolean(isInCell);
   }
   const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)
   {

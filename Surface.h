@@ -24,14 +24,9 @@ public:
   double M=0;
   double K=0;
 
-  virtual const double SurfaceEquation (const Coordinate &p)=0;
+  virtual const double SurfaceEquation(const Coordinate &p)=0;
   virtual const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)=0;
-  const bool SurfaceTest (const Coordinate &p)
-  {
-    // Return true if the point is inside (<0) or on (==0) the surface.
-    if (SurfaceEquation (p)<=0) return 1;
-    return 0;
-  }
+  virtual const bool SurfaceTest(const Coordinate &p)=0;
   virtual ~Surface(){}
 };
 
@@ -39,7 +34,7 @@ class Cylinder: public Surface
 {
 public:
   Coordinate centeredAt;
-  Cylinder (const double v, const Coordinate &at)
+  Cylinder(const double v, const Coordinate &at)
   {
     value=v;
     centeredAt=at;
@@ -76,28 +71,39 @@ public:
     else if(optionPositive>0 and optionNegative<0 and optionPositive>optionNegative) return optionPositive;
     else return optionNegative;
   }
-  const double SurfaceEquation (const Coordinate &p)
+  const double SurfaceEquation(const Coordinate &p)
   {
-    cout<<"cylinder SurfaceEquation"<<'\n';
     const double x=p.x;
     const double x0=centeredAt.x;
     const double y=p.y;
     const double y0=centeredAt.y;
     // Equation should be A*(x-x0)*(x-x0)+B*(y-y0)*(y-y0)+J, but A and B are omitted because they are 1.
-    return (x-x0)*(x-x0)+(y-y0)*(y-y0)+J;
+    // cout<<"("<<x<<"-"<<x0<<")*("<<x<<"-"<<x0<<")+("<<y<<"-"<<y0<<")*("<<y<<"-"<<y0<<")+J="<<(x-x0)*(x-x0)+(y-y0)*(y-y0)+J<<'\n';
+    // cout<<"cylinder r="<<J<<" "<<(x-x0)*(x-x0)+(y-y0)*(y-y0)+J<<'\n';
+    return(x-x0)*(x-x0)+(y-y0)*(y-y0)+J;
+  }
+  const bool SurfaceTest(const Coordinate &p)
+  {
+    // Return true if the point is inside(<0) or on(==0) the surface.
+    if(SurfaceEquation(p)<=0) return 1;
+    return 0;
   }
 };
 
 class PlaneX: public Surface
 {
 public:
-  PlaneX (const double v)
+  PlaneX(const double v)
   {
     value=v;
     G=1;
     J=-v;
   }
-  const double SurfaceEquation (const Coordinate &p){return p.x+J;}
+  const double SurfaceEquation(const Coordinate &p)
+  {
+    // cout<<"x "<<p.x+J<<'\n';
+    return p.x+J;
+  }
   const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
     const double x=positionAt.x;
@@ -109,18 +115,28 @@ public:
 
     return -numerator/u;
   }
+  const bool SurfaceTest(const Coordinate &p)
+  {
+    // Return true if the point is inside(<0) or on(==0) the surface.
+    if(SurfaceEquation(p)<=0) return 1;
+    return 0;
+  }
 };
 
 class PlaneY: public Surface
 {
 public:
-  PlaneY (const double v)
+  PlaneY(const double v)
   {
     value=v;
     H=1;
     J=-v;
   }
-  const double SurfaceEquation (const Coordinate &p){return p.y+J;}
+  const double SurfaceEquation(const Coordinate &p)
+  {
+    // cout<<"y "<<p.y+J<<'\n';
+    return p.y+J;
+  }
   const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
     const double y=positionAt.y;
@@ -132,18 +148,28 @@ public:
 
     return -numerator/v;
   }
+  const bool SurfaceTest(const Coordinate &p)
+  {
+    // Return true if the point is inside(<0) or on(==0) the surface.
+    if(SurfaceEquation(p)<=0) return 1;
+    return 0;
+  }
 };
 
 class PlaneZ: public Surface
 {
 public:
-  PlaneZ (const double v)
+  PlaneZ(const double v)
   {
     value=v;
     I=1;
     J=-v;
   }
-  const double SurfaceEquation (const Coordinate &p){return p.z+J;}
+  const double SurfaceEquation(const Coordinate &p)
+  {
+    // cout<<"z "<<p.z+J<<'\n';
+    return p.z+J;
+  }
   const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
     const double z=positionAt.z;
@@ -154,6 +180,12 @@ public:
     if(w==0) return -1;
 
     return -numerator/w;
+  }
+  const bool SurfaceTest(const Coordinate &p)
+  {
+    // Return true if the point is inside(<0) or on(==0) the surface.
+    if(SurfaceEquation(p)<=0) return 1;
+    return 0;
   }
 };
 
