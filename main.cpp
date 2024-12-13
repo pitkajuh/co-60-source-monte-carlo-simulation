@@ -37,36 +37,26 @@ void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coor
   bool collision=0;
   double boundaryDistance=0;
   double collisionDistance=0;
-  // Coordinate new1;
 
-  photonFrom.print();
-  photonTo.print();
   mfp.print();
 
   while(current!=nullptr and !collision)
     {
-      // collision=current->CellTest(photonTo);
       collision=current->CellTest(mfp);
 
       boundaryDistance=current->CellDistanceTest(photonFrom, photonDirection);
-      // boundaryDistance=current->CellDistanceTest(mfp, photonDirection);
+      collisionDistance=mfp.GetLength();
 
-      surfaceLocation=photonDirection*boundaryDistance;
-      cout<<"closest"<<'\n';
-      surfaceLocation.print();
-      // collisionDistance=mfp.GetLength();
-      collisionDistance=photonTo.GetLength();
-
-
-      if(collisionDistance<boundaryDistance) cout<<"No boundary crossed! "<<photonDirection.GetLength()<<'\n';
+      if(collisionDistance<boundaryDistance)
+	{
+	  cout<<"No boundary crossed!"<<'\n';
+	  // Call physics routine
+	}
       else
 	{
 	  cout<<"Boundary crossed!"<<'\n';
-	  // mfp=photonDirection*boundaryDistance+photonTo;
-	  // mfp=photonDirection*boundaryDistance;
-	  // new1=photonDirection*boundaryDistance;
-	  // new1.print();
-	  // mfp.print();
+	  surfaceLocation=photonDirection*boundaryDistance;
+	  SurfaceTracking(surfaceLocation, photonToDistance, photonDirection, current->next, radioNuclide);
 	}
 
       std::cout<<current->name<<" "<<collision<<" distance to surface "<<boundaryDistance<<" collision at "<<collisionDistance<<'\n';
@@ -78,6 +68,7 @@ void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coor
 void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time)
 {
   const unsigned activityRandom=PoissonRNG(radioNuclide->GetActivity(), time);
+  double energy;
   double photonToDistance;
   Coordinate photonFrom;
   Coordinate photonTo;
@@ -87,7 +78,8 @@ void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time
     {
       direction=RandomEmissionDirection();
       photonFrom=cellHead->GetInitialPosition();
-      photonToDistance=(-1/cellHead->material->GetMu(radioNuclide->PDF()))*log(RNG(0, 1));
+      energy=radioNuclide->PDF();
+      photonToDistance=(-1/cellHead->material->GetMu(energy))*log(RNG(0, 1));
       SurfaceTracking(photonFrom, photonToDistance, direction, cellHead, radioNuclide);
     }
 }
@@ -121,7 +113,7 @@ int main()
 {
   const unsigned time=1;
   const unsigned sourceActivity=100;
-
+  const double v3=1;
   Material *steel1=new Steel(7.874);
   Material *steel2=new Steel(7.874);
   Material *steel3=new Steel(7.874);
@@ -129,17 +121,50 @@ int main()
   Coordinate centeredAt(0, 0, 0);
   const double v1=0.1;
   const double v2=0.2;
-  const double v3=1;
+
   Cell *source=new CellCylinderTruncatedZ("Source", v1, v1, -v1, steel1, centeredAt);
-  Cell *cladding=new CellCylinderTruncatedZ("Cladding", v2, v2, -v2, steel2, centeredAt);
-  Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v3, -v3, steel3);
+  Cell *cladding=new CellCylinderTruncatedZ("Cladding", v2, v1, -v1, steel2, centeredAt);
+  Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v2, -v2, steel3);
 
   source->next=cladding;
   cladding->next=outside;
 
+
+    // Material *steel4=new Steel(7.874);
+  // Material *steel5=new Steel(7.874);
+  // const double sourceWidth=1e-6;
+  // const double sourceRadius=35e-3/2;
+
+  // const double sourceCladdingWidth=3e-3;
+  // const double sourceCladdingRadius=50e-3/2;
+
+  // const double sourceAirBelowHeight=1e-3;
+  // const double sourceAirAboveHeight=2e-3;
+
+
+  // // const double calibrationToolOuterRadius=89e-3;
+  // // const double calibrationToolInnerRadius=79e-3;
+  // // const double calibrationToolSecondInnerRadius=62e-3;
+  // const double calibrationToolBottomWidth=1e-3;
+
+  // // Source and its metal cladding
+  // Cell *sourceAirBelow=new CellCylinderTruncatedZ("Source air below", sourceRadius, sourceAirBelowHeight, calibrationToolBottomWidth, steel1, centeredAt);
+  // Cell *source=new CellCylinderTruncatedZ("Source", sourceRadius, sourceWidth+sourceAirBelowHeight, sourceAirBelowHeight+calibrationToolBottomWidth, steel2, centeredAt);
+  // Cell *sourceAirAbove=new CellCylinderTruncatedZ("Source air above", sourceRadius, sourceAirAboveHeight+sourceAirBelowHeight+sourceWidth, sourceAirBelowHeight+sourceWidth, steel3, centeredAt);
+
+  // Cell *sourceCladding=new CellCylinderTruncatedZ("Source cladding", sourceCladdingRadius, sourceCladdingWidth, 0, steel5, centeredAt);
+
+  // Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v3, -v3, steel4);
+
+  // source->next=sourceAirBelow;
+  // sourceAirBelow->next=sourceAirAbove;
+  // sourceAirAbove->next=sourceCladding;
+  // sourceCladding->next=outside;
+
   RadioNuclide *co60=new Co60(sourceActivity);
-  GetCrossSection();
+  // GetCrossSection();
   MonteCarlo(time, source, co60);
+  // GetCount(sourceAirBelow, 1);
 
   delete source;
   delete co60;

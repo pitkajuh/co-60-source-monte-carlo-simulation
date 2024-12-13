@@ -76,16 +76,10 @@ public:
     const double distanceZPositive=wallZPositiveC->SurfaceDistance(positionAt, directionTo);
     const double distances[2]={distanceZNegative, distanceZPositive};
     double distance=distanceCylinder;
-    // bool b1;
-    // bool b2;
-    // bool b3;
+
     // Find the distance to the surface that is the closest one, i.e. find the smallest value. The distance must be >0.
     for(const auto &i: distances)
       {
-	// b1=i<distance;
-	// b2=i>0;
-	// b3=distance<0;
-	// cout<<"try "<<distance<<" "<<i<<" "<<b1<<" "<<b2<<" "<<b3<<'\n';
 	if(i<distance and i>0) distance=i;
 	else if(distance<0 and i>0) distance=i;
       }

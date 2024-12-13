@@ -56,9 +56,8 @@ public:
     const double x0=centeredAt.x;
     const double y0=centeredAt.y;
     // Direction vector by using direction cosine.
-    const double size=directionTo.GetLength();
-    const double u=directionTo.x/size;
-    const double v=directionTo.y/size;
+    const double u=directionTo.x;
+    const double v=directionTo.y;
 
     K=(x-x0)*(x-x0)+(y-y0)*(y-y0)+J;
     L=2*(u*(x-x0)+v*(y-y0));
@@ -109,8 +108,7 @@ public:
   const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
     const double x=positionAt.x;
-    const double size=directionTo.GetLength();
-    const double u=directionTo.x/size;
+    const double u=directionTo.x;
     const double numerator=x+J;
 
     if(u==0) return -1;
@@ -137,8 +135,7 @@ public:
   const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
     const double y=positionAt.y;
-    const double size=directionTo.GetLength();
-    const double v=directionTo.y/size;
+    const double v=directionTo.y;
     const double numerator=y+J;
 
     if(v==0) return -1;
@@ -164,8 +161,7 @@ public:
   const double SurfaceDistance(const Coordinate &positionAt, Coordinate &directionTo)
   {
     const double z=positionAt.z;
-    const double size=directionTo.GetLength();
-    const double w=directionTo.z/size;
+    const double w=directionTo.z;
     const double numerator=z+J;
 
     if(w==0) return -1;
