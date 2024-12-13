@@ -5,6 +5,13 @@
 #include <iostream>
 using std::cout;
 
+const bool GetSurfaceTest(const double v)
+  {
+    // Return true if the point is inside(<0) or on(==0) the surface.
+    if(v<=0) return 1;
+    return 0;
+  }
+
 class Surface
 {
 public:
@@ -82,12 +89,7 @@ public:
     // cout<<"cylinder r="<<J<<" "<<(x-x0)*(x-x0)+(y-y0)*(y-y0)+J<<'\n';
     return(x-x0)*(x-x0)+(y-y0)*(y-y0)+J;
   }
-  const bool SurfaceTest(const Coordinate &p)
-  {
-    // Return true if the point is inside(<0) or on(==0) the surface.
-    if(SurfaceEquation(p)<=0) return 1;
-    return 0;
-  }
+  const bool SurfaceTest(const Coordinate &p){return GetSurfaceTest(SurfaceEquation(p));}
 };
 
 class PlaneX: public Surface
@@ -115,12 +117,7 @@ public:
 
     return -numerator/u;
   }
-  const bool SurfaceTest(const Coordinate &p)
-  {
-    // Return true if the point is inside(<0) or on(==0) the surface.
-    if(SurfaceEquation(p)<=0) return 1;
-    return 0;
-  }
+  const bool SurfaceTest(const Coordinate &p){return GetSurfaceTest(SurfaceEquation(p));}
 };
 
 class PlaneY: public Surface
@@ -148,14 +145,8 @@ public:
 
     return -numerator/v;
   }
-  const bool SurfaceTest(const Coordinate &p)
-  {
-    // Return true if the point is inside(<0) or on(==0) the surface.
-    if(SurfaceEquation(p)<=0) return 1;
-    return 0;
-  }
+  const bool SurfaceTest(const Coordinate &p){return GetSurfaceTest(SurfaceEquation(p));}
 };
-
 class PlaneZ: public Surface
 {
 public:
@@ -181,12 +172,7 @@ public:
 
     return -numerator/w;
   }
-  const bool SurfaceTest(const Coordinate &p)
-  {
-    // Return true if the point is inside(<0) or on(==0) the surface.
-    if(SurfaceEquation(p)<=0) return 1;
-    return 0;
-  }
+  const bool SurfaceTest(const Coordinate &p){return GetSurfaceTest(SurfaceEquation(p));}
 };
 
 #endif
