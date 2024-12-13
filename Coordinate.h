@@ -14,7 +14,7 @@ public:
   double GetLength(){return pow(x*x+y*y+z*z, 0.5);}
   void print()
   {
-    std::cout<<"("<<x<<" "<<y<<" "<<z<<" size "<<GetLength()<<")"<<'\n';
+    std::cout<<"("<<x<<", "<<y<<", "<<z<<" size "<<GetLength()<<")"<<'\n';
   }
   std::string Show()
   {

@@ -32,37 +32,44 @@ void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coor
 {
   Coordinate photonTo=photonDirection*photonToDistance;
   Coordinate mfp=photonFrom+photonTo;
+  Coordinate surfaceLocation;
   Cell *current=cellHead;
   bool collision=0;
   double boundaryDistance=0;
   double collisionDistance=0;
-  Coordinate new1;
+  // Coordinate new1;
+
+  photonFrom.print();
+  photonTo.print();
   mfp.print();
 
   while(current!=nullptr and !collision)
     {
-      collision=current->CellTest(photonTo);
+      // collision=current->CellTest(photonTo);
+      collision=current->CellTest(mfp);
 
       boundaryDistance=current->CellDistanceTest(photonFrom, photonDirection);
-      collisionDistance=mfp.GetLength();
+      // boundaryDistance=current->CellDistanceTest(mfp, photonDirection);
 
-      // if(!collision)
-      // 	{
-      // 	  cout<<"Boundary crossed2!"<<'\n';
-      // 	}
+      surfaceLocation=photonDirection*boundaryDistance;
+      cout<<"closest"<<'\n';
+      surfaceLocation.print();
+      // collisionDistance=mfp.GetLength();
+      collisionDistance=photonTo.GetLength();
 
-      if(collisionDistance<boundaryDistance) cout<<"No boundary crossed!"<<'\n';
+
+      if(collisionDistance<boundaryDistance) cout<<"No boundary crossed! "<<photonDirection.GetLength()<<'\n';
       else
 	{
 	  cout<<"Boundary crossed!"<<'\n';
 	  // mfp=photonDirection*boundaryDistance+photonTo;
 	  // mfp=photonDirection*boundaryDistance;
-	  new1=photonDirection*boundaryDistance;
-	  new1.print();
+	  // new1=photonDirection*boundaryDistance;
+	  // new1.print();
 	  // mfp.print();
 	}
 
-      std::cout<<current->name<<" "<<collision<<" distance to surf "<<boundaryDistance<<" "<<" D="<<collisionDistance<<" phototnto "<<photonTo.GetLength()<<'\n';
+      std::cout<<current->name<<" "<<collision<<" distance to surface "<<boundaryDistance<<" collision at "<<collisionDistance<<'\n';
       current=current->next;
     }
   cout<<" "<<'\n';

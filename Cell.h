@@ -76,8 +76,20 @@ public:
     const double distanceZPositive=wallZPositiveC->SurfaceDistance(positionAt, directionTo);
     const double distances[2]={distanceZNegative, distanceZPositive};
     double distance=distanceCylinder;
-
-    for(const auto &i: distances){if(i>distance) distance=i;}
+    // bool b1;
+    // bool b2;
+    // bool b3;
+    // Find the distance to the surface that is the closest one, i.e. find the smallest value. The distance must be >0.
+    for(const auto &i: distances)
+      {
+	// b1=i<distance;
+	// b2=i>0;
+	// b3=distance<0;
+	// cout<<"try "<<distance<<" "<<i<<" "<<b1<<" "<<b2<<" "<<b3<<'\n';
+	if(i<distance and i>0) distance=i;
+	else if(distance<0 and i>0) distance=i;
+      }
+    // cout<<distance<<'\n';
     return distance;
   }
   ~CellCylinderTruncatedZ()
@@ -130,7 +142,20 @@ public:
 			                              distanceWallYNegative, distanceWallZNegative, distanceWallZPositive};
     double distance=distanceWallXNegative;
 
-    for(const auto &i: distances){if(i>distance) distance=i;}
+    // bool b1;
+    // bool b2;
+    // bool b3;
+    // Find the distance to the surface that is the closest one, i.e. find the smallest value. The distance must be >0.
+    for(const auto &i: distances)
+      {
+	// b1=i<distance;
+	// b2=i>0;
+	// b3=distance<0;
+	// cout<<"try "<<distance<<" "<<i<<" "<<b1<<" "<<b2<<" "<<b3<<'\n';
+	if(i<distance and i>0) distance=i;
+	else if(distance<0 and i>0) distance=i;
+      }
+    // cout<<distance<<'\n';
     return distance;
   }
   CellBox3D(const string &name1, const double w1, const double w2, const double w3, const double w4, const double w5, const double w6, Material *m)
