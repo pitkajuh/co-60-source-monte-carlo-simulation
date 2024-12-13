@@ -28,30 +28,38 @@ double CellSearch(Cell *cellHead, const Coordinate &mfp, Coordinate &photonDirec
   return current->CellDistanceTest(mfp, photonDirection);
 }
 
-void SurfaceTracking(Coordinate &photonFrom, Coordinate &photonTo, Coordinate &photonDirection, Cell *cellHead, RadioNuclide *radioNuclide)
+void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coordinate &photonDirection, Cell *cellHead, RadioNuclide *radioNuclide)
 {
+  Coordinate photonTo=photonDirection*photonToDistance;
   Coordinate mfp=photonFrom+photonTo;
   Cell *current=cellHead;
   bool collision=0;
   double boundaryDistance=0;
   double collisionDistance=0;
-
+  Coordinate new1;
   mfp.print();
 
   while(current!=nullptr and !collision)
     {
-      collision=current->CellTest(mfp);
+      collision=current->CellTest(photonTo);
 
       boundaryDistance=current->CellDistanceTest(photonFrom, photonDirection);
       collisionDistance=mfp.GetLength();
+
+      // if(!collision)
+      // 	{
+      // 	  cout<<"Boundary crossed2!"<<'\n';
+      // 	}
 
       if(collisionDistance<boundaryDistance) cout<<"No boundary crossed!"<<'\n';
       else
 	{
 	  cout<<"Boundary crossed!"<<'\n';
 	  // mfp=photonDirection*boundaryDistance+photonTo;
-	  mfp=photonDirection*boundaryDistance;
-	  mfp.print();
+	  // mfp=photonDirection*boundaryDistance;
+	  new1=photonDirection*boundaryDistance;
+	  new1.print();
+	  // mfp.print();
 	}
 
       std::cout<<current->name<<" "<<collision<<" distance to surf "<<boundaryDistance<<" "<<" D="<<collisionDistance<<" phototnto "<<photonTo.GetLength()<<'\n';
@@ -63,6 +71,7 @@ void SurfaceTracking(Coordinate &photonFrom, Coordinate &photonTo, Coordinate &p
 void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time)
 {
   const unsigned activityRandom=PoissonRNG(radioNuclide->GetActivity(), time);
+  double photonToDistance;
   Coordinate photonFrom;
   Coordinate photonTo;
   Coordinate direction;
@@ -71,8 +80,8 @@ void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time
     {
       direction=RandomEmissionDirection();
       photonFrom=cellHead->GetInitialPosition();
-      photonTo=direction*(-1/cellHead->material->GetMu(radioNuclide->PDF()))*log(RNG(0, 1));
-      SurfaceTracking(photonFrom, photonTo, direction, cellHead, radioNuclide);
+      photonToDistance=(-1/cellHead->material->GetMu(radioNuclide->PDF()))*log(RNG(0, 1));
+      SurfaceTracking(photonFrom, photonToDistance, direction, cellHead, radioNuclide);
     }
 }
 
