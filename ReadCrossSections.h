@@ -1,6 +1,6 @@
 #ifndef READCROSSSECTIONS_H
 #define READCROSSSECTIONS_H
 
-void GetCrossSection();
+CrossSections GetMaterialCrossSection(const string &endf);
 
 #endif

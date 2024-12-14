@@ -1,29 +1,12 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
-#include <cassert>
 #include "CrossSection.h"
 
 using std::cout;
 using std::ifstream;
 using std::streampos;
 using std::stod;
-
-void print(const vector<string> &v)
-{
-  string s="";
-  for(const auto &i: v){s=s+";"+i;}
-  cout<<s<<" SIZE "<<v.size()<<'\n';
-  assert(v.size()==5);
-}
-
-void print(const vector<double> &v)
-{
-  string s="";
-  for(const auto &i: v){s=s+";"+std::to_string(i);}
-  cout<<s<<" SIZE "<<v.size()<<'\n';
-  assert(v.size()==5);
-}
 
 void LineSplit(string &line, vector<double> &v)
 {
@@ -63,7 +46,7 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos &from, const stri
     {
       size=line.size();
       line2=line.substr(size-idSize, size);
-      // cout<<line<<'\n';
+
       if(found and line.substr(size-idSize, size)!=id) break;
       else if(line2==id and linesSkip==0)
 	{
@@ -72,7 +55,6 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos &from, const stri
 	  energy=v[0];
 	  v.erase(v.begin()+0);
 	  ENDFmap[energy]=v;
-	  // print(v);
 	  v.clear();
 	  found=true;
 	}
@@ -102,12 +84,12 @@ void Split(string &line, vector<string> &v)
 
 vector<string> GetReactions(ifstream &endf, streampos &from)
 {
+  int at;
   bool found=0;
   string line;
   string line2;
   const string MFMT="MF/MT";
   const string warning="Warning";
-  int at;
   vector<string> v;
   vector<string> result;
 
@@ -145,18 +127,9 @@ CrossSections ParseEndf(ifstream &endf, streampos &from)
   return {crossSections};
 }
 
-void GetCrossSection()
+CrossSections GetMaterialCrossSection(const string &endf)
 {
-  ifstream steel("./cross-sections/photoat-026_Fe_000.endf");
-  ifstream nitrogen("./cross-sections/photoat-007_N_000.endf");
-  ifstream sodium("./cross-sections/photoat-011_Na_000.endf");
-  ifstream titanium("./cross-sections/photoat-022_Ti_000.endf");
-  ifstream iodine("./cross-sections/photoat-053_I_000.endf");
-
+  ifstream endfStream(endf);
   streampos from=0;
-  ParseEndf(steel, from);
-  ParseEndf(nitrogen, from);
-  ParseEndf(sodium, from);
-  ParseEndf(titanium, from);
-  ParseEndf(iodine , from);
+  return ParseEndf(endfStream, from);
 }

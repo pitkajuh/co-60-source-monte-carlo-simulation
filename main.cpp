@@ -1,8 +1,5 @@
 #include <iostream>
-#include <vector>
-#include <string>
 #include <cmath>
-#include <map>
 #include <utility>
 #include "math.h"
 #include "Material.h"
@@ -11,9 +8,7 @@
 #include "RadioNuclide.h"
 #include "ReadCrossSections.h"
 
-using std::string;
 using std::cout;
-using std::map;
 
 double CellSearch(Cell *cellHead, const Coordinate &mfp, Coordinate &photonDirection)
 {
@@ -162,7 +157,7 @@ int main()
   // sourceCladding->next=outside;
 
   RadioNuclide *co60=new Co60(sourceActivity);
-  GetCrossSection();
+  // GetCrossSection();
   // MonteCarlo(time, source, co60);
 
   delete source;

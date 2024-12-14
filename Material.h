@@ -2,6 +2,7 @@
 #define MATERIAL_H
 
 #include "MassAttenuation.h"
+#include "CrossSectionData.h"
 
 const double GetMuValue(const double photonEnergy, map<double, pair<double, double>> &muMap, const double density)
   {
@@ -26,6 +27,7 @@ class Material
 public:
   double density=0; // in g/cm3
   map<double, pair<double, double>> muMap;
+  CrossSections crossSections;
   virtual const double GetMu(const double photonEnergy)=0;
   virtual ~Material(){}
 };
@@ -37,6 +39,7 @@ public:
   {
     density=d;
     muMap=muMapSodium;
+    crossSections=sodiumCrossSections;
   }
 
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
@@ -49,6 +52,7 @@ public:
   {
     density=d;
     muMap=muMapTitanium;
+    crossSections=titaniumCrossSections;
   }
 
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
@@ -61,6 +65,7 @@ public:
   {
     density=d;
     muMap=muMapNitrogen;
+    crossSections=nitrogenCrossSections;
   }
 
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
@@ -73,6 +78,7 @@ public:
   {
     density=d;
     muMap=muMapSteel;
+    crossSections=steelCrossSections;
   }
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
 };
