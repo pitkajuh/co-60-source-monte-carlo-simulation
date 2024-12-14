@@ -30,26 +30,19 @@ void print(const vector<double> &v)
   assert(v.size()==5);
 }
 
-void FillVector(vector<double> &v){while(v.size()<6) v.push_back(0);}
-
-void LineSplit(string line, vector<double> &v)
+void LineSplit(string &line, vector<double> &v)
 {
   const string sub=line.substr(0, 10);
   const char empty=' ';
   const char s1=sub[0];
   const char s2=sub[sub.size()-1];
 
-  if(line.size()>10 and s1==empty and s2==empty)
+  if(line.size()>10)
     {
       line=line.substr(11, line.size());
-      v.push_back(0);
 
-      if(line.size()>=10) LineSplit(line, v);
-    }
-  else if(line.size()>10)
-    {
-      line=line.substr(11, line.size());
-      v.push_back(stod(sub));
+      if(s1==empty and s2==empty) v.push_back(0);
+      else v.push_back(stod(sub));
 
       if(line.size()>=10) LineSplit(line, v);
     }
@@ -89,7 +82,7 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos *&from, const str
 	  v.clear();
 	  found=true;
 	}
-      else if (line2==id) linesSkip--;
+      else if(line2==id) linesSkip--;
     }
   return ENDFmap;
 }
