@@ -1,18 +1,12 @@
 #include <fstream>
-#include <map>
 #include <iostream>
-#include <string>
-#include <vector>
 #include <algorithm>
 #include <cassert>
 #include "CrossSection.h"
 
-using std::vector;
-using std::string;
 using std::cout;
 using std::ifstream;
 using std::streampos;
-using std::map;
 using std::stod;
 
 void print(const vector<string> &v)

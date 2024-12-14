@@ -33,6 +33,8 @@ public:
   CrossSections(const vector<CrossSection> &cS)
   {
     totalCrossSection=cS[0];
+    crossSections=cS;
+    crossSections.erase(crossSections.begin()+0);
   }
 };
 
