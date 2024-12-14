@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
+#include "CrossSection.h"
 
 using std::vector;
 using std::string;
@@ -118,7 +119,6 @@ vector<string> GetReactions(ifstream &endf, streampos &from)
 
   while(getline(endf, line))
     {
-
       if(line.substr(2, warning.size())==warning) break;
       else if(found and line[1]!='=')
 	{
@@ -135,18 +135,20 @@ vector<string> GetReactions(ifstream &endf, streampos &from)
   return result;
 }
 
-void ParseEndf(ifstream &endf, streampos &from)
+CrossSections ParseEndf(ifstream &endf, streampos &from)
 {
+  vector<CrossSection> crossSections;
   const vector<string> reactions=GetReactions(endf, from);
-  map<double, vector<double>> map;
 
   for(const auto &reaction: reactions)
     {
       cout<<"FIND "<<reaction<<'\n';
-      map=ReadENDF(endf, from, reaction);
+      CrossSection crossSection(reaction, ReadENDF(endf, from, reaction));
+      crossSections.push_back(crossSection);
     }
   cout<<" "<<'\n';
   from=0;
+  return {crossSections};
 }
 
 void GetCrossSection()
