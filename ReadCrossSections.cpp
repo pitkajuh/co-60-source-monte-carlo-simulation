@@ -34,23 +34,27 @@ void FillVector(vector<double> &v){while(v.size()<6) v.push_back(0);}
 
 void LineSplit(string line, vector<double> &v)
 {
-  const int at=distance(line.begin(), find(line.begin(), line.end(), ' '));
+  const string sub=line.substr(0, 10);
+  const char empty=' ';
+  const char s1=sub[0];
+  const char s2=sub[sub.size()-1];
 
-  if(at==0) FillVector(v);
-  else
+  if(line.size()>10 and s1==empty and s2==empty)
     {
-      const string lineSplit=line.substr(0, at);
-      v.push_back(stod(lineSplit));
-    }
+      line=line.substr(11, line.size());
+      v.push_back(0);
 
-  if(line.size()>0)
+      if(line.size()>=10) LineSplit(line, v);
+    }
+  else if(line.size()>10)
     {
-      const string line2=line.substr(at+1, line.size());
-      const int size=line2.size();
+      line=line.substr(11, line.size());
+      v.push_back(stod(sub));
 
-      if(at!=size) LineSplit(line2, v);
-      else if(size>0) v.push_back(stod(line2));
+      if(line.size()>=10) LineSplit(line, v);
     }
+  else if(line.size()==10 and s1==empty and s2==empty) v.push_back(0);
+  else v.push_back(stod(line));
 }
 
 map<double, vector<double>> ReadENDF(ifstream &endf, streampos *&from, const string &id)
@@ -70,18 +74,18 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos *&from, const str
     {
       size=line.size();
       line2=line.substr(size-idSize, size);
-      cout<<line.size()<<" "<<line<<'\n';
+      // cout<<line.size()<<" "<<line<<'\n';
       if(found and line.substr(size-idSize, size)!=id) break;
       else if(line2==id and linesSkip==0)
 	{
 	  // cout<<line<<'\n';
 	  line=line.substr(1, size-idSize-1);
-
+	  // cout<<line<<" "<<line.size()<<'\n';
 	  LineSplit(line, v);
 	  energy=v[0];
 	  v.erase(v.begin()+0);
 	  ENDFmap[energy]=v;
-	  // print(v);
+	  print(v);
 	  v.clear();
 	  found=true;
 	}
@@ -172,17 +176,17 @@ void ParseEndf(ifstream &endf, streampos *&from)
 void GetCrossSection()
 {
   ifstream steel("./cross-sections/photoat-026_Fe_000.endf");
-  // ifstream nitrogen("./cross-sections/photoat-007_N_000.endf");
-  // ifstream sodium("./cross-sections/photoat-011_Na_000.endf");
-  // ifstream titanium("./cross-sections/photoat-022_Ti_000.endf");
-  // ifstream iodine("./cross-sections/photoat-053_I_000.endf");
+  ifstream nitrogen("./cross-sections/photoat-007_N_000.endf");
+  ifstream sodium("./cross-sections/photoat-011_Na_000.endf");
+  ifstream titanium("./cross-sections/photoat-022_Ti_000.endf");
+  ifstream iodine("./cross-sections/photoat-053_I_000.endf");
 
   streampos *from=new streampos;
   *from=0;
-  // ParseEndf(steel, from);
-  // ParseEndf(nitrogen, from);
-  // ParseEndf(sodium, from);
-  // ParseEndf(titanium, from);
-  // ParseEndf(iodine , from);
+  ParseEndf(steel, from);
+  ParseEndf(nitrogen, from);
+  ParseEndf(sodium, from);
+  ParseEndf(titanium, from);
+  ParseEndf(iodine , from);
   delete from;
 }

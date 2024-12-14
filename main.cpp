@@ -111,7 +111,7 @@ void MonteCarlo(const unsigned time, Cell *cell, RadioNuclide *radioNuclide)
 
 int main()
 {
-  const unsigned time=1;
+  // const unsigned time=1;
   const unsigned sourceActivity=100;
   const double v3=1;
   Material *steel1=new Steel(7.874);
@@ -162,9 +162,8 @@ int main()
   // sourceCladding->next=outside;
 
   RadioNuclide *co60=new Co60(sourceActivity);
-  // GetCrossSection();
-  MonteCarlo(time, source, co60);
-  // GetCount(sourceAirBelow, 1);
+  GetCrossSection();
+  // MonteCarlo(time, source, co60);
 
   delete source;
   delete co60;
