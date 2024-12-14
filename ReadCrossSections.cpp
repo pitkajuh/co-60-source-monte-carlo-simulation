@@ -68,7 +68,7 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos &from, const stri
     {
       size=line.size();
       line2=line.substr(size-idSize, size);
-
+      // cout<<line<<'\n';
       if(found and line.substr(size-idSize, size)!=id) break;
       else if(line2==id and linesSkip==0)
 	{
@@ -77,12 +77,13 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos &from, const stri
 	  energy=v[0];
 	  v.erase(v.begin()+0);
 	  ENDFmap[energy]=v;
-	  print(v);
+	  // print(v);
 	  v.clear();
 	  found=true;
 	}
       else if(line2==id) linesSkip--;
     }
+  from=endf.tellg();
   return ENDFmap;
 }
 
@@ -143,7 +144,6 @@ void ParseEndf(ifstream &endf, streampos &from)
     {
       cout<<"FIND "<<reaction<<'\n';
       map=ReadENDF(endf, from, reaction);
-      cout<<" "<<'\n';
     }
   cout<<" "<<'\n';
   from=0;
