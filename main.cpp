@@ -10,20 +10,26 @@
 
 using std::cout;
 
-double CellSearch(Cell *cellHead, const Coordinate &mfp, Coordinate &photonDirection)
-{
-  Cell *current=cellHead;
-  bool collision=0;
+// double CellSearch(Cell *cellHead, const Coordinate &mfp, Coordinate &photonDirection)
+// {
+//   Cell *current=cellHead;
+//   bool collision=0;
 
-  while(current!=nullptr and !collision)
-    {
-      collision=current->CellTest(mfp);
-      current=current->next;
-    }
-  return current->CellDistanceTest(mfp, photonDirection);
+//   while(current!=nullptr and !collision)
+//     {
+//       collision=current->CellTest(mfp);
+//       current=current->next;
+//     }
+//   return current->CellDistanceTest(mfp, photonDirection);
+// }
+
+void PhysicsRoutine(Cell *cell, double &photonEnergy)
+{
+  cout<<"PhysicsRoutine "<<'\n';
+  cell->material->crossSections.GetProbability(photonEnergy*10e6);
 }
 
-void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coordinate &photonDirection, Cell *cellHead, RadioNuclide *radioNuclide)
+void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coordinate &photonDirection, Cell *cellHead, RadioNuclide *radioNuclide, double &photonEnergy)
 {
   Coordinate photonTo=photonDirection*photonToDistance;
   Coordinate mfp=photonFrom+photonTo;
@@ -44,14 +50,15 @@ void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coor
 
       if(collisionDistance<boundaryDistance)
 	{
-	  cout<<"No boundary crossed!"<<'\n';
+	  cout<<"No boundary crossed! "<<photonEnergy<<'\n';
 	  // Call physics routine
+	  PhysicsRoutine(current, photonEnergy);
 	}
       else
 	{
-	  cout<<"Boundary crossed!"<<'\n';
+	  cout<<"Boundary crossed! "<<photonEnergy<<'\n';
 	  surfaceLocation=photonDirection*boundaryDistance;
-	  SurfaceTracking(surfaceLocation, photonToDistance, photonDirection, current->next, radioNuclide);
+	  // SurfaceTracking(surfaceLocation, photonToDistance, photonDirection, current->next, radioNuclide, photonEnergy);
 	}
 
       std::cout<<current->name<<" "<<collision<<" distance to surface "<<boundaryDistance<<" collision at "<<collisionDistance<<'\n';
@@ -75,7 +82,7 @@ void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time
       photonFrom=cellHead->GetInitialPosition();
       energy=radioNuclide->PDF();
       photonToDistance=(-1/cellHead->material->GetMu(energy))*log(RNG(0, 1));
-      SurfaceTracking(photonFrom, photonToDistance, direction, cellHead, radioNuclide);
+      SurfaceTracking(photonFrom, photonToDistance, direction, cellHead, radioNuclide, energy);
     }
 }
 
@@ -106,7 +113,7 @@ void MonteCarlo(const unsigned time, Cell *cell, RadioNuclide *radioNuclide)
 
 int main()
 {
-  // const unsigned time=1;
+  const unsigned time=1;
   const unsigned sourceActivity=100;
   const double v3=1;
   Material *steel1=new Steel(7.874);
@@ -158,7 +165,7 @@ int main()
 
   RadioNuclide *co60=new Co60(sourceActivity);
   // GetCrossSection();
-  // MonteCarlo(time, source, co60);
+  MonteCarlo(time, source, co60);
 
   delete source;
   delete co60;

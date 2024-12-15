@@ -7,6 +7,8 @@ using std::cout;
 using std::ifstream;
 using std::streampos;
 using std::stod;
+using std::stoi;
+using std::to_string;
 
 void LineSplit(string &line, vector<double> &v)
 {
@@ -82,16 +84,19 @@ void Split(string &line, vector<string> &v)
     }
 }
 
-vector<string> GetReactions(ifstream &endf, streampos &from)
+pair<string, vector<pair<unsigned, unsigned>>> GetReactions(ifstream &endf, streampos &from)
 {
   int at;
   bool found=0;
   string line;
   string line2;
+  string MF;
   const string MFMT="MF/MT";
   const string warning="Warning";
   vector<string> v;
-  vector<string> result;
+  vector<pair<unsigned, unsigned>> result;
+  pair<unsigned, unsigned> MFMTpair;
+  pair<string, vector<pair<unsigned, unsigned>>> resultf;
 
   while(getline(endf, line))
     {
@@ -101,30 +106,70 @@ vector<string> GetReactions(ifstream &endf, streampos &from)
 	  line2=line.substr(2, line.size());
 	  Split(line2, v);
 	  at=distance(v[0].begin(), find(v[0].begin(), v[0].end(), '/'));
-	  result.push_back(v.back()+v[0].substr(0, at)+v[0].substr(at+1, v[0].size()));
-	  cout<<result.back()<<'\n';
+
+	  MFMTpair={stoi(v[0].substr(0, at)), stoi(v[0].substr(at+1, v[0].size()))};
+	  MF=v.back();
+	  result.push_back(MFMTpair);
+	  // result.push_back(v.back()+v[0].substr(0, at)+v[0].substr(at+1, v[0].size()));
+	  // cout<<v[0].substr(0, at)+v[0].substr(at+1, v[0].size())<<"v[0].substr(0, at)+v[0].substr(at+1, v[0].size())"<<'\n';
 	  v.clear();
 	}
       else if(line.substr(2, MFMT.size())==MFMT) found=true;
     }
+  resultf={MF, result};
   from=endf.tellg();
-  return result;
+  return resultf;
 }
+
+// CrossSection *GetCrossSection(const string &reaction, const map<double, vector<double>> &map)
+// {
+//   // const unsigned MF=std::stoi(reaction.substr(4, 2));
+//   const unsigned MT=std::stoi(reaction.substr(6, 8));
+
+//   if(MT==501)
+//     {
+//       return new TotalCrossSection;
+//     }
+//   // else if(MT==502)
+//   //   {
+
+//   //   }
+//   // else if(MT==504)
+//   //   {
+
+//   //   }
+//   return nullptr;
+// }
 
 CrossSections ParseEndf(ifstream &endf, streampos &from)
 {
-  vector<CrossSection> crossSections;
-  const vector<string> reactions=GetReactions(endf, from);
+  vector<CrossSection> crossSections23={};
+  vector<CrossSection> crossSections27={};
+  const pair<string, vector<pair<unsigned, unsigned>>> reactions=GetReactions(endf, from);
+  const string material=reactions.first;
 
-  for(const auto &reaction: reactions)
+  for(const auto &reaction: reactions.second)
     {
-      cout<<"FIND "<<reaction<<'\n';
-      CrossSection crossSection(reaction, ReadENDF(endf, from, reaction));
-      crossSections.push_back(crossSection);
+      // cout<<reaction<<'\n';
+      // MF=reaction.substr(4, 2);
+      CrossSection crossSection(reaction, ReadENDF(endf, from, material+to_string(reaction.first)+to_string(reaction.second)));
+      // cout<<"MF;"<<std::stoi(reaction.substr(4, 2))<<";"<<'\n';
+      // cout<<"AEAOE "<<material+to_string(reaction.first)+to_string(reaction.second)<<'\n';
+      // crossSections23.push_back(crossSection);
+      if(reaction.first==23)
+	{
+	  // cout<<23<<'\n';
+	  crossSections23.push_back(crossSection);
+	}
+      else
+	{
+	  // cout<<27<<'\n';
+	  crossSections27.push_back(crossSection);
+	}
     }
-  cout<<" "<<'\n';
   from=0;
-  return {crossSections};
+  // cout<<"END"<<'\n';
+  return {crossSections23, crossSections27};
 }
 
 CrossSections GetMaterialCrossSection(const string &endf)
