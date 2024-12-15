@@ -4,8 +4,10 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "math.h"
 
+using std::cout;
 using std::map;
 using std::vector;
 using std::string;
@@ -34,7 +36,7 @@ class CrossSection
 	energyPrevious=energy;
       }
 
-    if(energyPrevious==0) return -1;
+    if(energyPrevious==0) return 0;
 
     // std::cout<<"FOUND?"<<not1<<" "<<photonEnergy<<" "<<energyPrevious<<" ;"<<energyCurrent<<";"<<'\n';
     return crossSection[energyPrevious][0]+(photonEnergy-energyPrevious)*(crossSection[energyCurrent][0]-crossSection[energyPrevious][0])/(energyCurrent-energyPrevious);
@@ -60,16 +62,38 @@ public:
   CrossSection totalCrossSection;
   vector<CrossSection> MF23;
   vector<CrossSection> MF27;
-  void GetProbability(const double photonEnergy)
+
+  pair<double, vector<double>> GetProbability(const double photonEnergy)
   {
+    vector<double> probabilities;
+    probabilities.reserve(MF23.size());
     // const double rng=RNG(0, 1);
-    double crossSectionTotal=totalCrossSection.GetCrossSection(photonEnergy);
-    std::cout<<crossSectionTotal<<'\n';
+    // double ee=20e6;
+    // double crossSectionTotal=totalCrossSection.GetCrossSection(photonEnergy);
+    // double crossSectionTotal=totalCrossSection.GetCrossSection(ee);
+    double total=0;
+    double e=0;
+    // std::cout<<crossSectionTotal<<'\n';
 
     for(auto &c: MF23)
       {
-	std::cout<<c.MT<<" "<<c.MF<<" "<<c.GetCrossSection(photonEnergy)/crossSectionTotal<<'\n';
+	e=c.GetCrossSection(photonEnergy);
+	// e=c.GetCrossSection(ee);
+	total+=e;
+	probabilities.push_back(e);
+	// std::cout<<c.MT<<" "<<c.MF<<" "<<e<<" "<<total<<" "<<total/crossSectionTotal<<'\n';
       }
+    std::sort(probabilities.begin(), probabilities.end());
+    return {total, probabilities};
+  }
+  void CreatePDF(const double photonEnergy)
+  {
+   const pair<double, vector<double>> probabilities=GetProbability(photonEnergy);
+
+   for(const auto &p: probabilities.second)
+     {
+       cout<<p/probabilities.first<<'\n';
+     }
   }
   CrossSections(){}
   CrossSections(const vector<CrossSection> &cS23, const vector<CrossSection> &cS27)

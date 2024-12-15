@@ -15,11 +15,6 @@ public:
   Coordinate mfp;
   Photon *next=nullptr;
 
-  // Coordinate GetMFP()
-  // {
-  //   mfp=origin+to;
-  //   return mfp;
-  // }
   Photon(){}
   Photon(Cell *source, RadioNuclide *nuclide)
   {

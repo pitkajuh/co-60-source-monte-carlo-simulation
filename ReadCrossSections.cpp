@@ -156,11 +156,14 @@ CrossSections ParseEndf(ifstream &endf, streampos &from)
       // cout<<"MF;"<<std::stoi(reaction.substr(4, 2))<<";"<<'\n';
       // cout<<"AEAOE "<<material+to_string(reaction.first)+to_string(reaction.second)<<'\n';
       // crossSections23.push_back(crossSection);
-      if(reaction.first==23)
+      // if(reaction.first==23 and reaction.second!=516 and reaction.second!=522 and reaction.second!=515)
+      if(reaction.first==23 and reaction.second!=516 and reaction.second!=522)
+      // if(reaction.first==23)
 	{
 	  // cout<<23<<'\n';
 	  crossSections23.push_back(crossSection);
 	}
+      // else if(reaction.first!=516 and reaction.first!=522 and reaction.first!=515)
       else
 	{
 	  // cout<<27<<'\n';
