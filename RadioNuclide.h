@@ -27,9 +27,9 @@ public:
   }
   double PDF()
   {
-    // Probability distribution function of Co-60 gamma energies (MeV).
-    if (RNG (0, 1)<=0.85) return 1.173;
-    return 1.332;
+    // Probability distribution function of Co-60 gamma energies (eV).
+    if(RNG(0, 1)<=0.85) return 1173e3;
+    return 1332e3;
   }
 };
 

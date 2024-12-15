@@ -26,7 +26,7 @@ using std::cout;
 void PhysicsRoutine(Cell *cell, double &photonEnergy)
 {
   cout<<"PhysicsRoutine "<<'\n';
-  cell->material->crossSections.GetProbability(photonEnergy*10e6);
+  cell->material->crossSections.GetProbability(photonEnergy);
 }
 
 void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coordinate &photonDirection, Cell *cellHead, RadioNuclide *radioNuclide, double &photonEnergy)

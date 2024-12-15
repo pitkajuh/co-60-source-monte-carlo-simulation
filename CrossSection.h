@@ -21,21 +21,22 @@ class CrossSection
   {
     double energyPrevious=0;
     double energyCurrent=0;
-    bool not1=0;
+    // bool not1=0;
 
     for(const auto& [energy, cs]: crossSection)
       {
 	if(energy>=photonEnergy)
 	  {
 	    energyCurrent=energy;
-	    not1=1;
+	    // not1=1;
 	    break;
 	  }
 	energyPrevious=energy;
-
-
       }
-    std::cout<<"FOUND?"<<not1<<" "<<photonEnergy<<'\n';
+
+    if(energyPrevious==0) return -1;
+
+    // std::cout<<"FOUND?"<<not1<<" "<<photonEnergy<<" "<<energyPrevious<<" ;"<<energyCurrent<<";"<<'\n';
     return crossSection[energyPrevious][0]+(photonEnergy-energyPrevious)*(crossSection[energyCurrent][0]-crossSection[energyPrevious][0])/(energyCurrent-energyPrevious);
   }
   CrossSection(){}
@@ -67,7 +68,7 @@ public:
 
     for(auto &c: MF23)
       {
-	std::cout<<c.MT<<" "<<c.MF<<" "<<c.GetCrossSection(photonEnergy)<<'\n';
+	std::cout<<c.MT<<" "<<c.MF<<" "<<c.GetCrossSection(photonEnergy)/crossSectionTotal<<'\n';
       }
   }
   CrossSections(){}
