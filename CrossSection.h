@@ -19,18 +19,17 @@ class CrossSection
   unsigned MF;
   unsigned MT;
   map<double, vector<double>> crossSection;
+
   double GetCrossSection(const double photonEnergy)
   {
     double energyPrevious=0;
     double energyCurrent=0;
-    // bool not1=0;
 
     for(const auto& [energy, cs]: crossSection)
       {
 	if(energy>=photonEnergy)
 	  {
 	    energyCurrent=energy;
-	    // not1=1;
 	    break;
 	  }
 	energyPrevious=energy;
@@ -38,7 +37,6 @@ class CrossSection
 
     if(energyPrevious==0) return 0;
 
-    // std::cout<<"FOUND?"<<not1<<" "<<photonEnergy<<" "<<energyPrevious<<" ;"<<energyCurrent<<";"<<'\n';
     return crossSection[energyPrevious][0]+(photonEnergy-energyPrevious)*(crossSection[energyCurrent][0]-crossSection[energyPrevious][0])/(energyCurrent-energyPrevious);
   }
   CrossSection(){}
@@ -58,41 +56,40 @@ public:
 
 class CrossSections
 {
+private:
+  static bool sortFunction(const pair<unsigned, double> &p1, const pair<unsigned, double> &p2)
+  {
+    return p1.second>p2.second;
+  }
+
+  pair<double, vector<pair<unsigned, double>>> GetProbability(const double photonEnergy)
+  {
+    vector<pair<unsigned, double>> probabilities;
+    probabilities.reserve(MF23.size());
+    double total=0;
+    double e=0;
+
+    for(auto &c: MF23)
+      {
+	e=c.GetCrossSection(photonEnergy);
+	total+=e;
+	probabilities.push_back({c.MT, e});
+      }
+    std::sort(probabilities.begin(), probabilities.end(), sortFunction);
+    return {total, probabilities};
+  }
 public:
   CrossSection totalCrossSection;
   vector<CrossSection> MF23;
   vector<CrossSection> MF27;
 
-  pair<double, vector<double>> GetProbability(const double photonEnergy)
-  {
-    vector<double> probabilities;
-    probabilities.reserve(MF23.size());
-    // const double rng=RNG(0, 1);
-    // double ee=20e6;
-    // double crossSectionTotal=totalCrossSection.GetCrossSection(photonEnergy);
-    // double crossSectionTotal=totalCrossSection.GetCrossSection(ee);
-    double total=0;
-    double e=0;
-    // std::cout<<crossSectionTotal<<'\n';
-
-    for(auto &c: MF23)
-      {
-	e=c.GetCrossSection(photonEnergy);
-	// e=c.GetCrossSection(ee);
-	total+=e;
-	probabilities.push_back(e);
-	// std::cout<<c.MT<<" "<<c.MF<<" "<<e<<" "<<total<<" "<<total/crossSectionTotal<<'\n';
-      }
-    std::sort(probabilities.begin(), probabilities.end());
-    return {total, probabilities};
-  }
   void CreatePDF(const double photonEnergy)
   {
-   const pair<double, vector<double>> probabilities=GetProbability(photonEnergy);
+   pair<double, vector<pair<unsigned, double>>> probabilities=GetProbability(photonEnergy);
 
    for(const auto &p: probabilities.second)
      {
-       cout<<p/probabilities.first<<'\n';
+       cout<<p.first<<" "<<p.second/probabilities.first<<'\n';
      }
   }
   CrossSections(){}
