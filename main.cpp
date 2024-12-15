@@ -7,6 +7,7 @@
 #include "Coordinate.h"
 #include "RadioNuclide.h"
 #include "ReadCrossSections.h"
+#include "Photon.h"
 
 using std::cout;
 
@@ -29,36 +30,34 @@ void PhysicsRoutine(Cell *cell, double &photonEnergy)
   cell->material->crossSections.GetProbability(photonEnergy);
 }
 
-void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coordinate &photonDirection, Cell *cellHead, RadioNuclide *radioNuclide, double &photonEnergy)
+void SurfaceTracking(Cell *cellHead, Photon photon)
 {
-  Coordinate photonTo=photonDirection*photonToDistance;
-  Coordinate mfp=photonFrom+photonTo;
+  bool collision=0;
   Coordinate surfaceLocation;
   Cell *current=cellHead;
-  bool collision=0;
   double boundaryDistance=0;
   double collisionDistance=0;
 
-  mfp.print();
+  photon.mfp.print();
 
   while(current!=nullptr and !collision)
     {
-      collision=current->CellTest(mfp);
+      collision=current->CellTest(photon.mfp);
 
-      boundaryDistance=current->CellDistanceTest(photonFrom, photonDirection);
-      collisionDistance=mfp.GetLength();
+      boundaryDistance=current->CellDistanceTest(photon.origin, photon.direction);
+      collisionDistance=photon.mfp.GetLength();
 
       if(collisionDistance<boundaryDistance)
 	{
-	  cout<<"No boundary crossed! "<<photonEnergy<<'\n';
+	  cout<<"No boundary crossed! "<<photon.energy<<'\n';
 	  // Call physics routine
-	  PhysicsRoutine(current, photonEnergy);
+	  PhysicsRoutine(current, photon.energy);
 	}
       else
 	{
-	  cout<<"Boundary crossed! "<<photonEnergy<<'\n';
-	  surfaceLocation=photonDirection*boundaryDistance;
-	  // SurfaceTracking(surfaceLocation, photonToDistance, photonDirection, current->next, radioNuclide, photonEnergy);
+	  cout<<"Boundary crossed! "<<photon.energy<<'\n';
+	  surfaceLocation=photon.direction*boundaryDistance;
+	  // SurfaceTracking(current->next, gamma);
 	}
 
       std::cout<<current->name<<" "<<collision<<" distance to surface "<<boundaryDistance<<" collision at "<<collisionDistance<<'\n';
@@ -70,19 +69,11 @@ void SurfaceTracking(Coordinate &photonFrom, const double photonToDistance, Coor
 void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time)
 {
   const unsigned activityRandom=PoissonRNG(radioNuclide->GetActivity(), time);
-  double energy;
-  double photonToDistance;
-  Coordinate photonFrom;
-  Coordinate photonTo;
-  Coordinate direction;
 
   for(unsigned i=0; i<activityRandom; i++)
     {
-      direction=RandomEmissionDirection();
-      photonFrom=cellHead->GetInitialPosition();
-      energy=radioNuclide->PDF();
-      photonToDistance=(-1/cellHead->material->GetMu(energy))*log(RNG(0, 1));
-      SurfaceTracking(photonFrom, photonToDistance, direction, cellHead, radioNuclide, energy);
+      Photon gamma(cellHead, radioNuclide);
+      SurfaceTracking(cellHead, gamma);
     }
 }
 
