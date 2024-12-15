@@ -2,6 +2,6 @@
 #define MATH_H
 
 double RNG (const double min, const double max);
-int PoissonRNG (const int activity, const int time);
+unsigned PoissonRNG (const unsigned activity, const unsigned time);
 
 #endif

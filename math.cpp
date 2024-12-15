@@ -8,7 +8,7 @@ double RNG(const double min, const double max)
   return rnd(random);
 }
 
-int PoissonRNG(const int activity, const int time)
+unsigned PoissonRNG(const unsigned activity, const unsigned time)
 {
   // Poisson random number generator
   std::mt19937 random(std::random_device{}());

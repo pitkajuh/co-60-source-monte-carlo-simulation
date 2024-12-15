@@ -64,32 +64,52 @@ private:
 
   pair<double, vector<pair<unsigned, double>>> GetProbability(const double photonEnergy)
   {
-    vector<pair<unsigned, double>> probabilities;
-    probabilities.reserve(MF23.size());
+    vector<pair<unsigned, double>> crossSections;
+    crossSections.reserve(MF23.size());
     double total=0;
-    double e=0;
+    double p=0;
 
     for(auto &c: MF23)
       {
-	e=c.GetCrossSection(photonEnergy);
-	total+=e;
-	probabilities.push_back({c.MT, e});
+	p=c.GetCrossSection(photonEnergy);
+	total+=p;
+	crossSections.push_back({c.MT, p});
+	// crossSections.push_back({c.MT, total});
       }
-    std::sort(probabilities.begin(), probabilities.end(), sortFunction);
-    return {total, probabilities};
+    std::sort(crossSections.begin(), crossSections.end(), sortFunction);
+    return {total, crossSections};
   }
 public:
   CrossSection totalCrossSection;
   vector<CrossSection> MF23;
   vector<CrossSection> MF27;
 
-  void CreatePDF(const double photonEnergy)
+  void PDF(const double photonEnergy)
   {
-   pair<double, vector<pair<unsigned, double>>> probabilities=GetProbability(photonEnergy);
+   const pair<double, vector<pair<unsigned, double>>> crossSections=GetProbability(photonEnergy);
+   const double crossSectionTotal=crossSections.first;
+   const double crossSectionRandom=RNG(0, 1)*crossSectionTotal;
+   double i1;
+   double i2;
+   // bool b1;
+   // bool b2;
 
-   for(const auto &p: probabilities.second)
+   for(unsigned crossSection=1; crossSection<crossSections.second.size(); crossSection++)
      {
-       cout<<p.first<<" "<<p.second/probabilities.first<<'\n';
+       i1=crossSections.second[crossSection-1].second;
+       i2=crossSections.second[crossSection].second;
+       // cout<<crossSections.second[crossSection-1].first<<" "<<crossSections.second[crossSection].first<<" "<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
+       // b1=i2<crossSectionRandom;
+       // b2=crossSectionRandom<=i1;
+       // cout<<b1<<" "<<b2<<'\n';
+
+       if(i2<crossSectionRandom and crossSectionRandom<=i1)
+	 {
+	   cout<<"AOE "<<crossSections.second[crossSection-1].first<<" "<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
+	   // cout<<"AOE "<<crossSections.second[crossSection-1].first<<" "<<crossSections.second[crossSection].first<" "<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
+	   break;
+	 }
+
      }
   }
   CrossSections(){}

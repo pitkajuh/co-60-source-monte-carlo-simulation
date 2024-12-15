@@ -27,7 +27,7 @@ using std::cout;
 void PhysicsRoutine(Cell *cell, double &photonEnergy)
 {
   cout<<"PhysicsRoutine "<<'\n';
-  cell->material->crossSections.CreatePDF(photonEnergy);
+  cell->material->crossSections.PDF(photonEnergy);
 }
 
 void SurfaceTracking(Cell *cellHead, Photon photon)
