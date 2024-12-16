@@ -30,12 +30,28 @@ double KleinNishinaCrossSection(const double E, const double mu)
   return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*(1-mu)*(1-mu));
 }
 
-double IncoherentScatteringCrossSection(const double E, const double mu, const double S)
+double IncoherentScatteringCrossSection(const double E, const double mu)
 {
-  // S is the incoherent scattering function
+  // S is the incoherent scattering function. Get from ENDF
   // mu is the cosine unit (cos(theta))
   // E is the incident photon energy
+  const double S=0;
   return S*KleinNishinaCrossSection(E, mu);
 }
 
-double ThomsonCrossSection(const double photonEnergy, const double mu){return M_PI*r_e*(1+mu);}
+double ThomsonCrossSection(const double E, const double mu)
+{
+  // Get mu from ENDF
+  return M_PI*r_e*r_e*(1+mu*mu);
+}
+
+double IncoherentScatteringCrossSection(const double E, const double mu, const double S)
+{
+  // Coherent scattering form factor
+  const double F=0;
+  // Real anomalous scattering factor
+  const double Fdot=0;
+  // Imaginary anomalous scattering factor
+  const double Fdotdot=0;
+  return ThomsonCrossSection(E, mu)*((F+Fdot)*(F+Fdot)+Fdotdot*Fdotdot);
+}
