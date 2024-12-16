@@ -48,11 +48,18 @@ class CrossSection
   }
 };
 
-class TotalCrossSection: public CrossSection
+class MicroscopicCrossSection: public CrossSection
 {
 public:
 
 };
+
+class MacroscopicCrossSection: public CrossSection
+{
+public:
+
+};
+
 
 class CrossSections
 {
@@ -74,7 +81,6 @@ private:
 	p=c.GetCrossSection(photonEnergy);
 	total+=p;
 	crossSections.push_back({c.MT, p});
-	// crossSections.push_back({c.MT, total});
       }
     std::sort(crossSections.begin(), crossSections.end(), sortFunction);
     return {total, crossSections};
@@ -91,25 +97,17 @@ public:
    const double crossSectionRandom=RNG(0, 1)*crossSectionTotal;
    double i1;
    double i2;
-   // bool b1;
-   // bool b2;
 
    for(unsigned crossSection=1; crossSection<crossSections.second.size(); crossSection++)
      {
        i1=crossSections.second[crossSection-1].second;
        i2=crossSections.second[crossSection].second;
-       // cout<<crossSections.second[crossSection-1].first<<" "<<crossSections.second[crossSection].first<<" "<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
-       // b1=i2<crossSectionRandom;
-       // b2=crossSectionRandom<=i1;
-       // cout<<b1<<" "<<b2<<'\n';
 
        if(i2<crossSectionRandom and crossSectionRandom<=i1)
 	 {
 	   cout<<"AOE "<<crossSections.second[crossSection-1].first<<" "<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
-	   // cout<<"AOE "<<crossSections.second[crossSection-1].first<<" "<<crossSections.second[crossSection].first<" "<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
 	   break;
 	 }
-
      }
   }
   CrossSections(){}
