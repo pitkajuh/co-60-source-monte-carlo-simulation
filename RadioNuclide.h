@@ -1,10 +1,6 @@
 #ifndef RADIONUCLIDE_H
 #define RADIONUCLIDE_H
 
-#include "Coordinate.h"
-#include <iostream>
-using std::cout;
-
 class RadioNuclide
 {
 protected:

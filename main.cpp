@@ -7,7 +7,7 @@
 #include "Coordinate.h"
 #include "RadioNuclide.h"
 #include "ReadCrossSections.h"
-#include "Photon.h"
+#include "Reactions.h"
 
 using std::cout;
 

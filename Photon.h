@@ -3,7 +3,7 @@
 
 #include "Coordinate.h"
 #include "RadioNuclide.h"
-#include "math.h"
+// #include "math.h"
 
 class Photon
 {

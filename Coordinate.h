@@ -1,8 +1,11 @@
 #ifndef COORDINATE_H
 #define COORDINATE_H
 
-#include <cmath>
 #include <string>
+#include <iostream>
+#include "math.h"
+
+using std::cout;
 
 struct Coordinate
 {
