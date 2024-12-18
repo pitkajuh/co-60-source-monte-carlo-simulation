@@ -11,19 +11,6 @@
 
 using std::cout;
 
-// double CellSearch(Cell *cellHead, const Coordinate &mfp, Coordinate &photonDirection)
-// {
-//   Cell *current=cellHead;
-//   bool collision=0;
-
-//   while(current!=nullptr and !collision)
-//     {
-//       collision=current->CellTest(mfp);
-//       current=current->next;
-//     }
-//   return current->CellDistanceTest(mfp, photonDirection);
-// }
-
 void PhysicsRoutine(Cell *cell, double &photonEnergy)
 {
   cout<<"PhysicsRoutine "<<'\n';
