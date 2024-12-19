@@ -36,8 +36,8 @@ class CrossSection
       }
 
     if(energyPrevious==0) return 0;
-
-    return crossSection[energyPrevious][0]+(photonEnergy-energyPrevious)*(crossSection[energyCurrent][0]-crossSection[energyPrevious][0])/(energyCurrent-energyPrevious);
+    const unsigned index=crossSection[energyPrevious].size()-1;
+    return crossSection[energyPrevious][index]+(photonEnergy-energyPrevious)*(crossSection[energyCurrent][index]-crossSection[energyPrevious][index])/(energyCurrent-energyPrevious);
   }
   CrossSection(){}
   CrossSection(const pair<unsigned, unsigned> &reaction, const map<double, vector<double>> &map)
@@ -81,7 +81,9 @@ private:
 	p=c.GetCrossSection(photonEnergy);
 	total+=p;
 	crossSections.push_back({c.MT, p});
+	cout<<c.MT<<" "<<p<<" "<<total<<'\n';
       }
+    cout<<total<<'\n';
     std::sort(crossSections.begin(), crossSections.end(), sortFunction);
     return {total, crossSections};
   }
@@ -111,12 +113,12 @@ public:
      }
   }
   CrossSections(){}
-  CrossSections(const vector<CrossSection> &cS23, const vector<CrossSection> &cS27)
+  CrossSections(const vector<CrossSection> &file23, const vector<CrossSection> &file27)
   {
-    totalCrossSection=cS23[0];
-    MF23=cS23;
+    totalCrossSection=file23[0];
+    MF23=file23;
     MF23.erase(MF23.begin()+0);
-    MF27=cS27;
+    MF27=file27;
   }
 };
 

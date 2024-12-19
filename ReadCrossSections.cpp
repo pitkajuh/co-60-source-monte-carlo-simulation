@@ -10,33 +10,33 @@ using std::stod;
 using std::stoi;
 using std::to_string;
 
-void LineSplit(string &line, vector<double> &v)
+void SplitRecord(string &record, vector<double> &v)
 {
-  const string sub=line.substr(0, 10);
+  const string sub=record.substr(0, 10);
   const char empty=' ';
   const char s1=sub[0];
   const char s2=sub[sub.size()-1];
 
-  if(line.size()>10)
+  if(record.size()>10)
     {
-      line=line.substr(11, line.size());
+      record=record.substr(11, record.size());
 
       if(s1==empty and s2==empty) v.push_back(0);
       else v.push_back(stod(sub));
 
-      if(line.size()>=10) LineSplit(line, v);
+      if(record.size()>=10) SplitRecord(record, v);
     }
-  else if(line.size()==10 and s1==empty and s2==empty) v.push_back(0);
-  else v.push_back(stod(line));
+  else if(record.size()==10 and s1==empty and s2==empty) v.push_back(0);
+  else v.push_back(stod(record));
 }
 
 map<double, vector<double>> ReadENDF(ifstream &endf, streampos &from, const string &id)
 {
   bool found=false;
   double energy;
-  string line;
-  string line2;
-  int linesSkip=3;
+  string record;
+  string record2;
+  int recordsSkip=3;
   int size;
   const int idSize=id.size();
   vector<double> v;
@@ -44,43 +44,43 @@ map<double, vector<double>> ReadENDF(ifstream &endf, streampos &from, const stri
   map<double, vector<double>> ENDFmap;
   endf.seekg(from);
 
-  while(getline(endf, line))
+  while(getline(endf, record))
     {
-      size=line.size();
-      line2=line.substr(size-idSize, size);
+      size=record.size();
+      record2=record.substr(size-idSize, size);
 
-      if(found and line.substr(size-idSize, size)!=id) break;
-      else if(line2==id and linesSkip==0)
+      if(found and record.substr(size-idSize, size)!=id) break;
+      else if(record2==id and recordsSkip==0)
 	{
-	  line=line.substr(1, size-idSize-1);
-	  LineSplit(line, v);
+	  record=record.substr(1, size-idSize-1);
+	  SplitRecord(record, v);
 	  energy=v[0];
 	  v.erase(v.begin()+0);
 	  ENDFmap[energy]=v;
 	  v.clear();
 	  found=true;
 	}
-      else if(line2==id) linesSkip--;
+      else if(record2==id) recordsSkip--;
     }
   from=endf.tellg();
   return ENDFmap;
 }
 
-void Split(string &line, vector<string> &v)
+void Split(string &record, vector<string> &v)
 {
-  const int at=distance(line.begin(), find(line.begin(), line.end(), ' '));
-  const int size=line.size();
+  const int at=distance(record.begin(), find(record.begin(), record.end(), ' '));
+  const int size=record.size();
 
   if(at>0 and at!=size)
     {
-      v.push_back(line.substr(0, at));
-      line=line.substr(at, line.size());
-      Split(line, v);
+      v.push_back(record.substr(0, at));
+      record=record.substr(at, record.size());
+      Split(record, v);
     }
   else if(at==0)
     {
-      string line3=line.substr(at+1, line.size());
-      Split(line3, v);
+      string record3=record.substr(at+1, record.size());
+      Split(record3, v);
     }
 }
 
@@ -88,8 +88,8 @@ pair<string, vector<pair<unsigned, unsigned>>> GetReactions(ifstream &endf, stre
 {
   int at;
   bool found=0;
-  string line;
-  string line2;
+  string record;
+  string record2;
   string MF;
   const string MFMT="MF/MT";
   const string warning="Warning";
@@ -98,13 +98,13 @@ pair<string, vector<pair<unsigned, unsigned>>> GetReactions(ifstream &endf, stre
   pair<unsigned, unsigned> MFMTpair;
   pair<string, vector<pair<unsigned, unsigned>>> resultf;
 
-  while(getline(endf, line))
+  while(getline(endf, record))
     {
-      if(line.substr(2, warning.size())==warning) break;
-      else if(found and line[1]!='=')
+      if(record.substr(2, warning.size())==warning) break;
+      else if(found and record[1]!='=')
 	{
-	  line2=line.substr(2, line.size());
-	  Split(line2, v);
+	  record2=record.substr(2, record.size());
+	  Split(record2, v);
 	  at=distance(v[0].begin(), find(v[0].begin(), v[0].end(), '/'));
 
 	  MFMTpair={stoi(v[0].substr(0, at)), stoi(v[0].substr(at+1, v[0].size()))};
@@ -114,7 +114,7 @@ pair<string, vector<pair<unsigned, unsigned>>> GetReactions(ifstream &endf, stre
 	  // cout<<v[0].substr(0, at)+v[0].substr(at+1, v[0].size())<<"v[0].substr(0, at)+v[0].substr(at+1, v[0].size())"<<'\n';
 	  v.clear();
 	}
-      else if(line.substr(2, MFMT.size())==MFMT) found=true;
+      else if(record.substr(2, MFMT.size())==MFMT) found=true;
     }
   resultf={MF, result};
   from=endf.tellg();
@@ -143,8 +143,8 @@ pair<string, vector<pair<unsigned, unsigned>>> GetReactions(ifstream &endf, stre
 
 CrossSections ParseEndf(ifstream &endf, streampos &from)
 {
-  vector<CrossSection> crossSections23={};
-  vector<CrossSection> crossSections27={};
+  vector<CrossSection> file23={};
+  vector<CrossSection> file27={};
   const pair<string, vector<pair<unsigned, unsigned>>> reactions=GetReactions(endf, from);
   const string material=reactions.first;
 
@@ -155,24 +155,24 @@ CrossSections ParseEndf(ifstream &endf, streampos &from)
       CrossSection crossSection(reaction, ReadENDF(endf, from, material+to_string(reaction.first)+to_string(reaction.second)));
       // cout<<"MF;"<<std::stoi(reaction.substr(4, 2))<<";"<<'\n';
       // cout<<"AEAOE "<<material+to_string(reaction.first)+to_string(reaction.second)<<'\n';
-      // crossSections23.push_back(crossSection);
+      // file23.push_back(crossSection);
       // if(reaction.first==23 and reaction.second!=516 and reaction.second!=522 and reaction.second!=515)
       if(reaction.first==23 and reaction.second!=516 and reaction.second!=522)
       // if(reaction.first==23)
 	{
 	  // cout<<23<<'\n';
-	  crossSections23.push_back(crossSection);
+	  file23.push_back(crossSection);
 	}
       // else if(reaction.first!=516 and reaction.first!=522 and reaction.first!=515)
       else
 	{
 	  // cout<<27<<'\n';
-	  crossSections27.push_back(crossSection);
+	  file27.push_back(crossSection);
 	}
     }
   from=0;
   // cout<<"END"<<'\n';
-  return {crossSections23, crossSections27};
+  return {file23, file27};
 }
 
 CrossSections GetMaterialCrossSection(const string &endf)
