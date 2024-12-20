@@ -71,10 +71,10 @@ private:
 
   pair<double, vector<pair<unsigned, double>>> GetProbability(const double photonEnergy)
   {
-    vector<pair<unsigned, double>> crossSections;
-    crossSections.reserve(MF23.size());
     double total=0;
     double p=0;
+    vector<pair<unsigned, double>> crossSections;
+    crossSections.reserve(MF23.size());
 
     for(auto &c: MF23)
       {

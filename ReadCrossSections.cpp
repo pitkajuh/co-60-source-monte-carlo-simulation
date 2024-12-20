@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include "CrossSection.h"
+#include "Tape.h"
 
 using std::cout;
 using std::ifstream;
@@ -143,6 +144,7 @@ pair<string, vector<pair<unsigned, unsigned>>> GetReactions(ifstream &endf, stre
 
 CrossSections ParseEndf(ifstream &endf, streampos &from)
 {
+  Tape *ENDFtape=new Tape;
   vector<CrossSection> file23={};
   vector<CrossSection> file27={};
   const pair<string, vector<pair<unsigned, unsigned>>> reactions=GetReactions(endf, from);
@@ -150,15 +152,9 @@ CrossSections ParseEndf(ifstream &endf, streampos &from)
 
   for(const auto &reaction: reactions.second)
     {
-      // cout<<reaction<<'\n';
-      // MF=reaction.substr(4, 2);
       CrossSection crossSection(reaction, ReadENDF(endf, from, material+to_string(reaction.first)+to_string(reaction.second)));
-      // cout<<"MF;"<<std::stoi(reaction.substr(4, 2))<<";"<<'\n';
-      // cout<<"AEAOE "<<material+to_string(reaction.first)+to_string(reaction.second)<<'\n';
-      // file23.push_back(crossSection);
-      // if(reaction.first==23 and reaction.second!=516 and reaction.second!=522 and reaction.second!=515)
+
       if(reaction.first==23 and reaction.second!=516 and reaction.second!=522)
-      // if(reaction.first==23)
 	{
 	  // cout<<23<<'\n';
 	  file23.push_back(crossSection);
@@ -172,6 +168,8 @@ CrossSections ParseEndf(ifstream &endf, streampos &from)
     }
   from=0;
   // cout<<"END"<<'\n';
+  delete ENDFtape;
+  endf.close();
   return {file23, file27};
 }
 
