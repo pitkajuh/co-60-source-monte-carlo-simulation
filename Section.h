@@ -12,21 +12,33 @@ class Section
 private:
   void GetSection(ifstream &tape, streampos &from)
   {
+    cout<<"ReadTape"<<'\n';
+    string record;
+    tape.seekg(from);
 
+    while(getline(tape, record))
+      {
+	cout<<record<<'\n';
+      }
+    tape.close();
   }
  public:
-  // unsigned MT;
+  unsigned MF;
   // vector<Record> records;
+  virtual ~Section(){}
 };
 
 class PairFormation: public Section
 {
 public:
+  PairFormation(){MF=517;}
+  ~PairFormation(){}
 };
 
 class PhotoIonization: public Section
 {
 public:
+  PhotoIonization *next=nullptr;
 };
 
 class Scattering: public Section
@@ -34,17 +46,32 @@ class Scattering: public Section
 public:
 };
 
-class Factor: public Section
-{
-public:
-};
-
 class CoherentScattering: public Scattering
 {
 public:
+  CoherentScattering()
+  {
+    MF=502;
+  }
+  CoherentScattering(const unsigned MT)
+  {
+    MF=502;
+  }
+  ~CoherentScattering(){}
 };
 
 class IncoherentScattering: public Scattering
+{
+public:
+  IncoherentScattering()
+  {
+    MF=504;
+
+  }
+  ~IncoherentScattering(){}
+};
+
+class Factor: public Section
 {
 public:
 };

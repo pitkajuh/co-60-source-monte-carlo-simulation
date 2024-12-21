@@ -144,7 +144,7 @@ pair<string, vector<pair<unsigned, unsigned>>> GetReactions(ifstream &endf, stre
 
 CrossSections ParseEndf(ifstream &endf, streampos &from)
 {
-  Tape *ENDFtape=new Tape;
+  // Tape *ENDFtape=new Tape(endf);
   vector<CrossSection> file23={};
   vector<CrossSection> file27={};
   const pair<string, vector<pair<unsigned, unsigned>>> reactions=GetReactions(endf, from);
@@ -168,7 +168,7 @@ CrossSections ParseEndf(ifstream &endf, streampos &from)
     }
   from=0;
   // cout<<"END"<<'\n';
-  delete ENDFtape;
+  // delete ENDFtape;
   endf.close();
   return {file23, file27};
 }

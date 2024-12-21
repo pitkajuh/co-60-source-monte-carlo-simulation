@@ -4,6 +4,7 @@
 #include "math.h"
 #include "Material.h"
 #include "Cell.h"
+#include "Tape.h"
 #include "Coordinate.h"
 #include "RadioNuclide.h"
 #include "ReadCrossSections.h"
@@ -77,16 +78,16 @@ void GetCount(Cell *cellHead, const unsigned N)
 
 void MonteCarlo(const unsigned time, Cell *cell, RadioNuclide *radioNuclide)
 {
-  unsigned t=0;
+  // unsigned t=0;
 
-  while(t<time)
-    {
-      ParseCells2(cell, radioNuclide, time);
-      t++;
-    }
-  printf("---------------------------------------\n");
+  // while(t<time)
+  //   {
+  //     ParseCells2(cell, radioNuclide, time);
+  //     t++;
+  //   }
+  // printf("---------------------------------------\n");
 
-  GetCount(cell, time);
+  // GetCount(cell, time);
 }
 
 int main()
@@ -144,7 +145,10 @@ int main()
   RadioNuclide *co60=new Co60(sourceActivity);
   // GetCrossSection();
   MonteCarlo(time, source, co60);
-
+  // string steelFile="./cross-sections/photoat-026_Fe_000.endf";
+  Tape *endf=new Tape("./cross-sections/photoat-026_Fe_000.endf");
+// CrossSections steelCrossSections=GetMaterialCrossSection("./cross-sections/photoat-026_Fe_000.endf");
+  delete endf;
   delete source;
   delete co60;
 

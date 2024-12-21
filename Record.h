@@ -2,7 +2,8 @@
 #define RECORD_H
 
 #include <vector>
-
+#include <iostream>
+using std::cout;
 using std::vector;
 
 class Record

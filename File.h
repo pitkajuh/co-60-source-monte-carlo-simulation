@@ -16,16 +16,22 @@ class File
 class File23: public File
 {
 public:
+  // Section *coherentScattering=new CoherentScattering;
+  Section *coherentScattering;
+  Section *incoherentScattering=new IncoherentScattering;
   Section *pairFormation=new PairFormation;
   Section *photoIonization=new PhotoIonization;
-  Section *incoherentScattering=new IncoherentScattering;
-  Section *coherentScattering=new CoherentScattering;
 
   void AddSection() override
   {
 
   }
   File23(){}
+  File23(ifstream &tape, streampos &from)
+  {
+    MT=23;
+    coherentScattering=new CoherentScattering(MT);
+  }
   ~File23()
   {
     delete pairFormation;
@@ -41,7 +47,7 @@ public:
   Section *coherentFactor=new CoherentFactor;
   Section *incoherentFactor=new IncoherentFactor;
   Section *imaginaryFactor=new ImaginaryFactor;
-    Section *realFactor=new RealFactor;
+  Section *realFactor=new RealFactor;
 
   void AddSection() override
   {

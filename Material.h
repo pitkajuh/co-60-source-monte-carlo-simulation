@@ -25,6 +25,7 @@ const double GetMuValue(const double photonEnergy, map<double, pair<double, doub
 class Material
 {
 public:
+  unsigned ZA;
   double density=0; // in g/cm3
   map<double, pair<double, double>> muMap;
   CrossSections crossSections;
@@ -39,7 +40,7 @@ public:
   {
     density=d;
     muMap=muMapSodium;
-    crossSections=sodiumCrossSections;
+    // crossSections=sodiumCrossSections;
   }
 
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
@@ -52,7 +53,7 @@ public:
   {
     density=d;
     muMap=muMapTitanium;
-    crossSections=titaniumCrossSections;
+    // crossSections=titaniumCrossSections;
   }
 
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
@@ -65,7 +66,7 @@ public:
   {
     density=d;
     muMap=muMapNitrogen;
-    crossSections=nitrogenCrossSections;
+    // crossSections=nitrogenCrossSections;
   }
 
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
@@ -76,9 +77,10 @@ class Steel: public Material
 public:
   Steel(const double d)
   {
+    ZA=26000;
     density=d;
     muMap=muMapSteel;
-    crossSections=steelCrossSections;
+    // crossSections=steelCrossSections;
   }
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
 };
