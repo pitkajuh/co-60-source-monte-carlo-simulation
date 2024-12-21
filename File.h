@@ -31,6 +31,7 @@ public:
   {
     MT=23;
     coherentScattering=new CoherentScattering(MT, tape, from);
+    incoherentScattering=new IncoherentScattering(MT, tape, from);
   }
   ~File23()
   {

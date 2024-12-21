@@ -19,13 +19,9 @@ protected:
       {
 	size=record.size();
 	id=record.substr(size-id2.size(), size);
-	if(id==id2)
-	  {
-	    from+=76;
-	    break;
-	  }
+	if(id==id2) break;
       }
-    cout<<record<<'\n';
+    // cout<<record<<'\n';
     // from+=76;
     from=tape.tellg();
     // from+=76;
@@ -33,7 +29,7 @@ protected:
   }
  public:
   unsigned MF;
-  vector<Record> records;
+  Records records;
   virtual ~Section(){}
 };
 
@@ -63,6 +59,7 @@ public:
   {
     MF=502;
     GetSection(tape, from, MT);
+    records.GetRecord(tape, from, MF);
   }
   ~CoherentScattering(){}
 };
@@ -70,10 +67,12 @@ public:
 class IncoherentScattering: public Scattering
 {
 public:
-  IncoherentScattering()
+  IncoherentScattering(){}
+  IncoherentScattering(const unsigned MT, ifstream &tape, streampos &from)
   {
     MF=504;
-
+    GetSection(tape, from, MT);
+    records.GetRecord(tape, from, MF);
   }
   ~IncoherentScattering(){}
 };
