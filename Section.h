@@ -36,7 +36,13 @@ protected:
 class PairFormation: public Section
 {
 public:
-  PairFormation(){MF=517;}
+  PairFormation(){}
+  PairFormation(const unsigned MT, ifstream &tape, streampos &from)
+  {
+    MF=517;
+    GetSection(tape, from, MT);
+    records.GetRecord(tape, from, MF);
+  }
   ~PairFormation(){}
 };
 

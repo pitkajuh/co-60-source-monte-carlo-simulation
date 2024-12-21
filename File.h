@@ -16,11 +16,10 @@ class File
 class File23: public File
 {
 public:
-  // Section *coherentScattering=new CoherentScattering;
   Section *coherentScattering;
-  Section *incoherentScattering=new IncoherentScattering;
-  Section *pairFormation=new PairFormation;
-  Section *photoIonization=new PhotoIonization;
+  Section *incoherentScattering;
+  Section *pairFormation;
+  Section *photoIonization;
 
   void AddSection() override
   {
@@ -32,6 +31,8 @@ public:
     MT=23;
     coherentScattering=new CoherentScattering(MT, tape, from);
     incoherentScattering=new IncoherentScattering(MT, tape, from);
+    pairFormation=new PairFormation(MT, tape, from);
+  photoIonization=new PhotoIonization;
   }
   ~File23()
   {

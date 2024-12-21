@@ -20,7 +20,6 @@ class Tape
   /*   tape.close(); */
   /* } */
  public:
-   /* File *MF23=new File23; */
   File *MF23;
   File *MF27=new File27;
 
@@ -28,10 +27,8 @@ class Tape
   Tape(const string &tape)
     {
       ifstream endf(tape);
-      /* streampos from=76; */
       streampos from=0;
       MF23=new File23(endf, from);
-      /* ReadTape(endf, from); */
     }
   ~Tape()
     {
