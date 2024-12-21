@@ -3,17 +3,23 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 using std::cout;
 using std::vector;
+using std::ifstream;
+using std::streampos;
 
 class Record
 {
-private:
+public:
+  // vector<double> records;
+  // records.reserve(6);
+  // Record(){}
+  Record(ifstream &tape, streampos &from)
+  {
 
- public:
-  vector<double> record;
-  // record.reserve(6);
+  }
+  ~Record(){}
 };
-
 
 #endif

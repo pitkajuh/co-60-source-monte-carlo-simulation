@@ -1,30 +1,39 @@
 #ifndef SECTION_H
 #define SECTION_H
 
-#include <fstream>
 #include "Record.h"
-
-using std::ifstream;
-using std::streampos;
 
 class Section
 {
-private:
-  void GetSection(ifstream &tape, streampos &from)
+protected:
+  void GetSection(ifstream &tape, streampos &from, unsigned MT)
   {
-    cout<<"ReadTape"<<'\n';
+    cout<<"ReadTape "<<MF<<'\n';
     string record;
+    string id;
+    unsigned size;
     tape.seekg(from);
+    const string id2=std::to_string(MT)+std::to_string(MF);
 
     while(getline(tape, record))
       {
-	cout<<record<<'\n';
+	size=record.size();
+	id=record.substr(size-id2.size(), size);
+	if(id==id2)
+	  {
+	    from+=76;
+	    break;
+	  }
       }
-    tape.close();
+    cout<<record<<'\n';
+    // from+=76;
+    from=tape.tellg();
+    // from+=76;
+    // cout<<record<<'\n';
   }
  public:
   unsigned MF;
-  // vector<Record> records;
+  vector<Record> records;
   virtual ~Section(){}
 };
 
@@ -49,13 +58,11 @@ public:
 class CoherentScattering: public Scattering
 {
 public:
-  CoherentScattering()
+  CoherentScattering(){}
+  CoherentScattering(const unsigned MT, ifstream &tape, streampos &from)
   {
     MF=502;
-  }
-  CoherentScattering(const unsigned MT)
-  {
-    MF=502;
+    GetSection(tape, from, MT);
   }
   ~CoherentScattering(){}
 };

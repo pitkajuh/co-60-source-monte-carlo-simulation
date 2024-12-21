@@ -30,7 +30,7 @@ public:
   File23(ifstream &tape, streampos &from)
   {
     MT=23;
-    coherentScattering=new CoherentScattering(MT);
+    coherentScattering=new CoherentScattering(MT, tape, from);
   }
   ~File23()
   {
