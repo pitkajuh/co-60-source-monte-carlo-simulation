@@ -57,15 +57,24 @@ public:
 
 class PhotoIonization: public Section
 {
+private:
+  void MultipleMF(ifstream &tape, streampos &from, const unsigned MT, const vector<unsigned> &MFs)
+  {
+    for(const auto &MF: MFs)
+      {
+	// cout<<MF<<'\n';
+	GetSection(tape, from, MT, MF);
+	records.GetRecord(tape, from, MF, MT);
+      }
+  }
 public:
-  PhotoIonization *next=nullptr;
   PhotoIonization(){}
   PhotoIonization(const unsigned MT, ifstream &tape, streampos &from)
   {
-    MF=100;
-    cout<<tape.tellg()<<'\n';
-    GetSection(tape, from, MT, MF);
-    records.GetRecord(tape, from, MF, MT);
+    vector<unsigned> MFs;
+    MFs.reserve(572-534);
+    for(unsigned i=534; i<573; i++){MFs.emplace_back(i);}
+    MultipleMF(tape, from, MT, MFs);
   }
   ~PhotoIonization(){}
 };

@@ -69,7 +69,7 @@ public:
 	printdouble(records);
 
 	records.clear();
-
+	// Save the records here.
       }
     from=tape.tellg();
     cout<<" "<<'\n';
