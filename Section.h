@@ -6,23 +6,46 @@
 class Section
 {
 protected:
-
-  void GetSection(ifstream &tape, streampos &from, unsigned MT, unsigned MF)
+  void FindSection(ifstream &tape, streampos &from, const unsigned MT, const unsigned MF)
   {
-    cout<<"ReadTape "<<MF<<" "<<MT<<'\n';
+    cout<<"ReadTape "<<MF<<" "<<MT<<" from "<<from<<" At "<<tape.tellg()<<'\n';
     string record;
     string id;
     unsigned size;
     tape.seekg(from);
     const string id2=std::to_string(MT)+std::to_string(MF);
+    string id3;
 
-    while(getline(tape, record))
+    getline(tape, record);
+    // getline(tape, record);
+    cout<<"RECORDLINE first ;"<<record<<";"<<tape.tellg()<<'\n';
+
+    if(record.substr(record.size()-id2.size(), record.size())!=" 0  0")
       {
-	size=record.size();
-	id=record.substr(size-id2.size(), size);
-	if(id==id2) break;
-      }
-    from=tape.tellg();
+	// from+=76;
+	cout<<"END"<<'\n';
+	}
+
+	tape.seekg(from);
+	while(getline(tape, record))
+	  {
+	    size=record.size();
+	    id=record.substr(size-id2.size(), size);
+	    id3=id.substr(0, 2);
+	    cout<<"RECORD12 ;"<<record<<";"<<id3<<'\n';
+	    // if(id==id2 or id.substr(0, 2)!=std::to_string(MT)) break;
+	    // cout<<" "<<'\n';
+
+	    if(id==id2) break;
+
+
+	    // cout<<id<<" "<<id2<<" ;"<<id3<<";"<<'\n';
+	  }
+	from=tape.tellg();
+	from+=76*2;
+	// getline(tape, record);
+	// cout<<record<<'\n';
+      // }
   }
  public:
   unsigned MF;
@@ -37,8 +60,7 @@ private:
   {
     for(const auto &MF: MFs)
       {
-	// cout<<MF<<'\n';
-	GetSection(tape, from, MT, MF);
+	FindSection(tape, from, MT, MF);
 	records.GetRecord(tape, from, MF, MT);
       }
   }
@@ -46,10 +68,7 @@ public:
   PairFormation(){}
   PairFormation(const unsigned MT, ifstream &tape, streampos &from)
   {
-    // MF=517;
     const vector<unsigned> MFs={515, 517};
-    // GetSection(tape, from, MT);
-    // records.GetRecord(tape, from, MF, MT);
     MultipleMF(tape, from, MT, MFs);
   }
   ~PairFormation(){}
@@ -62,8 +81,7 @@ private:
   {
     for(const auto &MF: MFs)
       {
-	// cout<<MF<<'\n';
-	GetSection(tape, from, MT, MF);
+	FindSection(tape, from, MT, MF);
 	records.GetRecord(tape, from, MF, MT);
       }
   }
@@ -91,7 +109,7 @@ public:
   CoherentScattering(const unsigned MT, ifstream &tape, streampos &from)
   {
     MF=502;
-    GetSection(tape, from, MT, MF);
+    FindSection(tape, from, MT, MF);
     records.GetRecord(tape, from, MF, MT);
   }
   ~CoherentScattering(){}
@@ -104,7 +122,7 @@ public:
   IncoherentScattering(const unsigned MT, ifstream &tape, streampos &from)
   {
     MF=504;
-    GetSection(tape, from, MT, MF);
+    FindSection(tape, from, MT, MF);
     records.GetRecord(tape, from, MF, MT);
   }
   ~IncoherentScattering(){}
@@ -118,21 +136,39 @@ public:
 class CoherentFactor: public Factor
 {
 public:
+  CoherentFactor(){}
+  CoherentFactor(const unsigned MT, ifstream &tape, streampos &from)
+  {
+    MF=502;
+    FindSection(tape, from, MT, MF);
+    records.GetRecord(tape, from, MF, MT);
+  }
+  ~CoherentFactor(){}
 };
 
 class IncoherentFactor: public Factor
 {
 public:
+  // IncoherentFactor(){}
+  // IncoherentFactor(const unsigned MT, ifstream &tape, streampos &from)
+  // {
+  //   MF=504;
+  //   FindSection(tape, from, MT, MF);
+  //   records.GetRecord(tape, from, MF, MT);
+  // }
+  // ~IncoherentFactor(){}
 };
 
 class ImaginaryFactor: public Factor
 {
 public:
+  // 505
 };
 
 class RealFactor: public Factor
 {
 public:
+  // 506
 };
 
 #endif
