@@ -42,25 +42,25 @@ class File27: public File
 {
 public:
   Section *coherentFactor;
-  // Section *incoherentFactor;
-  // Section *imaginaryFactor;
-  // Section *realFactor;
+  Section *incoherentFactor;
+  Section *imaginaryFactor;
+  Section *realFactor;
 
   File27(){}
   File27(ifstream &tape, streampos &from)
   {
     MT=27;
     coherentFactor=new CoherentFactor(MT, tape, from);
-  // incoherentFactor=new IncoherentFactor();
-  // imaginaryFactor=new ImaginaryFactor;
-  // realFactor=new RealFactor;
+    incoherentFactor=new IncoherentFactor(MT, tape, from);
+    imaginaryFactor=new ImaginaryFactor(MT, tape, from);
+    realFactor=new RealFactor(MT, tape, from);
   }
   ~File27()
   {
     delete coherentFactor;
-    // delete incoherentFactor;
-    // delete imaginaryFactor;
-    // delete realFactor;
+    delete incoherentFactor;
+    delete imaginaryFactor;
+    delete realFactor;
   }
 };
 

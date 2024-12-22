@@ -13,10 +13,10 @@ class Tape
   Tape(const string &tape)
     {
       ifstream endf(tape);
-      streampos from=0;
+      streampos from=76;
       MF23=new File23(endf, from);
-      /* cout<<"start MF27 "<<from<<'\n'; */
-      /* MF27=new File27(endf, from); */
+      cout<<"start MF27 "<<from<<'\n';
+      MF27=new File27(endf, from);
     }
   ~Tape()
     {

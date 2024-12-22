@@ -145,10 +145,20 @@ int main()
   RadioNuclide *co60=new Co60(sourceActivity);
   // GetCrossSection();
   MonteCarlo(time, source, co60);
-  // string steelFile="./cross-sections/photoat-026_Fe_000.endf";
-  Tape *endf=new Tape("./cross-sections/photoat-026_Fe_000.endf");
-// CrossSections steelCrossSections=GetMaterialCrossSection("./cross-sections/photoat-026_Fe_000.endf");
-  delete endf;
+
+  // Tape *steelENDF=new Tape("./cross-sections/photoat-026_Fe_000.endf");
+  // Tape *nitrogenENDF=new Tape("./cross-sections/photoat-007_N_000.endf");
+  // Tape *sodiumENDF=new Tape("./cross-sections/photoat-011_Na_000.endf");
+  // Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
+  Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
+
+  // delete steelENDF;
+  // delete nitrogenENDF;
+  // delete sodiumENDF;
+  // delete titaniumENDF;
+  delete iodineENDF;
+
+
   delete source;
   delete co60;
 

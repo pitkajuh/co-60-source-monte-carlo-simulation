@@ -17,37 +17,29 @@ protected:
     string id3;
 
     getline(tape, record);
-    // getline(tape, record);
-    cout<<"RECORDLINE first ;"<<record<<";"<<tape.tellg()<<'\n';
 
-    if(record.substr(record.size()-id2.size(), record.size())!=" 0  0")
+    if(record[74]=='0' and record[71]=='0')
       {
-	// from+=76;
-	cout<<"END"<<'\n';
-	}
+	changeFile=1;
+	cout<<"END FILE "<<record[74]<<" "<<record[71]<<'\n';
+      }
 
-	tape.seekg(from);
-	while(getline(tape, record))
-	  {
-	    size=record.size();
-	    id=record.substr(size-id2.size(), size);
-	    id3=id.substr(0, 2);
-	    cout<<"RECORD12 ;"<<record<<";"<<id3<<'\n';
-	    // if(id==id2 or id.substr(0, 2)!=std::to_string(MT)) break;
-	    // cout<<" "<<'\n';
+    tape.seekg(from);
 
-	    if(id==id2) break;
+    while(getline(tape, record))
+      {
+	size=record.size();
+	id=record.substr(size-id2.size(), size);
+	id3=id.substr(0, 2);
 
+	if(id==id2 or changeFile) break;
+      }
+    from=tape.tellg();
 
-	    // cout<<id<<" "<<id2<<" ;"<<id3<<";"<<'\n';
-	  }
-	from=tape.tellg();
-	from+=76*2;
-	// getline(tape, record);
-	// cout<<record<<'\n';
-      // }
+    if(!changeFile) from+=76*2;
   }
  public:
+  bool changeFile=0;
   unsigned MF;
   Records records;
   virtual ~Section(){}
@@ -81,8 +73,11 @@ private:
   {
     for(const auto &MF: MFs)
       {
-	FindSection(tape, from, MT, MF);
-	records.GetRecord(tape, from, MF, MT);
+	if(!changeFile)
+	  {
+	    FindSection(tape, from, MT, MF);
+	    records.GetRecord(tape, from, MF, MT);
+	  }
       }
   }
 public:
@@ -149,26 +144,40 @@ public:
 class IncoherentFactor: public Factor
 {
 public:
-  // IncoherentFactor(){}
-  // IncoherentFactor(const unsigned MT, ifstream &tape, streampos &from)
-  // {
-  //   MF=504;
-  //   FindSection(tape, from, MT, MF);
-  //   records.GetRecord(tape, from, MF, MT);
-  // }
-  // ~IncoherentFactor(){}
+  IncoherentFactor(){}
+  IncoherentFactor(const unsigned MT, ifstream &tape, streampos &from)
+  {
+    MF=504;
+    FindSection(tape, from, MT, MF);
+    records.GetRecord(tape, from, MF, MT);
+  }
+  ~IncoherentFactor(){}
 };
 
 class ImaginaryFactor: public Factor
 {
 public:
-  // 505
+  ImaginaryFactor(){}
+  ImaginaryFactor(const unsigned MT, ifstream &tape, streampos &from)
+  {
+    MF=505;
+    FindSection(tape, from, MT, MF);
+    records.GetRecord(tape, from, MF, MT);
+  }
+  ~ImaginaryFactor(){}
 };
 
 class RealFactor: public Factor
 {
 public:
-  // 506
+  RealFactor(){}
+  RealFactor(const unsigned MT, ifstream &tape, streampos &from)
+  {
+    MF=506;
+    FindSection(tape, from, MT, MF);
+    records.GetRecord(tape, from, MF, MT);
+  }
+  ~RealFactor(){}
 };
 
 #endif
