@@ -21,11 +21,7 @@ protected:
 	id=record.substr(size-id2.size(), size);
 	if(id==id2) break;
       }
-    // cout<<record<<'\n';
-    // from+=76;
     from=tape.tellg();
-    // from+=76;
-    // cout<<record<<'\n';
   }
  public:
   unsigned MF;
@@ -50,6 +46,15 @@ class PhotoIonization: public Section
 {
 public:
   PhotoIonization *next=nullptr;
+  PhotoIonization(){}
+  PhotoIonization(const unsigned MT, ifstream &tape, streampos &from)
+  {
+    MF=100;
+    cout<<tape.tellg()<<'\n';
+    GetSection(tape, from, MT);
+    records.GetRecord(tape, from, MF);
+  }
+  ~PhotoIonization(){}
 };
 
 class Scattering: public Section

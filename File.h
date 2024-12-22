@@ -8,7 +8,6 @@ class File
  public:
   unsigned MT;
 
-  virtual void AddSection()=0;
   File(){}
   virtual ~File(){}
 };
@@ -21,10 +20,6 @@ public:
   Section *pairFormation;
   Section *photoIonization;
 
-  void AddSection() override
-  {
-
-  }
   File23(){}
   File23(ifstream &tape, streampos &from)
   {
@@ -32,7 +27,7 @@ public:
     coherentScattering=new CoherentScattering(MT, tape, from);
     incoherentScattering=new IncoherentScattering(MT, tape, from);
     pairFormation=new PairFormation(MT, tape, from);
-  photoIonization=new PhotoIonization;
+  photoIonization=new PhotoIonization(MT, tape, from);
   }
   ~File23()
   {
@@ -51,10 +46,6 @@ public:
   Section *imaginaryFactor=new ImaginaryFactor;
   Section *realFactor=new RealFactor;
 
-  void AddSection() override
-  {
-
-  }
   ~File27()
   {
     delete coherentFactor;
