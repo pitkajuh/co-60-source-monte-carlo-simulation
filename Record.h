@@ -51,17 +51,18 @@ protected:
 }
 public:
   vector<double> records;
-  void GetRecord(ifstream &tape, streampos &from, unsigned MF)
+  void GetRecord(ifstream &tape, streampos &from, unsigned MF, unsigned MT)
   {
     records.reserve(6);
     from+=76*2;
     string record;
-    string MFstr=std::to_string(MF);
+    string MFstr=std::to_string(MT)+std::to_string(MF);
     Record r;
     tape.seekg(from);
 
     while(getline(tape, record))
       {
+	// cout<<MFstr<<'\n';
 	if(record.substr(record.size()-MFstr.size(), record.size())!=MFstr) break;
 	record=record.substr(0, 66);
 	r.CreateRecord(record, records);

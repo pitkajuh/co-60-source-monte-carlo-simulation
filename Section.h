@@ -6,9 +6,10 @@
 class Section
 {
 protected:
-  void GetSection(ifstream &tape, streampos &from, unsigned MT)
+
+  void GetSection(ifstream &tape, streampos &from, unsigned MT, unsigned MF)
   {
-    cout<<"ReadTape "<<MF<<'\n';
+    cout<<"ReadTape "<<MF<<" "<<MT<<'\n';
     string record;
     string id;
     unsigned size;
@@ -31,13 +32,25 @@ protected:
 
 class PairFormation: public Section
 {
+private:
+  void MultipleMF(ifstream &tape, streampos &from, const unsigned MT, const vector<unsigned> &MFs)
+  {
+    for(const auto &MF: MFs)
+      {
+	// cout<<MF<<'\n';
+	GetSection(tape, from, MT, MF);
+	records.GetRecord(tape, from, MF, MT);
+      }
+  }
 public:
   PairFormation(){}
   PairFormation(const unsigned MT, ifstream &tape, streampos &from)
   {
-    MF=517;
-    GetSection(tape, from, MT);
-    records.GetRecord(tape, from, MF);
+    // MF=517;
+    const vector<unsigned> MFs={515, 517};
+    // GetSection(tape, from, MT);
+    // records.GetRecord(tape, from, MF, MT);
+    MultipleMF(tape, from, MT, MFs);
   }
   ~PairFormation(){}
 };
@@ -51,8 +64,8 @@ public:
   {
     MF=100;
     cout<<tape.tellg()<<'\n';
-    GetSection(tape, from, MT);
-    records.GetRecord(tape, from, MF);
+    GetSection(tape, from, MT, MF);
+    records.GetRecord(tape, from, MF, MT);
   }
   ~PhotoIonization(){}
 };
@@ -69,8 +82,8 @@ public:
   CoherentScattering(const unsigned MT, ifstream &tape, streampos &from)
   {
     MF=502;
-    GetSection(tape, from, MT);
-    records.GetRecord(tape, from, MF);
+    GetSection(tape, from, MT, MF);
+    records.GetRecord(tape, from, MF, MT);
   }
   ~CoherentScattering(){}
 };
@@ -82,8 +95,8 @@ public:
   IncoherentScattering(const unsigned MT, ifstream &tape, streampos &from)
   {
     MF=504;
-    GetSection(tape, from, MT);
-    records.GetRecord(tape, from, MF);
+    GetSection(tape, from, MT, MF);
+    records.GetRecord(tape, from, MF, MT);
   }
   ~IncoherentScattering(){}
 };

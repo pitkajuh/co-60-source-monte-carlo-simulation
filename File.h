@@ -27,7 +27,7 @@ public:
     coherentScattering=new CoherentScattering(MT, tape, from);
     incoherentScattering=new IncoherentScattering(MT, tape, from);
     pairFormation=new PairFormation(MT, tape, from);
-  photoIonization=new PhotoIonization(MT, tape, from);
+    photoIonization=new PhotoIonization(MT, tape, from);
   }
   ~File23()
   {
