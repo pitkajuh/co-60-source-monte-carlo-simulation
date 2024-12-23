@@ -15,6 +15,8 @@ using std::map;
 struct Record
 {
 public:
+  const unsigned size(){return recordv.size();}
+  double operator[](const unsigned i){return recordv[i];}
   vector<double> recordv;
 
   void clear(){recordv.clear();}
@@ -64,6 +66,26 @@ protected:
 public:
   map<double, Record> map1;
 
+  double GetValue(const double photonEnergy)
+  {
+    double energyPrevious=0;
+    double energyCurrent=0;
+
+    for(const auto& [energy, record]: map1)
+      {
+	if(energy>=photonEnergy)
+	  {
+	    energyCurrent=energy;
+	    break;
+	  }
+	energyPrevious=energy;
+      }
+
+    if(energyPrevious==0) return 0;
+    const unsigned index=map1[energyPrevious].size()-1;
+    return map1[energyPrevious][index]+(photonEnergy-energyPrevious)*(map1[energyCurrent][index]-map1[energyPrevious][index])/(energyCurrent-energyPrevious);
+
+  }
   void GetRecords(ifstream &tape, streampos &from, const string &MF, const string &MT)
   {
     string record;

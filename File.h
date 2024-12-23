@@ -30,6 +30,10 @@ public:
   Section *pairFormation=nullptr;
   Section *photoIonization=nullptr;
 
+  void Get(const double photonEnergy)
+  {
+
+  }
   File23(){}
   File23(ifstream &tape, streampos &from, const vector<string> &MFs, const string &MT)
   {

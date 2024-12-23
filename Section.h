@@ -28,6 +28,7 @@ protected:
 
 	if(id==id2 or changeFile) break;
       }
+
     from=tape.tellg();
 
     if(!changeFile) from+=76*2;
@@ -36,6 +37,12 @@ public:
   bool changeFile=0;
   Records records;
   vector<Records> recordsAll;
+  vector<double> GetValue(const double photonEnergy)
+  {
+    vector<double> energies;
+    for(auto &record: recordsAll){energies.emplace_back(record.GetValue(photonEnergy));}
+    return energies;
+  }
   virtual ~Section(){}
 };
 

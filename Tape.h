@@ -56,6 +56,7 @@ class Tape
       const vector<string> MF27v=GetMF(endf, from, MT27);
       MF23=new File23(endf, from, MF23v, MT23);
       MF27=new File27(endf, from, MF27v, MT27);
+      endf.close();
     }
   ~Tape()
     {
@@ -63,6 +64,5 @@ class Tape
       delete MF27;
     }
 };
-
 
 #endif
