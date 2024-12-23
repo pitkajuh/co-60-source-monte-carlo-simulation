@@ -3,7 +3,7 @@
 
 #include "File.h"
 
-class Tape
+struct Tape
 {
  protected:
   void print(vector<string> v)
@@ -41,10 +41,20 @@ class Tape
     from=tape.tellg();
     return v;
   }
+  static bool sortFunction(const pair<string, double> &p1, const pair<string, double> &p2)
+  {
+    return p1.second>p2.second;
+  }
  public:
   File *MF23=nullptr;
   File *MF27=nullptr;
 
+  void Get(const double photonEnergy)
+  {
+    vector<pair<string, double>> v23=MF23->Get(photonEnergy);
+    std::sort(v23.begin(), v23.end(), sortFunction);
+    const vector<pair<string, double>> v27=MF27->Get(photonEnergy);
+  }
   Tape(){}
   Tape(const string &tape)
     {
