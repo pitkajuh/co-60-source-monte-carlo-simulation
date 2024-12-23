@@ -3,6 +3,22 @@
 
 #include "Record.h"
 
+using std::pair;
+
+struct CrossSectionPair
+{
+public:
+  string MF;
+  Records r;
+
+  double GetValue(const double photonEnergy)
+  {
+    return r.GetValue(photonEnergy);
+  }
+  CrossSectionPair(){}
+  ~CrossSectionPair(){}
+};
+
 class Section
 {
 protected:
@@ -36,12 +52,20 @@ protected:
 public:
   bool changeFile=0;
   Records records;
-  vector<Records> recordsAll;
-  vector<double> GetValue(const double photonEnergy)
+  vector<CrossSectionPair> recordsAll;
+
+  vector<pair<string, double>> GetValue(const double photonEnergy)
   {
-    vector<double> energies;
-    for(auto &record: recordsAll){energies.emplace_back(record.GetValue(photonEnergy));}
-    return energies;
+    vector<pair<string, double>> crossSections;
+    crossSections.reserve(recordsAll.size());
+    pair<string, double> p;
+
+    for(auto &record: recordsAll)
+      {
+	p={record.MF, record.r.GetValue(photonEnergy)};
+	crossSections.emplace_back(p);
+      }
+    return crossSections;
   }
   virtual ~Section(){}
 };
@@ -52,12 +76,16 @@ public:
   PairFormation(){}
   PairFormation(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
+    CrossSectionPair p;
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
 	records.GetRecords(tape, from, MF, MT);
-	recordsAll.emplace_back(records);
+	p.MF=MF;
+	p.r=records;
+	recordsAll.emplace_back(p);
       }
+    records.clear();
   }
   ~PairFormation(){}
 };
@@ -68,12 +96,16 @@ public:
   PhotoIonization(){}
   PhotoIonization(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
+    CrossSectionPair p;
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
 	records.GetRecords(tape, from, MF, MT);
-	recordsAll.emplace_back(records);
+	p.MF=MF;
+	p.r=records;
+	recordsAll.emplace_back(p);
       }
+    records.clear();
   }
   ~PhotoIonization(){}
 };
@@ -91,7 +123,11 @@ public:
   {
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
-    recordsAll.emplace_back(records);
+    CrossSectionPair p;
+    p.MF=MF;
+    p.r=records;
+    recordsAll.emplace_back(p);
+    records.clear();
   }
   ~CoherentScattering(){}
 };
@@ -104,7 +140,11 @@ public:
   {
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
-    recordsAll.emplace_back(records);
+    CrossSectionPair p;
+    p.MF=MF;
+    p.r=records;
+    recordsAll.emplace_back(p);
+    records.clear();
   }
   ~IncoherentScattering(){}
 };
@@ -122,7 +162,11 @@ public:
   {
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
-    recordsAll.emplace_back(records);
+    CrossSectionPair p;
+    p.MF=MF;
+    p.r=records;
+    recordsAll.emplace_back(p);
+    records.clear();
   }
   ~CoherentFactor(){}
 };
@@ -135,7 +179,11 @@ public:
   {
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
-    recordsAll.emplace_back(records);
+    CrossSectionPair p;
+    p.MF=MF;
+    p.r=records;
+    recordsAll.emplace_back(p);
+    records.clear();
   }
   ~IncoherentFactor(){}
 };
@@ -148,7 +196,11 @@ public:
   {
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
-    recordsAll.emplace_back(records);
+    CrossSectionPair p;
+    p.MF=MF;
+    p.r=records;
+    recordsAll.emplace_back(p);
+    records.clear();
   }
   ~ImaginaryFactor(){}
 };
@@ -161,7 +213,11 @@ public:
   {
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
-    recordsAll.emplace_back(records);
+    CrossSectionPair p;
+    p.MF=MF;
+    p.r=records;
+    recordsAll.emplace_back(p);
+    records.clear();
   }
   ~RealFactor(){}
 };

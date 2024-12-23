@@ -32,7 +32,16 @@ public:
 
   void Get(const double photonEnergy)
   {
-
+    const vector<pair<string, double>> coherentScatteringEnergy=coherentScattering->GetValue(photonEnergy);
+    const vector<pair<string, double>> incoherentScatteringEnergy=incoherentScattering->GetValue(photonEnergy);
+    const vector<pair<string, double>> pairFormationEnergy=pairFormation->GetValue(photonEnergy);
+    const vector<pair<string, double>> photoIonizationEnergy=photoIonization->GetValue(photonEnergy);
+    vector<pair<string, double>> v;
+    v.reserve(coherentScatteringEnergy.size()+incoherentScatteringEnergy.size()+pairFormationEnergy.size()+photoIonizationEnergy.size());
+    v.insert(v.begin(), coherentScatteringEnergy.begin(), coherentScatteringEnergy.end());
+    v.insert(v.end(), incoherentScatteringEnergy.begin(), incoherentScatteringEnergy.end());
+    v.insert(v.end(), pairFormationEnergy.begin(), pairFormationEnergy.end());
+    v.insert(v.end(), photoIonizationEnergy.begin(), photoIonizationEnergy.end());
   }
   File23(){}
   File23(ifstream &tape, streampos &from, const vector<string> &MFs, const string &MT)

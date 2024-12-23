@@ -66,6 +66,7 @@ protected:
 public:
   map<double, Record> map1;
 
+  void clear(){map1.clear();}
   double GetValue(const double photonEnergy)
   {
     double energyPrevious=0;
