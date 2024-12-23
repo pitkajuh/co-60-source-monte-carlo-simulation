@@ -40,13 +40,13 @@ class Tape
     {
       ifstream endf(tape);
       streampos from=76;
-      const vector<string> MF23=GetMF(endf, from, 23);
+      const vector<string> MF23v=GetMF(endf, from, 23);
       cout<<"GET 27 "<<from<<'\n';
-      const vector<string> MF27=GetMF(endf, from, 27);
-      /* MF23=new File23(endf, from); */
-      /* cout<<"start MF27 "<<from<<'\n'; */
+      const vector<string> MF27v=GetMF(endf, from, 27);
+      MF23=new File23(endf, from, MF23v);
+      cout<<"start MF27 "<<from<<'\n';
 
-      /* MF27=new File27(endf, from); */
+      MF27=new File27(endf, from, MF27v);
     }
   ~Tape()
     {
