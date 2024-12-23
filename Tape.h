@@ -6,7 +6,7 @@
 class Tape
 {
  protected:
-  vector<string> GetMF(ifstream &tape, streampos &from, const unsigned MT)
+  vector<string> GetMF(ifstream &tape, streampos &from, const string &MT)
   {
     bool found=0;
     string record;
@@ -19,8 +19,8 @@ class Tape
 	MF=record.substr(5, 3);
 	MTstr=record.substr(2, 2);
 
-	if(found and MTstr!=std::to_string(MT)) break;
-	else if(MTstr==std::to_string(MT) and MF!="501" and MF!="522" and MF!="516")
+	if(found and MTstr!=MT) break;
+	else if(MTstr==MT and MF!="501" and MF!="522" and MF!="516")
 	  {
 	    record=record.substr(2, record.size());
 	    cout<<record<<'\n';
@@ -40,13 +40,12 @@ class Tape
     {
       ifstream endf(tape);
       streampos from=76;
-      const vector<string> MF23v=GetMF(endf, from, 23);
-      cout<<"GET 27 "<<from<<'\n';
-      const vector<string> MF27v=GetMF(endf, from, 27);
-      MF23=new File23(endf, from, MF23v);
-      cout<<"start MF27 "<<from<<'\n';
-
-      MF27=new File27(endf, from, MF27v);
+      const string MT23="23";
+      const string MT27="27";
+      const vector<string> MF23v=GetMF(endf, from, MT23);
+      const vector<string> MF27v=GetMF(endf, from, MT27);
+      MF23=new File23(endf, from, MF23v, MT23);
+      MF27=new File27(endf, from, MF27v, MT27);
     }
   ~Tape()
     {
