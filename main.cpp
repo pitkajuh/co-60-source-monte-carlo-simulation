@@ -146,18 +146,17 @@ int main()
   // GetCrossSection();
   MonteCarlo(time, source, co60);
 
-  Tape *steelENDF=new Tape("./cross-sections/photoat-026_Fe_000.endf");
-  Tape *nitrogenENDF=new Tape("./cross-sections/photoat-007_N_000.endf");
-  Tape *sodiumENDF=new Tape("./cross-sections/photoat-011_Na_000.endf");
-  Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
+  // Tape *steelENDF=new Tape("./cross-sections/photoat-026_Fe_000.endf");
+  // Tape *nitrogenENDF=new Tape("./cross-sections/photoat-007_N_000.endf");
+  // Tape *sodiumENDF=new Tape("./cross-sections/photoat-011_Na_000.endf");
+  // Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
   Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
 
-  delete steelENDF;
-  delete nitrogenENDF;
-  delete sodiumENDF;
-  delete titaniumENDF;
+  // delete steelENDF;
+  // delete nitrogenENDF;
+  // delete sodiumENDF;
+  // delete titaniumENDF;
   delete iodineENDF;
-
 
   delete source;
   delete co60;

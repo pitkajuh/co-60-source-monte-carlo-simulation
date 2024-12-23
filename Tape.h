@@ -6,6 +6,17 @@
 class Tape
 {
  protected:
+  void print(vector<string> v)
+  {
+    string s="";
+    for(const auto &a: v)
+      {
+	s+=a;
+	s+=";";
+      }
+    cout<<s<<'\n';
+  }
+
   vector<string> GetMF(ifstream &tape, streampos &from, const string &MT)
   {
     bool found=0;
@@ -23,7 +34,6 @@ class Tape
 	else if(MTstr==MT and MF!="501" and MF!="522" and MF!="516")
 	  {
 	    record=record.substr(2, record.size());
-	    cout<<record<<'\n';
 	    v.emplace_back(MF);
 	    found=1;
 	  }

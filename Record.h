@@ -4,17 +4,23 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <map>
 
 using std::cout;
 using std::vector;
 using std::ifstream;
 using std::streampos;
+using std::map;
 
 struct Record
 {
 public:
-  void CreateRecord(string &record, vector<double> &v)
+  vector<double> recordv;
+
+  void clear(){recordv.clear();}
+  void CreateRecord(string &record)
   {
+    recordv.reserve(6);
     const string sub=record.substr(0, 11);
     const char empty=' ';
     const char s1=sub[0];
@@ -24,13 +30,19 @@ public:
       {
 	record=record.substr(11, record.size());
 
-	if(s1==empty and s2==empty) v.emplace_back(0);
-	else v.push_back(stod(sub));
+	if(s1==empty and s2==empty) recordv.emplace_back(0);
+	else recordv.emplace_back(stod(sub));
 
-	if(record.size()>=10) CreateRecord(record, v);
+	if(record.size()>=10) CreateRecord(record);
       }
-    else if(record.size()==10 and s1==empty and s2==empty) v.emplace_back(0);
-    else v.emplace_back(stod(record));
+    else if(record.size()==10 and s1==empty and s2==empty) recordv.emplace_back(0);
+    else recordv.emplace_back(stod(record));
+  }
+  double GetEnergy()
+  {
+    const double energy=recordv[0];
+    recordv.erase(recordv.begin()+0);
+    return energy;
   }
   Record(){}
   ~Record(){}
@@ -50,15 +62,14 @@ protected:
     cout<<s<<'\n';
   }
 public:
-  vector<double> records;
-  void GetRecord(ifstream &tape, streampos &from, const string &MF, const string &MT)
+  map<double, Record> map1;
+
+  void GetRecords(ifstream &tape, streampos &from, const string &MF, const string &MT)
   {
-    records.reserve(6);
     string record;
     string id;
     const string MFstr=MT+MF;
     Record r;
-
     tape.seekg(from);
 
     while(getline(tape, record))
@@ -66,11 +77,9 @@ public:
 	id=record.substr(record.size()-MFstr.size(), record.size());
 	if(id!=MFstr) break;
 	record=record.substr(0, 66);
-	r.CreateRecord(record, records);
-	printdouble(records);
-
-	records.clear();
-	// Save the records here.
+	r.CreateRecord(record);
+	map1[r.GetEnergy()]=r;
+	r.clear();
       }
     from=tape.tellg();
     cout<<" "<<'\n';

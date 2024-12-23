@@ -32,9 +32,10 @@ protected:
 
     if(!changeFile) from+=76*2;
   }
- public:
+public:
   bool changeFile=0;
   Records records;
+  vector<Records> recordsAll;
   virtual ~Section(){}
 };
 
@@ -47,7 +48,8 @@ public:
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
-	records.GetRecord(tape, from, MF, MT);
+	records.GetRecords(tape, from, MF, MT);
+	recordsAll.emplace_back(records);
       }
   }
   ~PairFormation(){}
@@ -62,7 +64,8 @@ public:
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
-	records.GetRecord(tape, from, MF, MT);
+	records.GetRecords(tape, from, MF, MT);
+	recordsAll.emplace_back(records);
       }
   }
   ~PhotoIonization(){}
@@ -80,7 +83,8 @@ public:
   CoherentScattering(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecord(tape, from, MF, MT);
+    records.GetRecords(tape, from, MF, MT);
+    recordsAll.emplace_back(records);
   }
   ~CoherentScattering(){}
 };
@@ -92,7 +96,8 @@ public:
   IncoherentScattering(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecord(tape, from, MF, MT);
+    records.GetRecords(tape, from, MF, MT);
+    recordsAll.emplace_back(records);
   }
   ~IncoherentScattering(){}
 };
@@ -109,7 +114,8 @@ public:
   CoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecord(tape, from, MF, MT);
+    records.GetRecords(tape, from, MF, MT);
+    recordsAll.emplace_back(records);
   }
   ~CoherentFactor(){}
 };
@@ -121,7 +127,8 @@ public:
   IncoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecord(tape, from, MF, MT);
+    records.GetRecords(tape, from, MF, MT);
+    recordsAll.emplace_back(records);
   }
   ~IncoherentFactor(){}
 };
@@ -133,7 +140,8 @@ public:
   ImaginaryFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecord(tape, from, MF, MT);
+    records.GetRecords(tape, from, MF, MT);
+    recordsAll.emplace_back(records);
   }
   ~ImaginaryFactor(){}
 };
@@ -145,7 +153,8 @@ public:
   RealFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecord(tape, from, MF, MT);
+    records.GetRecords(tape, from, MF, MT);
+    recordsAll.emplace_back(records);
   }
   ~RealFactor(){}
 };

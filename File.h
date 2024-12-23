@@ -37,7 +37,7 @@ public:
     incoherentScattering=new IncoherentScattering(MT, tape, from, MFs[1]);
     const vector<string> MFsPair{MFs.begin()+2, MFs.begin()+4};
     pairFormation=new PairFormation(MT, tape, from, MFsPair);
-    const vector<string> MFsIon{MFs.begin()+4, MFs.end()-4};
+    const vector<string> MFsIon{MFs.begin()+4, MFs.end()};
     photoIonization=new PhotoIonization(MT, tape, from, MFsIon);
   }
   ~File23()
