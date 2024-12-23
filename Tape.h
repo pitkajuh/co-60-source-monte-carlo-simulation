@@ -23,7 +23,7 @@ class Tape
 	else if(MTstr==std::to_string(MT) and MF!="501" and MF!="522" and MF!="516")
 	  {
 	    record=record.substr(2, record.size());
-	    cout<<record<<" "<<MF<<'\n';
+	    cout<<record<<'\n';
 	    v.emplace_back(MF);
 	    found=1;
 	  }
