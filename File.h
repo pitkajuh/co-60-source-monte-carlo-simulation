@@ -19,6 +19,7 @@ protected:
   }
 public:
   File(){}
+  virtual void Get(const double photonEnergy)=0;
   virtual ~File(){}
 };
 
@@ -30,18 +31,18 @@ public:
   Section *pairFormation=nullptr;
   Section *photoIonization=nullptr;
 
-  void Get(const double photonEnergy)
+  void Get(const double photonEnergy) override
   {
-    const vector<pair<string, double>> coherentScatteringEnergy=coherentScattering->GetValue(photonEnergy);
-    const vector<pair<string, double>> incoherentScatteringEnergy=incoherentScattering->GetValue(photonEnergy);
-    const vector<pair<string, double>> pairFormationEnergy=pairFormation->GetValue(photonEnergy);
-    const vector<pair<string, double>> photoIonizationEnergy=photoIonization->GetValue(photonEnergy);
+    const vector<pair<string, double>> coherentScatteringValue=coherentScattering->GetValue(photonEnergy);
+    const vector<pair<string, double>> incoherentScatteringValue=incoherentScattering->GetValue(photonEnergy);
+    const vector<pair<string, double>> pairFormationValue=pairFormation->GetValue(photonEnergy);
+    const vector<pair<string, double>> photoIonizationValue=photoIonization->GetValue(photonEnergy);
     vector<pair<string, double>> v;
-    v.reserve(coherentScatteringEnergy.size()+incoherentScatteringEnergy.size()+pairFormationEnergy.size()+photoIonizationEnergy.size());
-    v.insert(v.begin(), coherentScatteringEnergy.begin(), coherentScatteringEnergy.end());
-    v.insert(v.end(), incoherentScatteringEnergy.begin(), incoherentScatteringEnergy.end());
-    v.insert(v.end(), pairFormationEnergy.begin(), pairFormationEnergy.end());
-    v.insert(v.end(), photoIonizationEnergy.begin(), photoIonizationEnergy.end());
+    v.reserve(coherentScatteringValue.size()+incoherentScatteringValue.size()+pairFormationValue.size()+photoIonizationValue.size());
+    v.insert(v.begin(), coherentScatteringValue.begin(), coherentScatteringValue.end());
+    v.insert(v.end(), incoherentScatteringValue.begin(), incoherentScatteringValue.end());
+    v.insert(v.end(), pairFormationValue.begin(), pairFormationValue.end());
+    v.insert(v.end(), photoIonizationValue.begin(), photoIonizationValue.end());
   }
   File23(){}
   File23(ifstream &tape, streampos &from, const vector<string> &MFs, const string &MT)
@@ -70,6 +71,19 @@ public:
   Section *imaginaryFactor=nullptr;
   Section *realFactor=nullptr;
 
+  void Get(const double photonEnergy) override
+  {
+    const vector<pair<string, double>> coherentFactorValue=coherentFactor->GetValue(photonEnergy);
+    const vector<pair<string, double>> incoherentFactorValue=incoherentFactor->GetValue(photonEnergy);
+    const vector<pair<string, double>> imaginaryFactorValue=imaginaryFactor->GetValue(photonEnergy);
+    const vector<pair<string, double>> realFactorValue=realFactor->GetValue(photonEnergy);
+    vector<pair<string, double>> v;
+    v.reserve(coherentFactorValue.size()+incoherentFactorValue.size()+imaginaryFactorValue.size()+realFactorValue.size());
+    v.insert(v.begin(), coherentFactorValue.begin(), coherentFactorValue.end());
+    v.insert(v.end(), incoherentFactorValue.begin(), incoherentFactorValue.end());
+    v.insert(v.end(), imaginaryFactorValue.begin(), imaginaryFactorValue.end());
+    v.insert(v.end(), realFactorValue.begin(), realFactorValue.end());
+  }
   File27(){}
   File27(ifstream &tape, streampos &from, const vector<string> &MFs, const string &MT)
   {
