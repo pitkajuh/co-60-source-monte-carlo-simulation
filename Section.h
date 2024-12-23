@@ -14,15 +14,11 @@ protected:
     unsigned size;
     tape.seekg(from);
     const string id2=std::to_string(MT)+std::to_string(MF);
-    string id3;
+    // string id3;
 
     getline(tape, record);
 
-    if(record[74]=='0' and record[71]=='0')
-      {
-	changeFile=1;
-	cout<<"END FILE "<<record[74]<<" "<<record[71]<<'\n';
-      }
+    if(record[74]=='0' and record[71]=='0') changeFile=1;
 
     tape.seekg(from);
 
@@ -30,7 +26,7 @@ protected:
       {
 	size=record.size();
 	id=record.substr(size-id2.size(), size);
-	id3=id.substr(0, 2);
+	// id3=id.substr(0, 2);
 
 	if(id==id2 or changeFile) break;
       }

@@ -5,7 +5,9 @@
 
 class File
 {
- public:
+protected:
+
+public:
   unsigned MT;
 
   File(){}
@@ -24,6 +26,7 @@ public:
   File23(ifstream &tape, streampos &from)
   {
     MT=23;
+    // GetMF(tape, from, MT);
     coherentScattering=new CoherentScattering(MT, tape, from);
     incoherentScattering=new IncoherentScattering(MT, tape, from);
     pairFormation=new PairFormation(MT, tape, from);
