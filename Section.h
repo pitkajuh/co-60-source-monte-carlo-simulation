@@ -8,7 +8,7 @@ class Section
 protected:
   void FindSection(ifstream &tape, streampos &from, const string &MT, const string &MF)
   {
-    cout<<"ReadTape "<<MF<<" "<<MT<<" from "<<from<<" At "<<tape.tellg()<<'\n';
+    cout<<"ReadTape "<<MT<<MF<<" from "<<from<<" At "<<tape.tellg()<<'\n';
     string record;
     string id;
     unsigned size;
