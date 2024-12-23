@@ -92,23 +92,23 @@ void MonteCarlo(const unsigned time, Cell *cell, RadioNuclide *radioNuclide)
 
 int main()
 {
-  // const unsigned time=1;
-  // const unsigned sourceActivity=100;
-  // const double v3=1;
-  // Material *steel1=new Steel(7.874);
-  // Material *steel2=new Steel(7.874);
-  // Material *steel3=new Steel(7.874);
+  const unsigned time=1;
+  const unsigned sourceActivity=100;
+  const double v3=1;
+  Material *steel1=new Steel(7.874);
+  Material *steel2=new Steel(7.874);
+  Material *steel3=new Steel(7.874);
 
-  // Coordinate centeredAt(0, 0, 0);
-  // const double v1=0.1;
-  // const double v2=0.2;
+  Coordinate centeredAt(0, 0, 0);
+  const double v1=0.1;
+  const double v2=0.2;
 
-  // Cell *source=new CellCylinderTruncatedZ("Source", v1, v1, -v1, steel1, centeredAt);
-  // Cell *cladding=new CellCylinderTruncatedZ("Cladding", v2, v1, -v1, steel2, centeredAt);
-  // Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v2, -v2, steel3);
+  Cell *source=new CellCylinderTruncatedZ("Source", v1, v1, -v1, steel1, centeredAt);
+  Cell *cladding=new CellCylinderTruncatedZ("Cladding", v2, v1, -v1, steel2, centeredAt);
+  Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v2, -v2, steel3);
 
-  // source->next=cladding;
-  // cladding->next=outside;
+  source->next=cladding;
+  cladding->next=outside;
 
 
     // Material *steel4=new Steel(7.874);
@@ -142,25 +142,25 @@ int main()
   // sourceAirAbove->next=sourceCladding;
   // sourceCladding->next=outside;
 
-  // RadioNuclide *co60=new Co60(sourceActivity);
-  // // GetCrossSection();
-  // MonteCarlo(time, source, co60);
+  RadioNuclide *co60=new Co60(sourceActivity);
+  // GetCrossSection();
+  MonteCarlo(time, source, co60);
 
-  // Tape *steelENDF=new Tape("./cross-sections/photoat-026_Fe_000.endf");
-  // Tape *nitrogenENDF=new Tape("./cross-sections/photoat-007_N_000.endf");
-  // Tape *sodiumENDF=new Tape("./cross-sections/photoat-011_Na_000.endf");
-  // Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
+  Tape *steelENDF=new Tape("./cross-sections/photoat-026_Fe_000.endf");
+  Tape *nitrogenENDF=new Tape("./cross-sections/photoat-007_N_000.endf");
+  Tape *sodiumENDF=new Tape("./cross-sections/photoat-011_Na_000.endf");
+  Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
   Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
 
-  // delete steelENDF;
-  // delete nitrogenENDF;
-  // delete sodiumENDF;
-  // delete titaniumENDF;
+  delete steelENDF;
+  delete nitrogenENDF;
+  delete sodiumENDF;
+  delete titaniumENDF;
   delete iodineENDF;
 
 
-  // delete source;
-  // delete co60;
+  delete source;
+  delete co60;
 
   return 0;
 }
