@@ -46,8 +46,8 @@ struct Tape
     return p1.second>p2.second;
   }
  public:
-  File *MF23=nullptr;
-  File *MF27=nullptr;
+  File23 *MF23=nullptr;
+  File27 *MF27=nullptr;
 
   void Get(const double photonEnergy)
   {

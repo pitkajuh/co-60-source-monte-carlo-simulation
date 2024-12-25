@@ -67,6 +67,7 @@ public:
   map<double, double> map1;
 
   void clear(){map1.clear();}
+  unsigned size(){return map1.size();}
   double GetValue(const double photonEnergy)
   {
     double energyPrevious=0;

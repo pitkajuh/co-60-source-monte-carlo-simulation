@@ -68,20 +68,20 @@ class File27: public File
 {
 public:
   Section *coherentFactor=nullptr;
-  Section *incoherentFactor=nullptr;
+  Section *incoherentFunction=nullptr;
   Section *imaginaryFactor=nullptr;
   Section *realFactor=nullptr;
 
   vector<pair<unsigned, double>> Get(const double photonEnergy) override
   {
     const vector<pair<unsigned, double>> coherentFactorValue=coherentFactor->GetValue(photonEnergy);
-    const vector<pair<unsigned, double>> incoherentFactorValue=incoherentFactor->GetValue(photonEnergy);
+    const vector<pair<unsigned, double>> incoherentFunctionValue=incoherentFunction->GetValue(photonEnergy);
     const vector<pair<unsigned, double>> imaginaryFactorValue=imaginaryFactor->GetValue(photonEnergy);
     const vector<pair<unsigned, double>> realFactorValue=realFactor->GetValue(photonEnergy);
     vector<pair<unsigned, double>> v;
-    v.reserve(coherentFactorValue.size()+incoherentFactorValue.size()+imaginaryFactorValue.size()+realFactorValue.size());
+    v.reserve(coherentFactorValue.size()+incoherentFunctionValue.size()+imaginaryFactorValue.size()+realFactorValue.size());
     v.insert(v.begin(), coherentFactorValue.begin(), coherentFactorValue.end());
-    v.insert(v.end(), incoherentFactorValue.begin(), incoherentFactorValue.end());
+    v.insert(v.end(), incoherentFunctionValue.begin(), incoherentFunctionValue.end());
     v.insert(v.end(), imaginaryFactorValue.begin(), imaginaryFactorValue.end());
     v.insert(v.end(), realFactorValue.begin(), realFactorValue.end());
     return v;
@@ -90,14 +90,14 @@ public:
   File27(ifstream &tape, streampos &from, const vector<string> &MFs, const string &MT)
   {
     coherentFactor=new CoherentFactor(MT, tape, from, MFs[0]);
-    incoherentFactor=new IncoherentFactor(MT, tape, from, MFs[1]);
+    incoherentFunction=new IncoherentFactor(MT, tape, from, MFs[1]);
     imaginaryFactor=new ImaginaryFactor(MT, tape, from, MFs[2]);
     realFactor=new RealFactor(MT, tape, from, MFs[3]);
   }
   ~File27()
   {
     delete coherentFactor;
-    delete incoherentFactor;
+    delete incoherentFunction;
     delete imaginaryFactor;
     delete realFactor;
   }

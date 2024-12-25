@@ -8,10 +8,8 @@
 #include "Coordinate.h"
 #include "RadioNuclide.h"
 #include "ReadCrossSections.h"
-#include "Reactions.h"
+#include "Photon.h"
 #include "PhotonAngularDistribution.h"
-
-using std::cout;
 
 void PhysicsRoutine(Cell *cell, double &photonEnergy)
 {
@@ -156,6 +154,14 @@ int main()
 
   PhotonAngularDistribution *steelAngular=new IncoherentAngularDistribution(steelENDF);
   delete steelAngular;
+  // PhotonAngularDistribution *nitrogenAngular=new IncoherentAngularDistribution(nitrogenENDF);
+  // delete nitrogenAngular;
+  // PhotonAngularDistribution *sodiumAngular=new IncoherentAngularDistribution(sodiumENDF);
+  // delete sodiumAngular;
+  // PhotonAngularDistribution *titaniumAngular=new IncoherentAngularDistribution(titaniumENDF);
+  // delete titaniumAngular;
+  // PhotonAngularDistribution *iodineAngular=new IncoherentAngularDistribution(iodineENDF);
+  // delete iodineAngular;
   delete steelENDF;
   // delete nitrogenENDF;
   // delete sodiumENDF;
