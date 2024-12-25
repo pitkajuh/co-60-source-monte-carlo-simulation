@@ -1,9 +1,9 @@
 #include <random>
 #include <cmath>
 
-const double e=1.602176634E-19;
+using std::numeric_limits;
+
 const double m_e=0.51099895069E+06;
-const double c=299792458;
 const double r_e=2.8179403227E-15;
 
 double RNG(const double min, const double max)
@@ -22,25 +22,33 @@ unsigned PoissonRNG(const unsigned activity, const unsigned time)
   return rnd(random);
 }
 
-double KleinNishinaCrossSection(const double E)
+double KleinNishinaCrossSection(const double E, const double Edot, const double mu)
 {
-  // Get mu
-  const double mu=0;
   const double k=E/m_e;
-  const double kdot=k/(1+k*(1-mu));
+  const double kdot=Edot/m_e;
   const double kk=kdot/k;
-  return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*(1-mu)*(1-mu));
+  const double mudot=1-mu;
+  return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*mudot*mudot);
 }
 
-double IncoherentScatteringCrossSection(const double E)
+double DiracDeltaFunction(const double x)
+{
+  if(x!=0) return 0;
+  else return numeric_limits<double>::infinity();
+}
+
+double Edotv(const double E, const double mu)
+{
+  return E/(1+(E/m_e)*(1-mu));
+}
+
+double IncoherentScatteringCrossSection(const double E, const double S, const double mu)
 {
   // S is the incoherent scattering function. Get from ENDF
   // mu is the cosine unit (cos(theta))
   // E is the incident photon energy
-
-  // Get S
-  const double S=0;
-  return S*KleinNishinaCrossSection(E);
+  const double Edot=Edotv(E, mu);
+  return S*KleinNishinaCrossSection(E, Edot, mu)*DiracDeltaFunction(E-Edot);
 }
 
 double ThomsonCrossSection(const double E)

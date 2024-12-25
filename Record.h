@@ -83,7 +83,8 @@ public:
       }
 
     if(energyPrevious==0) return 0;
-    return map1[energyPrevious]+(photonEnergy-energyPrevious)*(map1[energyCurrent]-map1[energyPrevious])/(energyCurrent-energyPrevious);
+    const double previousValue=map1[energyPrevious];
+    return previousValue+(photonEnergy-energyPrevious)*(map1[energyCurrent]-previousValue)/(energyCurrent-energyPrevious);
 
   }
   void AddToMap(const Record &r)
