@@ -15,8 +15,6 @@ using std::map;
 struct Record
 {
 public:
-  const unsigned size(){return recordv.size();}
-  double operator[](const unsigned i){return recordv[i];}
   vector<double> recordv;
 
   void clear(){recordv.clear();}
@@ -63,7 +61,7 @@ protected:
     cout<<s<<'\n';
   }
 public:
-  map<double, Record> map1;
+  map<double, double> map1;
 
   void clear(){map1.clear();}
   double GetValue(const double photonEnergy)
@@ -82,16 +80,13 @@ public:
       }
 
     if(energyPrevious==0) return 0;
-    // const unsigned index=map1[energyPrevious].size()-1;
-    const unsigned index=0;
-    return map1[energyPrevious][index]+(photonEnergy-energyPrevious)*(map1[energyCurrent][index]-map1[energyPrevious][index])/(energyCurrent-energyPrevious);
+    return map1[energyPrevious]+(photonEnergy-energyPrevious)*(map1[energyCurrent]-map1[energyPrevious])/(energyCurrent-energyPrevious);
 
   }
-  void Create(Record &r)
+  void AddToMap(const Record &r)
   {
-    map<double, double> map2;
     const vector<double> v=r.recordv;
-    for(unsigned i=1; i<v.size(); i++){map2[v[i-1]]=v[i];}
+    for(unsigned i=1; i<v.size(); i++){map1[v[i-1]]=v[i];}
   }
   void GetRecords(ifstream &tape, streampos &from, const string &MF, const string &MT)
   {
@@ -107,7 +102,7 @@ public:
 	if(id!=MFstr) break;
 	record=record.substr(0, 66);
 	r.CreateRecord(record);
-	map1[r.GetEnergy()]=r;
+	AddToMap(r);
 	r.clear();
       }
     from=tape.tellg();
