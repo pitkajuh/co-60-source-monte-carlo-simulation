@@ -53,6 +53,10 @@ struct Tape
   {
     vector<pair<string, double>> v23=MF23->Get(photonEnergy);
     std::sort(v23.begin(), v23.end(), sortFunction);
+    for(const auto &i: v23)
+      {
+	cout<<i.first<<" "<<i.second<<'\n';
+      }
     const vector<pair<string, double>> v27=MF27->Get(photonEnergy);
   }
   Tape(){}

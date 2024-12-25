@@ -151,7 +151,7 @@ int main()
   Tape *sodiumENDF=new Tape("./cross-sections/photoat-011_Na_000.endf");
   Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
   Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
-
+  steelENDF->Get(1332e3);
   delete steelENDF;
   delete nitrogenENDF;
   delete sodiumENDF;

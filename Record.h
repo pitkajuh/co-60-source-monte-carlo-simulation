@@ -22,7 +22,6 @@ public:
   void clear(){recordv.clear();}
   void CreateRecord(string &record)
   {
-    recordv.reserve(6);
     const string sub=record.substr(0, 11);
     const char empty=' ';
     const char s1=sub[0];
@@ -46,7 +45,7 @@ public:
     recordv.erase(recordv.begin()+0);
     return energy;
   }
-  Record(){}
+  Record(){recordv.reserve(6);}
   ~Record(){}
 };
 
@@ -83,9 +82,16 @@ public:
       }
 
     if(energyPrevious==0) return 0;
-    const unsigned index=map1[energyPrevious].size()-1;
+    // const unsigned index=map1[energyPrevious].size()-1;
+    const unsigned index=0;
     return map1[energyPrevious][index]+(photonEnergy-energyPrevious)*(map1[energyCurrent][index]-map1[energyPrevious][index])/(energyCurrent-energyPrevious);
 
+  }
+  void Create(Record &r)
+  {
+    map<double, double> map2;
+    const vector<double> v=r.recordv;
+    for(unsigned i=1; i<v.size(); i++){map2[v[i-1]]=v[i];}
   }
   void GetRecords(ifstream &tape, streampos &from, const string &MF, const string &MT)
   {
