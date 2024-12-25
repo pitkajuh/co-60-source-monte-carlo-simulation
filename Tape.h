@@ -41,7 +41,7 @@ struct Tape
     from=tape.tellg();
     return v;
   }
-  static bool sortFunction(const pair<string, double> &p1, const pair<string, double> &p2)
+  static bool sortFunction(const pair<unsigned, double> &p1, const pair<unsigned, double> &p2)
   {
     return p1.second>p2.second;
   }
@@ -51,25 +51,25 @@ struct Tape
 
   void Get(const double photonEnergy)
   {
-    vector<pair<string, double>> v23=MF23->Get(photonEnergy);
+    vector<pair<unsigned, double>> v23=MF23->Get(photonEnergy);
     std::sort(v23.begin(), v23.end(), sortFunction);
     for(const auto &i: v23)
       {
 	cout<<i.first<<" "<<i.second<<'\n';
       }
-    const vector<pair<string, double>> v27=MF27->Get(photonEnergy);
+    const vector<pair<unsigned, double>> v27=MF27->Get(photonEnergy);
   }
   Tape(){}
   Tape(const string &tape)
     {
       ifstream endf(tape);
       streampos from=76;
-      const string MT23="23";
-      const string MT27="27";
-      const vector<string> MF23v=GetMF(endf, from, MT23);
-      const vector<string> MF27v=GetMF(endf, from, MT27);
-      MF23=new File23(endf, from, MF23v, MT23);
-      MF27=new File27(endf, from, MF27v, MT27);
+      const string MF23str="23";
+      const string MF27str="27";
+      const vector<string> MF23v=GetMF(endf, from, MF23str);
+      const vector<string> MF27v=GetMF(endf, from, MF27str);
+      MF23=new File23(endf, from, MF23v, MF23str);
+      MF27=new File27(endf, from, MF27v, MF27str);
       endf.close();
     }
   ~Tape()

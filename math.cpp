@@ -44,7 +44,7 @@ double Edotv(const double E, const double mu)
 
 double IncoherentScatteringCrossSection(const double E, const double S, const double mu)
 {
-  // S is the incoherent scattering function. Get from ENDF
+  // S is the incoherent scattering function. Get from ENDF 27504
   // mu is the cosine unit (cos(theta))
   // E is the incident photon energy
   const double Edot=Edotv(E, mu);

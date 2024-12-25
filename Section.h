@@ -8,7 +8,7 @@ using std::pair;
 struct CrossSectionPair
 {
 public:
-  string MF;
+  unsigned MT;
   Records r;
 
   double GetValue(const double photonEnergy)
@@ -54,15 +54,15 @@ public:
   Records records;
   vector<CrossSectionPair> recordsAll;
 
-  vector<pair<string, double>> GetValue(const double photonEnergy)
+  vector<pair<unsigned, double>> GetValue(const double photonEnergy)
   {
-    vector<pair<string, double>> crossSections;
+    vector<pair<unsigned, double>> crossSections;
     crossSections.reserve(recordsAll.size());
-    pair<string, double> p;
+    pair<unsigned, double> p;
 
     for(auto &record: recordsAll)
       {
-	p={record.MF, record.r.GetValue(photonEnergy)};
+	p={record.MT, record.r.GetValue(photonEnergy)};
 	crossSections.emplace_back(p);
       }
     return crossSections;
@@ -81,7 +81,7 @@ public:
       {
 	FindSection(tape, from, MT, MF);
 	records.GetRecords(tape, from, MF, MT);
-	p.MF=MF;
+	p.MT=std::stoi(MF);
 	p.r=records;
 	recordsAll.emplace_back(p);
       }
@@ -101,7 +101,7 @@ public:
       {
 	FindSection(tape, from, MT, MF);
 	records.GetRecords(tape, from, MF, MT);
-	p.MF=MF;
+	p.MT=std::stoi(MF);
 	p.r=records;
 	recordsAll.emplace_back(p);
       }
@@ -124,7 +124,7 @@ public:
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
-    p.MF=MF;
+    p.MT=std::stoi(MF);
     p.r=records;
     recordsAll.emplace_back(p);
     records.clear();
@@ -141,7 +141,7 @@ public:
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
-    p.MF=MF;
+    p.MT=std::stoi(MF);
     p.r=records;
     recordsAll.emplace_back(p);
     records.clear();
@@ -163,7 +163,7 @@ public:
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
-    p.MF=MF;
+    p.MT=std::stoi(MF);
     p.r=records;
     recordsAll.emplace_back(p);
     records.clear();
@@ -180,7 +180,7 @@ public:
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
-    p.MF=MF;
+    p.MT=std::stoi(MF);
     p.r=records;
     recordsAll.emplace_back(p);
     records.clear();
@@ -197,7 +197,7 @@ public:
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
-    p.MF=MF;
+    p.MT=std::stoi(MF);
     p.r=records;
     recordsAll.emplace_back(p);
     records.clear();
@@ -214,7 +214,7 @@ public:
     FindSection(tape, from, MT, MF);
     records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
-    p.MF=MF;
+    p.MT=std::stoi(MF);
     p.r=records;
     recordsAll.emplace_back(p);
     records.clear();

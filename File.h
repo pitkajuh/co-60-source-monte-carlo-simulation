@@ -19,7 +19,7 @@ protected:
   }
 public:
   File(){}
-  virtual vector<pair<string, double>> Get(const double photonEnergy)=0;
+  virtual vector<pair<unsigned, double>> Get(const double photonEnergy)=0;
   virtual ~File(){}
 };
 
@@ -31,13 +31,13 @@ public:
   Section *pairFormation=nullptr;
   Section *photoIonization=nullptr;
 
-  vector<pair<string, double>> Get(const double photonEnergy) override
+  vector<pair<unsigned, double>> Get(const double photonEnergy) override
   {
-    const vector<pair<string, double>> coherentScatteringValue=coherentScattering->GetValue(photonEnergy);
-    const vector<pair<string, double>> incoherentScatteringValue=incoherentScattering->GetValue(photonEnergy);
-    const vector<pair<string, double>> pairFormationValue=pairFormation->GetValue(photonEnergy);
-    const vector<pair<string, double>> photoIonizationValue=photoIonization->GetValue(photonEnergy);
-    vector<pair<string, double>> v;
+    const vector<pair<unsigned, double>> coherentScatteringValue=coherentScattering->GetValue(photonEnergy);
+    const vector<pair<unsigned, double>> incoherentScatteringValue=incoherentScattering->GetValue(photonEnergy);
+    const vector<pair<unsigned, double>> pairFormationValue=pairFormation->GetValue(photonEnergy);
+    const vector<pair<unsigned, double>> photoIonizationValue=photoIonization->GetValue(photonEnergy);
+    vector<pair<unsigned, double>> v;
     v.reserve(coherentScatteringValue.size()+incoherentScatteringValue.size()+pairFormationValue.size()+photoIonizationValue.size());
     v.insert(v.begin(), coherentScatteringValue.begin(), coherentScatteringValue.end());
     v.insert(v.end(), incoherentScatteringValue.begin(), incoherentScatteringValue.end());
@@ -72,13 +72,13 @@ public:
   Section *imaginaryFactor=nullptr;
   Section *realFactor=nullptr;
 
-  vector<pair<string, double>> Get(const double photonEnergy) override
+  vector<pair<unsigned, double>> Get(const double photonEnergy) override
   {
-    const vector<pair<string, double>> coherentFactorValue=coherentFactor->GetValue(photonEnergy);
-    const vector<pair<string, double>> incoherentFactorValue=incoherentFactor->GetValue(photonEnergy);
-    const vector<pair<string, double>> imaginaryFactorValue=imaginaryFactor->GetValue(photonEnergy);
-    const vector<pair<string, double>> realFactorValue=realFactor->GetValue(photonEnergy);
-    vector<pair<string, double>> v;
+    const vector<pair<unsigned, double>> coherentFactorValue=coherentFactor->GetValue(photonEnergy);
+    const vector<pair<unsigned, double>> incoherentFactorValue=incoherentFactor->GetValue(photonEnergy);
+    const vector<pair<unsigned, double>> imaginaryFactorValue=imaginaryFactor->GetValue(photonEnergy);
+    const vector<pair<unsigned, double>> realFactorValue=realFactor->GetValue(photonEnergy);
+    vector<pair<unsigned, double>> v;
     v.reserve(coherentFactorValue.size()+incoherentFactorValue.size()+imaginaryFactorValue.size()+realFactorValue.size());
     v.insert(v.begin(), coherentFactorValue.begin(), coherentFactorValue.end());
     v.insert(v.end(), incoherentFactorValue.begin(), incoherentFactorValue.end());
