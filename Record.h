@@ -20,21 +20,23 @@ public:
   void clear(){recordv.clear();}
   void CreateRecord(string &record)
   {
+    unsigned size=record.size();
     const string sub=record.substr(0, 11);
     const char empty=' ';
     const char s1=sub[0];
     const char s2=sub[9];
 
-    if(record.size()>10)
+    if(size>10)
       {
-	record=record.substr(11, record.size());
+	record=record.substr(11, size);
+	size=record.size();
 
 	if(s1==empty and s2==empty) recordv.emplace_back(0);
 	else recordv.emplace_back(stod(sub));
 
-	if(record.size()>=10) CreateRecord(record);
+	if(size>=10) CreateRecord(record);
       }
-    else if(record.size()==10 and s1==empty and s2==empty) recordv.emplace_back(0);
+    else if(size==10 and s1==empty and s2==empty) recordv.emplace_back(0);
     else recordv.emplace_back(stod(record));
   }
   double GetEnergy()
@@ -53,6 +55,7 @@ protected:
   void printdouble(vector<double> v)
   {
     string s="";
+
     for(const auto &a: v)
       {
 	s+=std::to_string(a);
@@ -93,12 +96,15 @@ public:
     string record;
     string id;
     const string MFstr=MT+MF;
+    const unsigned size=MFstr.size();
+    unsigned size2;
     Record r;
     tape.seekg(from);
 
     while(getline(tape, record))
       {
-	id=record.substr(record.size()-MFstr.size(), record.size());
+	size2=record.size();
+	id=record.substr(size2-size, size2);
 	if(id!=MFstr) break;
 	record=record.substr(0, 66);
 	r.CreateRecord(record);
