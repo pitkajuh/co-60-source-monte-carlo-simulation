@@ -65,6 +65,7 @@ protected:
   }
 public:
   map<double, double> map1;
+  vector<double> energy;
 
   void clear(){map1.clear();}
   unsigned size(){return map1.size();}
@@ -91,7 +92,11 @@ public:
   void AddToMap(const Record &r)
   {
     const vector<double> v=r.recordv;
-    for(unsigned i=1; i<v.size(); i++){map1[v[i-1]]=v[i];}
+    for(unsigned i=1; i<v.size(); i++)
+      {
+	energy.emplace_back(v[i-1]);
+	map1[v[i-1]]=v[i];
+      }
   }
   void GetRecords(ifstream &tape, streampos &from, const string &MF, const string &MT)
   {

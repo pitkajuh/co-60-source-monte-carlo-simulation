@@ -2,7 +2,6 @@
 #define PHOTONANGULARDISTRIBUTION_H
 
 #include "Tape.h"
-#include "RungeKutta4.h"
 
 using std::numeric_limits;
 
@@ -12,8 +11,9 @@ const double r_e=2.8179403227E-15;
 class PhotonAngularDistribution
 {
  public:
+  Tape *tape=nullptr;
   PhotonAngularDistribution(){}
-  virtual ~PhotonAngularDistribution(){}
+  virtual ~PhotonAngularDistribution(){delete tape;}
 };
 
 class IncoherentAngularDistribution: public PhotonAngularDistribution
@@ -39,13 +39,22 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return E/(1+(E/m_e)*(1-mu));
   }
 
-  static double IncoherentScatteringCrossSection(const double E, const double S, const double mu)
+  double IncoherentScatteringCrossSection(const double E, const double S, const double mu)
   {
     // S is the incoherent scattering function. Get from ENDF 27504
     // mu is the cosine unit (cos(theta))
     // E is the incident photon energy
     const double Edot=Edotv(E, mu);
     return S*KleinNishinaCrossSection(E, Edot, mu);//*DiracDeltaFunction(E-Edot);
+  }
+
+  double KleinNishinaCrossSection2(const double E, const double mu)
+  {
+    const double k=E/m_e;
+    const double kdot=Edotv(E, mu)/m_e;
+    const double kk=kdot/k;
+    const double mudot=1-mu;
+    return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*mudot*mudot);
   }
 
   void Solve(Records &function, Records &crossSection)
@@ -65,22 +74,26 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 	cosine.emplace_back(i);
 	i+=h;
       }
-    RungeKutta4(1, 3, 4, &IncoherentScatteringCrossSection);
+
     int j=0;
     for(const auto &[energy, cs]: crossSection.map1)
       {
 	cout<<energy<<";"<<IncoherentScatteringCrossSection(energy, function.GetValue(energy), cosine[j])<<'\n';
 	j+=1;
       }
+
+
+
   }
  public:
   IncoherentAngularDistribution(){}
   IncoherentAngularDistribution(Tape *tape)
   {
-    Records &function=tape->MF27->incoherentFunction->recordsAll[0].r;
-    Records &crossSection=tape->MF23->incoherentScattering->recordsAll[0].r;
-    cout<<function.size()<<" "<<crossSection.size()<<'\n';
-    Solve(function, crossSection);
+    this->tape=tape;
+    /* Records &function=tape->MF27->incoherentFunction->recordsAll[0].r; */
+    /* Records &crossSection=tape->MF23->incoherentScattering->recordsAll[0].r; */
+    /* cout<<function.size()<<" "<<crossSection.size()<<'\n'; */
+    /* Solve(function, crossSection); */
   }
   ~IncoherentAngularDistribution(){}
 };

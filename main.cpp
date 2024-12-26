@@ -10,6 +10,7 @@
 #include "ReadCrossSections.h"
 #include "Photon.h"
 #include "PhotonAngularDistribution.h"
+#include "RungeKutta4.h"
 
 void PhysicsRoutine(Cell *cell, double &photonEnergy)
 {
@@ -153,6 +154,9 @@ int main()
   // steelENDF->Get(1332e3);
 
   PhotonAngularDistribution *steelAngular=new IncoherentAngularDistribution(steelENDF);
+
+  RungeKutta4 rk4(steelAngular);
+
   delete steelAngular;
   // PhotonAngularDistribution *nitrogenAngular=new IncoherentAngularDistribution(nitrogenENDF);
   // delete nitrogenAngular;
@@ -162,7 +166,7 @@ int main()
   // delete titaniumAngular;
   // PhotonAngularDistribution *iodineAngular=new IncoherentAngularDistribution(iodineENDF);
   // delete iodineAngular;
-  delete steelENDF;
+  // delete steelENDF;
   // delete nitrogenENDF;
   // delete sodiumENDF;
   // delete titaniumENDF;
