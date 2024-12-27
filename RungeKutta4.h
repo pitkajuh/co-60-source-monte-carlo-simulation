@@ -9,42 +9,36 @@ struct RungeKutta4
 private:
   unsigned size;
   double delta;
+  PhotonAngularDistribution *distribution=nullptr;
 
-  K k0(const double mu, const double E)
-  {
-    K k0v(size);
-    return k0v;
-  }
-  K k(K k, const double d, const double mu, const double E)
-  {
-    K kx(size);
-    return kx;
-  }
-
-  void RK4(PhotonAngularDistribution *d)
+  void RK4()
   {
     unsigned i=0;
     double mu=-1;
     double E;
-    /* Records &function=d->tape->MF27->incoherentFunction->recordsAll[0].r; */
-    Records &crossSection=d->tape->MF23->incoherentScattering->recordsAll[0].r;
+    /* Records &function=distribution->tape->MF27->incoherentFunction->recordsAll[0].r; */
+    Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
     size=crossSection.map1.size();
     delta=2.0/size;
-    K k1(size);
-    K k2(size);
-    K k3(size);
-    K k4(size);
+    double k1=0;
+    double k2=0;
+    double k3=0;
+    double k4=0;
+    double w1=0;
     vector<double> result;
     result.reserve(size);
+    E=crossSection.energy[i];
+    E=1000;
 
     while(mu<=1+delta)
       {
-	E=crossSection.energy[i];
-	k1=k0(mu, E);
-	k2=k(k1, 0.5, mu, E);
-	k3=k(k2, 0.5, mu, E);
-	k4=k(k3, 0, mu, E);
-	cout<<mu<<'\n';
+	k1=delta*distribution->GetV(E, mu);
+	k2=delta*distribution->GetV(E, mu+0.5*delta);
+	k3=delta*distribution->GetV(E, mu+0.5*delta);
+	k4=delta*distribution->GetV(E, mu+delta);
+
+	w1+=(k1+2*k2+2*k3+k4)/6;
+	cout<<mu<<" "<<w1<<'\n';
 	mu+=delta;
       }
   }
@@ -52,7 +46,8 @@ public:
   RungeKutta4(){}
   RungeKutta4(PhotonAngularDistribution *d)
   {
-    RK4(d);
+    this->distribution=d;
+    RK4();
   }
   ~RungeKutta4(){}
 };
