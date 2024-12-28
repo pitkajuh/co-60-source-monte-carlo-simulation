@@ -92,7 +92,8 @@ public:
   void AddToMap(const Record &r)
   {
     const vector<double> v=r.recordv;
-    for(unsigned i=1; i<v.size(); i++)
+
+    for(unsigned i=1; i<v.size(); i+=2)
       {
 	energy.emplace_back(v[i-1]);
 	map1[v[i-1]]=v[i];

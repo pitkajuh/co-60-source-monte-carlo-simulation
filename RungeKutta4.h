@@ -30,7 +30,7 @@ private:
     E=crossSection.energy[i];
     E=1000;
 
-    while(mu<=1+delta)
+    while(mu<=1)
       {
 	k1=delta*distribution->GetV(E, mu);
 	k2=delta*distribution->GetV(E, mu+0.5*delta);
