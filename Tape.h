@@ -1,6 +1,7 @@
 #ifndef TAPE_H
 #define TAPE_H
 
+#include <algorithm>
 #include "File.h"
 
 struct Tape

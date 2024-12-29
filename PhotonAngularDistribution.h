@@ -12,7 +12,7 @@ class PhotonAngularDistribution
 {
  public:
   Tape *tape=nullptr;
-  virtual double GetV(const double E, const double mu)=0;
+  virtual double GetV(const double E, const double mu, const double S)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){delete tape;}
 };
@@ -87,9 +87,9 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 
   }
  public:
-  double GetV(const double E, const double mu) override
+  double GetV(const double E, const double mu, const double S) override
   {
-    return KleinNishinaCrossSection2(E, mu);
+    return IncoherentScatteringCrossSection(E, S, mu);
   }
   IncoherentAngularDistribution(){}
   IncoherentAngularDistribution(Tape *tape)

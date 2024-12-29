@@ -7,15 +7,16 @@
 #include "Tape.h"
 #include "Coordinate.h"
 #include "RadioNuclide.h"
-#include "ReadCrossSections.h"
+// #include "ReadCrossSections.h"
 #include "Photon.h"
 #include "PhotonAngularDistribution.h"
 #include "RungeKutta4.h"
+#include "CentralDifference.h"
 
 void PhysicsRoutine(Cell *cell, double &photonEnergy)
 {
   cout<<"PhysicsRoutine "<<'\n';
-  cell->material->crossSections.PDF(photonEnergy);
+  // cell->material->crossSections.PDF(photonEnergy);
 }
 
 void SurfaceTracking(Cell *cellHead, Photon photon)
@@ -155,7 +156,7 @@ int main()
 
   PhotonAngularDistribution *steelAngular=new IncoherentAngularDistribution(steelENDF);
 
-  RungeKutta4 rk4(steelAngular);
+  CentralDifference cd(steelAngular);
 
   delete steelAngular;
   // PhotonAngularDistribution *nitrogenAngular=new IncoherentAngularDistribution(nitrogenENDF);

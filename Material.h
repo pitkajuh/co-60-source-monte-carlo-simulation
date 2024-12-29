@@ -28,7 +28,7 @@ public:
   unsigned ZA;
   double density=0; // in g/cm3
   map<double, pair<double, double>> muMap;
-  CrossSections crossSections;
+  // CrossSections crossSections;
   virtual const double GetMu(const double photonEnergy)=0;
   virtual ~Material(){}
 };

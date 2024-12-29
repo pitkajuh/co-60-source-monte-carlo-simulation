@@ -1,8 +1,8 @@
 #ifndef CROSSSECTIONDATA_H
 #define CROSSSECTIONDATA_H
 
-#include "CrossSection.h"
-#include "ReadCrossSections.h"
+/* #include "CrossSection.h" */
+/* #include "ReadCrossSections.h" */
 
 /* CrossSections steelCrossSections=GetMaterialCrossSection("./cross-sections/photoat-026_Fe_000.endf"); */
 /* CrossSections nitrogenCrossSections=GetMaterialCrossSection("./cross-sections/photoat-007_N_000.endf"); */
