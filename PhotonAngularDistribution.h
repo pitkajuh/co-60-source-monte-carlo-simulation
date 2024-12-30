@@ -12,7 +12,7 @@ class PhotonAngularDistribution
 {
  public:
   Tape *tape=nullptr;
-  virtual double GetV(const double E, const double mu, const double S)=0;
+  virtual double GetV(const double E, const double mu, const double S, const double sigma)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){delete tape;}
 };
@@ -29,10 +29,15 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*mudot*mudot);
   }
 
-  double DiracDeltaFunction(const double x)
+  double Gaussian(const double x, const double sigma)
   {
-    if(x!=0) return 0;
-    else return numeric_limits<double>::infinity();
+    return (exp(x/(2*sigma*sigma))/(sigma*pow(2*M_PI, 0.5)));
+  }
+
+  double DiracDelta(const double x, const double sigma)
+  {
+    // Dirac delta is approximated as Gaussian function
+    return Gaussian(x, sigma);
   }
 
   double Edotv(const double E, const double mu)
@@ -40,13 +45,13 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return E/(1+(E/m_e)*(1-mu));
   }
 
-  double IncoherentScatteringCrossSection(const double E, const double S, const double mu)
+  double IncoherentScatteringCrossSection(const double E, const double S, const double mu, const double sigma)
   {
     // S is the incoherent scattering function. Get from ENDF 27504
     // mu is the cosine unit (cos(theta))
     // E is the incident photon energy
     const double Edot=Edotv(E, mu);
-    return S*KleinNishinaCrossSection(E, Edot, mu);//*DiracDeltaFunction(E-Edot);
+    return S*KleinNishinaCrossSection(E, Edot, mu)*DiracDelta(E-Edot, sigma);
   }
 
   double KleinNishinaCrossSection2(const double E, const double mu)
@@ -76,20 +81,20 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 	i+=h;
       }
 
-    int j=0;
-    for(const auto &[energy, cs]: crossSection.map1)
-      {
-	cout<<energy<<";"<<IncoherentScatteringCrossSection(energy, function.GetValue(energy), cosine[j])<<'\n';
-	j+=1;
-      }
+    // int j=0;
+    // for(const auto &[energy, cs]: crossSection.map1)
+    //   {
+    // 	cout<<energy<<";"<<IncoherentScatteringCrossSection(energy, function.GetValue(energy), cosine[j])<<'\n';
+    // 	j+=1;
+    //   }
 
 
 
   }
  public:
-  double GetV(const double E, const double mu, const double S) override
+  double GetV(const double E, const double mu, const double S, const double sigma) override
   {
-    return IncoherentScatteringCrossSection(E, S, mu);
+    return IncoherentScatteringCrossSection(E, S, mu, sigma);
   }
   IncoherentAngularDistribution(){}
   IncoherentAngularDistribution(Tape *tape)

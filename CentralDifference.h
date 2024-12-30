@@ -30,11 +30,12 @@ private:
     unsigned j=1;
     double mu=-1;
     double E;
-    double S=1;
+    double S;
     double ep1;
     double em1;
     double mup1;
     double mum1;
+    double sigma;
     Records &function=distribution->tape->MF27->incoherentFunction->recordsAll[0].r;
     Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
     const unsigned size=crossSection.map1.size()-1;
@@ -48,6 +49,7 @@ private:
       {
 	E=crossSection.energy[i-1];
 	deltaEnergy=crossSection.energy[i]-E;
+	sigma=0.5*deltaEnergy;
 	S=function.GetValue(E);
 	ep1=E+deltaEnergy;
 	em1=E-deltaEnergy;
@@ -57,7 +59,7 @@ private:
 	    mup1=mu+delta;
 	    mum1=mu-delta;
 
-	    d2sigmadmudE=(distribution->GetV(ep1, mup1, S)-distribution->GetV(ep1, mum1, S)-distribution->GetV(em1, mup1, S)+distribution->GetV(em1, mum1, S))/(4*deltaEnergy*delta);
+	    d2sigmadmudE=(distribution->GetV(ep1, mup1, S, sigma)-distribution->GetV(ep1, mum1, S, sigma)-distribution->GetV(em1, mup1, S, sigma)+distribution->GetV(em1, mum1, S, sigma))/(4*deltaEnergy*delta);
 	    cout<<i-1<<" "<<j-1<<" "<<mu<<" "<<E<<" "<<d2sigmadmudE<<'\n';
 
 	    mu+=delta;
