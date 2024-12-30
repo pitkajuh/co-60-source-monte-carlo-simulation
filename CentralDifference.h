@@ -8,8 +8,10 @@ struct Matrix
 {
  public:
   unsigned N;
-  vector<double> matrix;
+  vector<vector<double>> matrix;
 
+  void AddRow(const vector<double> &row){matrix.emplace_back(row);}
+  void init(const unsigned n){matrix.reserve(N);}
   Matrix(){}
   Matrix(const unsigned n)
   {
@@ -44,12 +46,15 @@ private:
     result.reserve(size);
     double deltaEnergy;
     double d2sigmadmudE;
+    grid.init(size);
+    vector<double> row;
+    row.reserve(size);
 
     while(i<size)
       {
 	E=crossSection.energy[i-1];
 	deltaEnergy=crossSection.energy[i]-E;
-	sigma=0.5*deltaEnergy;
+	sigma=5*deltaEnergy;
 	S=function.GetValue(E);
 	ep1=E+deltaEnergy;
 	em1=E-deltaEnergy;
@@ -61,7 +66,7 @@ private:
 
 	    d2sigmadmudE=(distribution->GetV(ep1, mup1, S, sigma)-distribution->GetV(ep1, mum1, S, sigma)-distribution->GetV(em1, mup1, S, sigma)+distribution->GetV(em1, mum1, S, sigma))/(4*deltaEnergy*delta);
 	    cout<<i-1<<" "<<j-1<<" "<<mu<<" "<<E<<" "<<d2sigmadmudE<<'\n';
-
+	    /* row.emplace_back(); */
 	    mu+=delta;
 	    j++;
 	  }
@@ -71,6 +76,8 @@ private:
       }
   }
 public:
+  Matrix grid;
+
   CentralDifference(){}
   CentralDifference(PhotonAngularDistribution *d)
   {

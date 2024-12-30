@@ -31,7 +31,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 
   double Gaussian(const double x, const double sigma)
   {
-    return (exp(x/(2*sigma*sigma))/(sigma*pow(2*M_PI, 0.5)));
+    return (exp(-x*x/(2*sigma*sigma))/(sigma*pow(2*M_PI, 0.5)));
   }
 
   double DiracDelta(const double x, const double sigma)
