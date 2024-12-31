@@ -9,7 +9,6 @@
 #include "RadioNuclide.h"
 #include "Photon.h"
 #include "PhotonAngularDistribution.h"
-#include "RungeKutta4.h"
 #include "CentralDifference.h"
 
 void PhysicsRoutine(Cell *cell, double &photonEnergy)
