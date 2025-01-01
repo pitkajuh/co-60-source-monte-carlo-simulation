@@ -7,16 +7,29 @@ struct GaussSeidel
 {
 private:
 
-  void GS(Matrix &m, Matrix &gridmu)
+  void GS(Matrix &m, vector<double> &gridE)
   {
-    for()
-  }
+    unsigned i=0;
+    Matrix result;
+    result.init2(m.N);
+    /* while(i!=gridE.size()*gridE.size()) */
+    /*   { */
+	for(const auto &e: gridE)
+	  {
 
-Public:
+	    for(const auto &m1: m)
+	      {
+		cout<<i<<" "<<e<<" "<<gridE.size()<<'\n';
+	      }
+	  }
+	/* i++; */
+      /* } */
+  }
+public:
   GaussSeidel(){}
-  GaussSeidel(Matrix &m, Matrix &gridmu)
+  GaussSeidel(Matrix &m, vector<double> &gridE)
   {
-    GS(m, gridmu);
+    GS(m, gridE);
   }
   ~GaussSeidel(){}
 };
