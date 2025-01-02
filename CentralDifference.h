@@ -30,18 +30,15 @@ private:
     result.reserve(size);
     double deltaEnergy;
     double d2sigmadmudE;
-    /* gridE.init(size); */
     gridmu.init(size);
+    discretized.init(size);
     vector<double> row;
-    /* vector<double> rowmu; */
-    /* vector<double> rowE; */
     row.reserve(size);
-    /* rowmu.reserve(size); */
-    /* rowE.reserve(size); */
 
     while(i<size)
       {
 	E=crossSection.energy[i-1];
+	E1.emplace_back(E);
 	deltaEnergy=crossSection.energy[i]-E;
 	sigma=5*deltaEnergy;
 	S=function.GetValue(E);
@@ -54,16 +51,13 @@ private:
 	    mum1=mu-deltaMu;
 
 	    d2sigmadmudE=(distribution->GetV(ep1, mup1, S, sigma)-distribution->GetV(ep1, mum1, S, sigma)-distribution->GetV(em1, mup1, S, sigma)+distribution->GetV(em1, mum1, S, sigma))/(4*deltaEnergy*deltaMu);
-	    cout<<i-1<<" "<<j-1<<" "<<mu<<" "<<E<<" "<<d2sigmadmudE<<'\n';
+	    /* cout<<i-1<<" "<<j-1<<" "<<mu<<" "<<E<<" "<<d2sigmadmudE<<'\n'; */
 	    row.emplace_back(d2sigmadmudE);
-	    /* rowmu.emplace_back(mu); */
 	    mu+=deltaMu;
 	    j++;
 	  }
 
 	gridE.emplace_back(deltaEnergy);
-	/* gridmu.emplace_back(rowmu); */
-	/* rowmu.clear(); */
 	discretized.emplace_back(row);
 	row.clear();
 
@@ -73,7 +67,8 @@ private:
       }
   }
 public:
-  vector<double >gridE;
+  vector<double> gridE;
+  vector<double> E1;
   Matrix gridmu;
   Matrix discretized;
 
@@ -82,7 +77,7 @@ public:
   {
     this->distribution=d;
     cd();
-    GaussSeidel gs(discretized, gridE);
+    GaussSeidel gs(discretized, gridE, E1);
   }
   ~CentralDifference(){}
 };
