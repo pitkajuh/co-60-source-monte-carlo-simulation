@@ -63,34 +63,6 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*mudot*mudot);
   }
 
-  void Solve(Records &function, Records &crossSection)
-  {
-    vector<double> resultEnergy;
-    resultEnergy.reserve(crossSection.map1.size());
-    vector<double> resultCos;
-    resultCos.reserve(crossSection.map1.size());
-    vector<double> cosine;
-    cosine.reserve(crossSection.map1.size());
-
-    double i=-1;
-    double h=2.0/crossSection.map1.size();
-
-    while(i<=1)
-      {
-	cosine.emplace_back(i);
-	i+=h;
-      }
-
-    // int j=0;
-    // for(const auto &[energy, cs]: crossSection.map1)
-    //   {
-    // 	cout<<energy<<";"<<IncoherentScatteringCrossSection(energy, function.GetValue(energy), cosine[j])<<'\n';
-    // 	j+=1;
-    //   }
-
-
-
-  }
  public:
   double GetV(const double E, const double mu, const double S, const double sigma) override
   {
@@ -100,10 +72,6 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   IncoherentAngularDistribution(Tape *tape)
   {
     this->tape=tape;
-    /* Records &function=tape->MF27->incoherentFunction->recordsAll[0].r; */
-    /* Records &crossSection=tape->MF23->incoherentScattering->recordsAll[0].r; */
-    /* cout<<function.size()<<" "<<crossSection.size()<<'\n'; */
-    /* Solve(function, crossSection); */
   }
   ~IncoherentAngularDistribution(){}
 };
