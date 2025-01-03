@@ -89,7 +89,7 @@ private:
   {
     const unsigned size=m.N-1;
     const double deltaMu=(double) 2/size;
-    /* const double deltaE=(E.back()-E[0])/size; */
+    const double deltaE=(double) (E.back()-E[0])/size;
     vector<vector<double>> result;
     vector<vector<double>> resultOld;
     vector<double> row;
@@ -128,8 +128,9 @@ private:
     /* 	    for(unsigned j=1; j<size-1; j++) */
     /* 	      { */
     /* 		result[i][j]=result[i+1][j+1]-result[i+1][j-1]-result[i-1][j+1] */
-    /* 		  /\* -result[i-1][j-1]-4*deltaE*deltaMu; *\/ */
-    /* 		  -result[i-1][j-1]-4*gridE[i]*deltaMu; */
+    /* 		  -result[i-1][j-1]-4*deltaE*deltaMu; */
+    /* 		  /\* -result[i-1][j-1]-4*gridE[i]*deltaMu; *\/ */
+    /* 		/\* result[i][j]=result[i][j]/4; *\/ */
     /* 	      } */
     /* 	  } */
     /* 	convergence=CheckConvergence(result, resultOld, 0.5); */
@@ -142,9 +143,16 @@ private:
       {
 	for(unsigned j=1; j<size-1; j++)
 	  {
+	    /* result[i][j]=result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1] */
+	    /*   +result[i-1][j-1]+4*deltaE*deltaMu; */
+
+
+
+
 	    result[i][j]=result[i+1][j+1]-result[i+1][j-1]-result[i-1][j+1]
-	      /* -result[i-1][j-1]-4*deltaE*deltaMu; */
-	    -result[i-1][j-1]-4*gridE[i]*deltaMu;
+	      -result[i-1][j-1]-4*deltaE*deltaMu;
+	    /* -result[i-1][j-1]-4*gridE[i]*deltaMu; */
+	    /* result[i][j]=result[i][j]/4; */
 	  }
       }
     print(result);

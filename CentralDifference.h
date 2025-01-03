@@ -25,10 +25,10 @@ private:
     Records &function=distribution->tape->MF27->incoherentFunction->recordsAll[0].r;
     Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
     const unsigned size=crossSection.map1.size()-1;
-    const double deltaMu=2.0/size;
+    const double deltaMu=(double) 2.0/size;
     vector<double> result;
     result.reserve(size);
-    double deltaEnergy;
+    const double deltaEnergy=(double)(crossSection.energy.back()-crossSection.energy[0])/size;
     double d2sigmadmudE;
     gridmu.init(size);
     discretized.init(size);
@@ -39,7 +39,7 @@ private:
       {
 	E=crossSection.energy[i-1];
 	E1.emplace_back(E);
-	deltaEnergy=crossSection.energy[i]-E;
+	/* deltaEnergy=crossSection.energy[i]-E; */
 	sigma=5*deltaEnergy;
 	S=function.GetValue(E);
 	ep1=E+deltaEnergy;
