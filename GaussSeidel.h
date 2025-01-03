@@ -54,22 +54,35 @@ private:
     file.close();
   }
 
-  void CheckConvergence(const vector<vector<double>> &resultNew, const vector<vector<double>> &resultOld, const double tolerance)
+  bool CheckConvergence(const vector<vector<double>> &resultNew, const vector<vector<double>> &resultOld, const double tolerance)
   {
+    /* bool r=0; */
     vector<double> rowNew;
     vector<double> rowOld;
+    double delta;
+    cout<<"CHECK"<<'\n';
+    double largest=0;
 
     for(unsigned i=0; i<resultNew.size(); i++)
       {
-	/* cout<<resultNew[i]<<" "<<resultOld[i]<<'\n'; */
+	/* cout<<resultNew[i].size()<<" "<<resultOld[i].size()<<'\n'; */
 	rowNew=resultNew[i];
 	rowOld=resultOld[i];
 
-	for(unsigned j=0; rowNew.size(); j++)
+	for(unsigned j=0; j<rowNew.size(); j++)
 	  {
-	    cout<<rowNew[j]<<" "<<rowOld[j]<<'\n';
+	    delta=abs(rowNew[j]-rowOld[j]);
+	    if(delta>largest) largest=delta;
+	    /* cout<<rowNew[j]<<" "<<rowOld[j]<<" "<<delta<<" "<<i<<" "<<j<<'\n'; */
+	    /* if(rowOld[j]==0 or rowNew[j]==0) continue; */
+	    /* cout<<delta<<'\n'; */
+
+	    /* if(delta>tolerance and rowNew[j]!=0 and rowOld[j]!=0 and (rowNew[j]==0 or rowOld[j]==0)) return 0; */
+	    /* if(delta>tolerance and rowNew[j]!=0 and rowOld[j]!=0) return 0; */
 	  }
       }
+    cout<<largest<<'\n';
+    return largest<tolerance;
   }
 
   void GS(Matrix &m, vector<double> &gridE, vector<double> &E)
@@ -78,6 +91,7 @@ private:
     const double deltaMu=(double) 2/size;
     /* const double deltaE=(E.back()-E[0])/size; */
     vector<vector<double>> result;
+    vector<vector<double>> resultOld;
     vector<double> row;
 
     result.reserve(size);
@@ -98,6 +112,31 @@ private:
       }
 
     cout<<"AOE "<<m.N<<'\n';
+
+    /* bool convergence=0; */
+    /* /\* const unsigned stop=200; *\/ */
+    /* unsigned k=0; */
+
+    /* /\* while(k!=stop) *\/ */
+    /* while(!convergence) */
+    /*   { */
+    /* 	resultOld=result; */
+    /* 	/\* cout<<"ao"<<'\n'; *\/ */
+
+    /* 	for(unsigned i=1; i<size-1; i++) */
+    /* 	  { */
+    /* 	    for(unsigned j=1; j<size-1; j++) */
+    /* 	      { */
+    /* 		result[i][j]=result[i+1][j+1]-result[i+1][j-1]-result[i-1][j+1] */
+    /* 		  /\* -result[i-1][j-1]-4*deltaE*deltaMu; *\/ */
+    /* 		  -result[i-1][j-1]-4*gridE[i]*deltaMu; */
+    /* 	      } */
+    /* 	  } */
+    /* 	convergence=CheckConvergence(result, resultOld, 0.5); */
+    /* 	cout<<"convergence "<<convergence<<'\n'; */
+    /* 	k++; */
+    /*   } */
+
 
     for(unsigned i=1; i<size-1; i++)
       {
