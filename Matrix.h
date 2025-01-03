@@ -7,6 +7,21 @@ struct Matrix
   unsigned N;
   vector<vector<double>> matrix;
 
+  void print()
+  {
+    string m="";
+
+    for(const auto &row: matrix)
+      {
+	for(const auto &columnValue: row)
+	  {
+	    m+=std::to_string(columnValue)+" ";
+	  }
+	cout<<m<<'\n';
+	m="";
+      }
+
+  }
   void Set(const unsigned i, const unsigned j, const double v)
   {
     matrix[i][j]=v;
