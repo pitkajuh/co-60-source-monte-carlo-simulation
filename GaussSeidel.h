@@ -56,27 +56,21 @@ private:
 
   void GS(Matrix &m, vector<double> &gridE, vector<double> &E)
   {
-    double d;
-    double d1=0;
-    double d2=0;
-    double d3=0;
-    double d4=0;
-    double d5=0;
-    /* Matrix result; */
     vector<vector<double>> result;
-    result.reserve(m.N-1);
-
     vector<double> row;
+
+    result.reserve(m.N-1);
     row.reserve(m.N-1);
 
     print2(gridE, E);
     print3(m.N-1);
 
-    for(unsigned i=0; i<m.N; i++)
+    for(unsigned i=0; i<m.N-1; i++)
       {
-	for(unsigned j=0; j<m.N; j++)
+	for(unsigned j=0; j<m.N-1; j++)
 	  {
 	    row.emplace_back(0);
+	    /* row.emplace_back(j+1); */
 	  }
 	result.emplace_back(row);
 	row.clear();
@@ -84,26 +78,16 @@ private:
 
     cout<<"AOE "<<m.N<<'\n';
 
-    for(unsigned i=1; i<m.N-1; i++)
+    for(unsigned i=1; i<m.N-2; i++)
       {
-	for(unsigned j=1; j<m.N-1; j++)
+	for(unsigned j=1; j<m.N-2; j++)
 	  {
-	    /* d1=result.Get(i+1, j+1); */
-	    /* d2=result.Get(i+1, j-1); */
-	    /* d3=result.Get(i-1, j+1); */
-	    /* d4=result.Get(i-1, j-1); */
-	    /* d5=4*gridE[i-1]*2/m.N-1; */
-	    d1=result[i+1][j+1];
-	    d2=result[i+1][j-1];
-	    d3=result[i-1][j+1];
-	    d4=result[i-1][j-1];
-	    d5=4*gridE[i-1]*2/m.N-1;
-	    d=d1-d2-d3-d4-d5;
-	    /* cout<<E[i]+gridE[i-1]<<";"<<d<<'\n'; */
-	    /* result.Set(i,j, d); */
-	    result[i][j]=d;
+	    result[i][j]=result[i+1][j+1]-result[i+1][j-1]-result[i-1][j+1]-result[i-1][j-1]-4*gridE[i-1]*2/(m.N-1);
 	  }
       }
+
+    cout<<d1<<'\n';
+
 
     /* unsigned i=1; */
     /* unsigned j=1; */
