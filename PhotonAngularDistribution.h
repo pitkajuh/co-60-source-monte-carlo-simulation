@@ -51,7 +51,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     // mu is the cosine unit (cos(theta))
     // E is the incident photon energy
     const double Edot=Edotv(E, mu);
-    return S*KleinNishinaCrossSection(E, Edot, mu)*DiracDelta(E-Edot, sigma);
+    return S*KleinNishinaCrossSection(E, Edot, mu)*DiracDelta(Edot-Edot, sigma);
   }
 
   double KleinNishinaCrossSection2(const double E, const double mu)

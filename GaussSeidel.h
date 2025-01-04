@@ -257,8 +257,7 @@ private:
 
      	      }
      	  }
-     	convergence=CheckConvergence(result, resultOld, 5e-22);
-     	cout<<"convergence "<<convergence<<'\n';
+     	convergence=CheckConvergence(result, resultOld, 1e-24);
       }
 
 
