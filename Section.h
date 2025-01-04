@@ -173,6 +173,13 @@ public:
 
 class IncoherentFactor: public Factor
 {
+private:
+  double GetX(const double E, const double mu)
+  {
+    const double h=4.135667696e-15;
+    const double c=299792458;
+    return (E/(h*c))*sqrt((1-mu)/2);
+  }
 public:
   IncoherentFactor(){}
   IncoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
