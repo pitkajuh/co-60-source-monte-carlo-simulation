@@ -17,10 +17,10 @@ private:
     double mu=-1;
     double E;
     double S;
-    double ep1;
-    double em1;
-    double mup1;
-    double mum1;
+    /* double ep1; */
+    /* double em1; */
+    /* double mup1; */
+    /* double mum1; */
     double sigma;
     Records &function=distribution->tape->MF27->incoherentFunction->recordsAll[0].r;
     Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
@@ -29,6 +29,7 @@ private:
     vector<double> result;
     result.reserve(size);
     const double deltaEnergy=(double)(crossSection.energy.back()-crossSection.energy[0])/size;
+    /* double deltaEnergy; */
     double d2sigmadmudE;
     gridmu.init(size);
     discretized.init(size);
@@ -40,18 +41,16 @@ private:
 	E=crossSection.energy[i-1];
 	E1.emplace_back(E);
 	/* deltaEnergy=crossSection.energy[i]-E; */
-	sigma=5*deltaEnergy;
+	sigma=deltaEnergy;
 	S=function.GetValue(E);
-	ep1=E+deltaEnergy;
-	em1=E-deltaEnergy;
 
 	while(j<size)
 	  {
-	    mup1=mu+deltaMu;
-	    mum1=mu-deltaMu;
-
-	    d2sigmadmudE=(distribution->GetV(ep1, mup1, S, sigma)-distribution->GetV(ep1, mum1, S, sigma)-distribution->GetV(em1, mup1, S, sigma)+distribution->GetV(em1, mum1, S, sigma))/(4*deltaEnergy*deltaMu);
-	    /* cout<<i-1<<" "<<j-1<<" "<<mu<<" "<<E<<" "<<d2sigmadmudE<<'\n'; */
+	    d2sigmadmudE=(distribution->GetV(E+deltaEnergy, mu+deltaMu, S, sigma)
+			  -distribution->GetV(E+deltaEnergy, mu-deltaMu, S, sigma)
+			  -distribution->GetV(E-deltaEnergy, mu+deltaMu, S, sigma)
+			  +distribution->GetV(E-deltaEnergy, mu-deltaMu, S, sigma)
+			  )/(4*deltaEnergy*deltaMu);
 	    row.emplace_back(d2sigmadmudE);
 	    mu+=deltaMu;
 	    j++;

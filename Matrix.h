@@ -26,6 +26,10 @@ struct Matrix
   {
     matrix[i][j]=v;
   }
+  vector<double> &GetRow(const unsigned i)
+  {
+    return matrix[i];
+  }
   double &Get(const unsigned i, const unsigned j)
   {
     return matrix[i][j];
