@@ -208,11 +208,11 @@ private:
     result.reserve(size);
     row.reserve(size);
 
-    // print2(gridE, E);
+    print2(gridE, E);
     // // print4(size, deltaE);
     // print3(size);
 
-    saveFile(deltaE, E.back(), deltaE, "E.txt");
+    // saveFile(deltaE, E.back(), deltaE, "E.txt");
     saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
 
     for(unsigned i=0; i<size; i++)
@@ -233,7 +233,6 @@ private:
     while(!convergence)
       {
      	resultOld=result;
-	// cout<<"ao"<<'\n';
 
      	for(unsigned i=1; i<size-1; i++)
      	  {
@@ -243,8 +242,8 @@ private:
      	      {
 		// cout<<gridE[j]<<'\n';
 		result[i][j]=0.25*(result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1]
-				   // +result[i-1][j-1]-4*gridE[j]*deltaMu*row2[j]);
-				   +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]);
+				   +result[i-1][j-1]-4*gridE[j]*deltaMu*row2[j]);
+				   // +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]);
 
 		/////////////////////////////////////////////////////////////////////////////
 
@@ -259,60 +258,6 @@ private:
      	  }
      	convergence=CheckConvergence(result, resultOld, 1e-24);
       }
-
-
-     // for(unsigned i=1; i<size-1; i++) *\/
-     //   { *\/
-     // 	row2=m.GetRow(i); *\/
-
-     // 	for(unsigned j=1; j<size-1; j++) *\/
-     // 	  { *\/
-     // 	     result[i][j]=result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1] *\\/ *\/
-     // 	       +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]; *\\/ *\/
-
-     // 	     result[i][j]=result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1] *\\/ *\/
-     // 	       +result[i-1][j-1]+4*deltaE*deltaMu*row2[j]; *\\/ *\/
-
-
-     // 	     result[i][j]=result[i+1][j+1]-result[i+1][j-1]-result[i-1][j+1] *\\/ *\/
-     // 	       +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]; *\\/ // wrong *\/
-
-
-
-     // 	     result[i][j]=-result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1] *\\/ *\/
-     // 	       +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]; *\\/ *\/
-
-
-     // 	     result[i][j]=-result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1] *\\/ *\/
-     // 	       +result[i-1][j-1]+4*deltaE*deltaMu*row2[j]; *\\/ *\/
-
-
-
-     // 	     result[i][j]=result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1] *\\/ *\/
-     // 	       +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]; *\\/ *\/
-     // 	     /\\\* result[i][j]=result[i][j]/4; *\\\/ *\\/ *\/
-
-
-     // 	     result[i][j]=result[i+1][j-1]+result[i-1][j+1] *\\/ *\/
-     // 	       +result[i-1][j-1]+4*deltaE*deltaMu*row2[j]; *\\/ *\/
-     // 	     result[i][j]=result[i][j]/4; *\\/ *\/
-
-
-     // 	     result[i][j]=-result[i+1][j-1]-result[i-1][j+1] *\\/ *\/
-     // 	       -result[i-1][j-1]-4*deltaE*deltaMu*row2[j]; *\\/ *\/
-     // 	     result[i][j]=result[i][j]/4; *\\/ *\/
-
-
-
-     // 	    result[i][j]=0.25*(result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1] *\/
-     // 			       +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]); *\/
-
-
-
-     // 	     result[i][j]=result[i+1][j+1]-result[i+1][j-1]-result[i-1][j+1] *\\/ *\/
-     // 	       -result[i-1][j-1]-4*deltaE*deltaMu*row2[j]; *\\/ *\/
-     // 	  } *\/
-     //   } *\/
     print(result);
   }
 public:

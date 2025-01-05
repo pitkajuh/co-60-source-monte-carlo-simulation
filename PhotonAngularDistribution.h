@@ -12,7 +12,7 @@ class PhotonAngularDistribution
 {
  public:
   Tape *tape=nullptr;
-  virtual double GetV(const double E, const double mu, const double S, const double sigma)=0;
+  virtual double GetV(const double E, const double Edot, const double mu, const double sigma)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){delete tape;}
 };
@@ -20,6 +20,32 @@ class PhotonAngularDistribution
 class IncoherentAngularDistribution: public PhotonAngularDistribution
 {
  private:
+  Records *function=nullptr;
+
+  double x(const double E, const double mu)
+  {
+    const double h=4.135667696e-15;
+    const double c=299792458;
+    return (E/(h*c))*sqrt((1-mu)/2);
+  }
+
+  double Gaussian(const double x, const double width)
+  {
+    return exp(-x*x/(2*width*width))/(width*pow(2*M_PI, 0.5));
+  }
+
+  double DiracDelta(const double x, const double width)
+  {
+    // Dirac delta is approximated as Gaussian function
+    cout<<width<<" "<<Gaussian(x, width)<<'\n';
+    return Gaussian(x, width);
+  }
+
+  double Edotv(const double E, const double mu)
+  {
+    return E/(1+(E/m_e)*(1-mu));
+  }
+
   double KleinNishinaCrossSection(const double E, const double Edot, const double mu)
   {
     const double k=E/m_e;
@@ -29,49 +55,27 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*mudot*mudot);
   }
 
-  double Gaussian(const double x, const double sigma)
+  double dsigmadmu(const double E, const double Edot, const double mu)
   {
-    return (exp(-x*x/(2*sigma*sigma))/(sigma*pow(2*M_PI, 0.5)));
+    return function->GetValue(x(E, mu))*KleinNishinaCrossSection(E, Edot, mu);
   }
 
-  double DiracDelta(const double x, const double sigma)
+  double d2sigmadEdmu(const double E, const double Edot, const double mu, const double width)
   {
-    // Dirac delta is approximated as Gaussian function
-    return Gaussian(x, sigma);
-  }
-
-  double Edotv(const double E, const double mu)
-  {
-    return E/(1+(E/m_e)*(1-mu));
-  }
-
-  double IncoherentScatteringCrossSection(const double E, const double S, const double mu, const double sigma)
-  {
-    // S is the incoherent scattering function. Get from ENDF 27504
-    // mu is the cosine unit (cos(theta))
-    // E is the incident photon energy
-    const double Edot=Edotv(E, mu);
-    return S*KleinNishinaCrossSection(E, Edot, mu)*DiracDelta(Edot-Edot, sigma);
-  }
-
-  double KleinNishinaCrossSection2(const double E, const double mu)
-  {
-    const double k=E/m_e;
-    const double kdot=Edotv(E, mu)/m_e;
-    const double kk=kdot/k;
-    const double mudot=1-mu;
-    return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*mudot*mudot);
+    const double Edot2=Edotv(E, mu);
+    return dsigmadmu(E, Edot2, mu)*DiracDelta(Edot-Edot2, width);
   }
 
  public:
-  double GetV(const double E, const double mu, const double S, const double sigma) override
+  double GetV(const double E, const double Edot, const double mu, const double width) override
   {
-    return IncoherentScatteringCrossSection(E, S, mu, sigma);
+    return d2sigmadEdmu(E, Edot, mu, width);
   }
   IncoherentAngularDistribution(){}
   IncoherentAngularDistribution(Tape *tape)
   {
     this->tape=tape;
+    function=&tape->MF27->incoherentFunction->recordsAll[0].r;
   }
   ~IncoherentAngularDistribution(){}
 };
