@@ -3,8 +3,6 @@
 
 #include "Tape.h"
 
-using std::numeric_limits;
-
 const double m_e=0.51099895069E+06;
 const double r_e=2.8179403227E-15;
 
@@ -12,7 +10,9 @@ class PhotonAngularDistribution
 {
  public:
   Tape *tape=nullptr;
-  virtual double GetV(const double E, const double Edot, const double mu, const double sigma)=0;
+  virtual double GetV(const double E, const double Eprime, const double mu, const double width)=0;
+  virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
+  virtual double Getdsigma(const double E, const double Eprime, const double mu)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){delete tape;}
 };
@@ -37,39 +37,46 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   double DiracDelta(const double x, const double width)
   {
     // Dirac delta is approximated as Gaussian function
-    cout<<width<<" "<<Gaussian(x, width)<<'\n';
     return Gaussian(x, width);
   }
 
-  double Edotv(const double E, const double mu)
+  double Eprimev(const double E, const double mu)
   {
     return E/(1+(E/m_e)*(1-mu));
   }
 
-  double KleinNishinaCrossSection(const double E, const double Edot, const double mu)
+  double KleinNishinaCrossSection(const double E, const double Eprime, const double mu)
   {
     const double k=E/m_e;
-    const double kdot=Edot/m_e;
-    const double kk=kdot/k;
-    const double mudot=1-mu;
-    return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kdot*mudot*mudot);
+    const double kprime=Eprime/m_e;
+    const double kk=kprime/k;
+    const double muprime=1-mu;
+    return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kprime*muprime*muprime);
   }
 
-  double dsigmadmu(const double E, const double Edot, const double mu)
+  double dsigmadmu(const double E, const double Eprime, const double mu)
   {
-    return function->GetValue(x(E, mu))*KleinNishinaCrossSection(E, Edot, mu);
+    return function->GetValue(x(E, mu))*KleinNishinaCrossSection(E, Eprime, mu);
   }
 
-  double d2sigmadEdmu(const double E, const double Edot, const double mu, const double width)
+  double d2sigmadEdmu(const double E, const double Eprime, const double mu, const double width)
   {
-    const double Edot2=Edotv(E, mu);
-    return dsigmadmu(E, Edot2, mu)*DiracDelta(Edot-Edot2, width);
+    const double Eprime2=Eprimev(E, mu);
+    return dsigmadmu(E, Eprime2, mu)*DiracDelta(Eprime-Eprime2, width);
   }
 
  public:
-  double GetV(const double E, const double Edot, const double mu, const double width) override
+  double GetV(const double E, const double Eprime, const double mu, const double width) override
   {
-    return d2sigmadEdmu(E, Edot, mu, width);
+    return d2sigmadEdmu(E, Eprime, mu, width);
+  }
+  double Getd2sigma(const double E, const double Eprime, const double mu, const double width) override
+  {
+    return d2sigmadEdmu(E, Eprime, mu, width);
+  }
+  double Getdsigma(const double E, const double Eprime, const double mu) override
+  {
+    return dsigmadmu(E, Eprime, mu);
   }
   IncoherentAngularDistribution(){}
   IncoherentAngularDistribution(Tape *tape)
@@ -93,11 +100,11 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     // Coherent scattering form factor
     const double F=0;
     // Real anomalous scattering factor
-    const double Fdot=0;
+    const double Fprime=0;
     // Imaginary anomalous scattering factor
-    const double Fdotdot=0;
+    const double Fprimeprime=0;
     // mu is the cosine unit (cos(theta))
-    return ThomsonCrossSection(E, mu)*((F+Fdot)*(F+Fdot)+Fdotdot*Fdotdot);
+    return ThomsonCrossSection(E, mu)*((F+Fprime)*(F+Fprime)+Fprimeprime*Fprimeprime);
   }
  public:
   CoherentAngularDistribution(){}

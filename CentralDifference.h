@@ -4,6 +4,7 @@
 #include "PhotonAngularDistribution.h"
 #include "Matrix.h"
 #include "GaussSeidel.h"
+#include "LU.h"
 
 struct CentralDifference
 {
@@ -17,7 +18,7 @@ private:
     double mu=-1;
     double E;
     double width;
-    double Edot;
+    double Eprime;
     Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
     const unsigned size=crossSection.map1.size()-1;
     const double deltaMu=(double) 2.0/size;
@@ -26,10 +27,13 @@ private:
     // const double deltaEnergy=(double)(crossSection.energy.back()-crossSection.energy[0])/size;
     double deltaEnergy;
     double d2sigmadmudE;
+    // double dsigmadmu;
     gridmu.init(size);
     discretized.init(size);
     vector<double> row;
     row.reserve(size);
+    // vector<double> row2;
+    // row2.reserve(size);
 
     while(i<size)
       {
@@ -41,13 +45,17 @@ private:
 	while(j<size)
 	  {
 	    // cout<<"E="<<E<<" mu="<<mu<<" x="<<GetX(E, mu)<<" S="<<S<<'\n';
-	    Edot=E/(1+(E/m_e)*(1-mu));
-	    d2sigmadmudE=(distribution->GetV(E, Edot+deltaEnergy, mu+deltaMu, width)
-			  -distribution->GetV(E, Edot+deltaEnergy, mu-deltaMu, width)
-			  -distribution->GetV(E, Edot-deltaEnergy, mu+deltaMu, width)
-			  +distribution->GetV(E, Edot-deltaEnergy, mu-deltaMu, width)
+	    Eprime=E/(1+(E/m_e)*(1-mu));
+	    d2sigmadmudE=(distribution->Getd2sigma(E, Eprime+deltaEnergy, mu+deltaMu, width)
+			  -distribution->Getd2sigma(E, Eprime+deltaEnergy, mu-deltaMu, width)
+			  -distribution->Getd2sigma(E, Eprime-deltaEnergy, mu+deltaMu, width)
+			  +distribution->Getd2sigma(E, Eprime-deltaEnergy, mu-deltaMu, width)
 			  )/(4*deltaEnergy*deltaMu);
 	    row.emplace_back(d2sigmadmudE);
+
+	    // dsigmadmu=(distribution->Getdsigma(E, Eprime, mu+deltaMu)
+	    // 	       -distribution->Getdsigma(E, Eprime, mu-deltaMu))/(2*deltaMu);
+	    // row2.emplace_back(dsigmadmu);
 	    // gridE.emplace_back(deltaEnergy/(1+(deltaEnergy/m_e)*(1-mu)));
 	    mu+=deltaMu;
 	    j++;
@@ -56,6 +64,7 @@ private:
 	gridE.emplace_back(deltaEnergy);
 	discretized.emplace_back(row);
 	row.clear();
+	// row2.clear();
 
 	mu=-1;
 	j=1;
@@ -73,7 +82,8 @@ public:
   {
     this->distribution=d;
     cd();
-    GaussSeidel gs(discretized, gridE, E1);
+    // GaussSeidel gs(discretized, gridE, E1);
+    LU lu(discretized, gridE, E1);
   }
   ~CentralDifference(){}
 };
