@@ -45,8 +45,9 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return E/(1+(E/m_e)*(1-mu));
   }
 
-  double KleinNishinaCrossSection(const double E, const double Eprime, const double mu)
+  double KleinNishinaCrossSection(const double E, const double mu)
   {
+    const double Eprime=Eprimev(E, mu);
     const double k=E/m_e;
     const double kprime=Eprime/m_e;
     const double kk=kprime/k;
@@ -54,15 +55,14 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return M_PI*r_e*r_e*kk*kk*(1+mu*mu+k*kprime*muprime*muprime);
   }
 
-  double dsigmadmu(const double E, const double Eprime, const double mu)
+  double dsigmadmu(const double E, const double mu)
   {
-    return function->GetValue(x(E, mu))*KleinNishinaCrossSection(E, Eprime, mu);
+    return function->GetValue(x(E, mu))*KleinNishinaCrossSection(E, mu);
   }
 
   double d2sigmadEdmu(const double E, const double Eprime, const double mu, const double width)
   {
-    const double Eprime2=Eprimev(E, mu);
-    return dsigmadmu(E, Eprime2, mu)*DiracDelta(Eprime-Eprime2, width);
+    return dsigmadmu(E, mu)*DiracDelta(Eprime-Eprimev(E, mu), width);
   }
 
  public:
@@ -76,7 +76,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   }
   double Getdsigma(const double E, const double Eprime, const double mu) override
   {
-    return dsigmadmu(E, Eprime, mu);
+    return dsigmadmu(E, mu);
   }
   IncoherentAngularDistribution(){}
   IncoherentAngularDistribution(Tape *tape)

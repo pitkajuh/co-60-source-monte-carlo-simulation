@@ -46,6 +46,7 @@ private:
     // row2.reserve(size);
     // std::ofstream file11;
     // file11.open("E123.txt");
+    cout<<"Central difference"<<'\n';
 
     while(j<size)
       {
@@ -55,7 +56,7 @@ private:
 	    Eprime=E/(1+(E/m_e)*(1-mu));
 	    deltaEnergy=crossSection.energy[i]-E;
 	    deltaEnergy=deltaEnergy/(1+(deltaEnergy/m_e)*(1-mu));
-	    width=5*deltaEnergy;
+	    width=deltaEnergy;
 
 	    d2sigmadmudE=(distribution->Getd2sigma(E, Eprime+deltaEnergy, mu+deltaMu, width)
 			  -distribution->Getd2sigma(E, Eprime+deltaEnergy, mu-deltaMu, width)
