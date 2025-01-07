@@ -8,6 +8,25 @@
 struct LU
 {
 private:
+  void print2(const vector<double> &matrix, const string &name)
+  {
+    std::ofstream file;
+    file.open(name);
+    // unsigned i=0;
+    for(const auto &row: matrix)
+      {
+	// for(const auto &columnValue: row)
+	//   {
+	    file<<row;
+
+	    // if(i<row.size()-1) file<<';';
+	    // i++;
+	  // }
+	// i=0;
+	file<<'\n';
+      }
+    file.close();
+  }
   void print(const vector<vector<double>> &matrix, const string &name)
   {
     std::ofstream file;
@@ -83,16 +102,16 @@ private:
       }
   }
 
-  vector<vector<double>> BackL(const vector<vector<double>> &L, vector<vector<double>> &rhs)
+  vector<double> BackL(const vector<vector<double>> &L, vector<double> &rhs)
   {
-    vector<vector<double>> temp;
-    vector<vector<double>> x=rhs;
+    vector<double> temp;
+    // vector<vector<double>> x=rhs;
     double sm;
 
     for(unsigned i=0; i<L.size(); i++)
       {
 	// for(unsigned j=0; j<)
-	temp[i].emplace_back(0);
+	temp.emplace_back(1);
       }
 
     for(unsigned i=0; i<L.size(); i++)
@@ -101,12 +120,13 @@ private:
 
 	for(unsigned j=0; j<i; j++)
 	  {
-	    sm+=L[i][j]*temp[j][0];
+	    sm+=L[i][j]*temp[j];
 	  }
 	for(unsigned k=0; k<rhs.size(); k++)
 	  {
-	    temp[i][0]=rhs[k][i]-sm;
+	    temp[i]=rhs[k]-sm;
 	  }
+	cout<<temp[i]<<'\n';
       }
 
 
@@ -142,10 +162,11 @@ private:
 
   void lu(Matrix &m, vector<double> &gridE, vector<double> &E)
   {
-    // vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
+    vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
+    // vector<vector<double>> aaa=m.matrix;
     // m.matrix=aaa;
     // m.N=aaa.size();
-    const unsigned size=m.N-1;
+    const unsigned size=aaa.size();
 
     cout<<size<<'\n';
     vector<double> row;
@@ -189,7 +210,7 @@ private:
 		sum1+=L[i][k]*U[k][j];
 	      }
 
-	    U[i][j]=m.matrix[i][j]-sum1;
+	    U[i][j]=aaa[i][j]-sum1;
 
 	  }
 	for(unsigned i=j; i<size; i++)
@@ -200,7 +221,7 @@ private:
 	      {
 		sum2+=L[i][k]*U[k][j];
 	      }
-	    L[i][j]=m.matrix[i][j]-sum2;
+	    L[i][j]=aaa[i][j]-sum2;
 	    L[i][j]/=U[j][j];
 	  }
       }
@@ -248,24 +269,24 @@ private:
     // print(U, "U.txt");
 
 
-    // vector<vector<double>> result;
-    // result.reserve(size);
+    vector<double> result;
+    result.reserve(size);
     // vector<double> row1;
     // row1.reserve(size);
     // cout<<L.size()<<" "<<L[0].size()<<'\n';
-    // for(unsigned i=0; i<size; i++)
-    //   {
-    // 	for(unsigned j=0; j<size; j++)
-    // 	  {
-    // 	    row1.emplace_back(1);
-    // 	  }
-    // 	result.emplace_back(row1);
-    // 	row1.clear();
-    //   }
+    for(unsigned i=0; i<size; i++)
+      {
+	// for(unsigned j=0; j<size; j++)
+	//   {
+	  //   row1.emplace_back(1);
+	  // // }
+	result.emplace_back(0);
+	// row1.clear();
+      }
     // // cout<<L.size()<<" "<<L[0].size()<<'\n';
-    // result=BackL(L, result);
+    vector<double> r1=BackL(L, result);
     // // BackU(U, result);
-    // print(result, "res.txt");
+    print2(r1, "res.txt");
   }
 public:
   LU(){}
