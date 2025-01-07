@@ -8,7 +8,8 @@
 struct LU
 {
 private:
-  void subs(Matrix m, vector<double> &r)
+  // void subs(Matrix m, vector<double> &r)
+  void subs(Matrix m)
   {
     std::ofstream file;
     file.open("LU.txt");
@@ -73,7 +74,8 @@ private:
     file.open("E.txt");
     for(unsigned i=0; i<matrix.size(); i++)
       {
-	file<<std::to_string(matrix[i]+matrix2[i])+'\n';
+	// file<<std::to_string(matrix[i]+matrix2[i])+'\n';
+	file<<std::to_string(matrix[i])+'\n';
       }
     file.close();
   }
@@ -295,15 +297,23 @@ private:
     // result={-4,3,9,7};
     vector<double> r1=BackL(L, result);
     r1=BackU(U, r1);
+
+    const double deltaMu=(double) 2/E.size();
+
     print2(r1, "res.txt");
+    print2(gridE, E);
+    saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
     return r1;
   }
 public:
   LU(){}
   LU(Matrix &m, vector<double> &gridE, vector<double> &E)
   {
-    vector<double> res=lu(m, gridE, E);
-    subs(m, res);
+    // vector<double> res=lu(m, gridE, E);
+    print2(gridE, E);
+    const double deltaMu=(double) 2/gridE.size();
+    saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
+    subs(m);
   }
   ~LU(){}
 };
