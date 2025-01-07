@@ -9,6 +9,16 @@
 struct CentralDifference
 {
 private:
+  void write()
+  {
+    for(const auto &i: discretized.matrix)
+      {
+	for(const auto &j: i)
+	  {
+	    cout<<j<<'\n';
+	  }
+      }
+  }
   PhotonAngularDistribution *distribution=nullptr;
 
   void cd()
@@ -83,6 +93,7 @@ public:
     this->distribution=d;
     cd();
     // GaussSeidel gs(discretized, gridE, E1);
+    // write();
     LU lu(discretized, gridE, E1);
   }
   ~CentralDifference(){}

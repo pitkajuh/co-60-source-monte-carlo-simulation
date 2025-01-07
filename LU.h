@@ -8,6 +8,26 @@
 struct LU
 {
 private:
+  void subs(Matrix m, vector<double> &r)
+  {
+    std::ofstream file;
+    file.open("LU.txt");
+    unsigned k=0;
+    for(const auto &i: m.matrix)
+      {
+	for(const auto &j: i)
+	  {
+	    // cout<<j<<'\n';
+	    // file<<j*r[k];
+	    file<<j;
+
+	    if(k<i.size()-1) file<<';';
+	    k++;
+	  }
+	k=0;
+	file<<'\n';
+      }
+  }
   void print2(const vector<double> &matrix, const string &name)
   {
     std::ofstream file;
@@ -148,10 +168,10 @@ private:
     return temp;
   }
 
-  void lu(Matrix &m, vector<double> &gridE, vector<double> &E)
+  vector<double> lu(Matrix &m, vector<double> &gridE, vector<double> &E)
   {
-    vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
-    // vector<vector<double>> aaa=m.matrix;
+    // vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
+    vector<vector<double>> aaa=m.matrix;
     // m.matrix=aaa;
     // m.N=aaa.size();
     const unsigned size=aaa.size();
@@ -272,16 +292,18 @@ private:
 	// row1.clear();
       }
     // // cout<<L.size()<<" "<<L[0].size()<<'\n';
-    result={-4,3,9,7};
+    // result={-4,3,9,7};
     vector<double> r1=BackL(L, result);
     r1=BackU(U, r1);
     print2(r1, "res.txt");
+    return r1;
   }
 public:
   LU(){}
   LU(Matrix &m, vector<double> &gridE, vector<double> &E)
   {
-    lu(m, gridE, E);
+    vector<double> res=lu(m, gridE, E);
+    subs(m, res);
   }
   ~LU(){}
 };
