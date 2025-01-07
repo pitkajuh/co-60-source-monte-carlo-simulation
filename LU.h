@@ -102,16 +102,14 @@ private:
       }
   }
 
-  vector<double> BackL(const vector<vector<double>> &L, vector<double> &rhs)
+  vector<double> BackL(const vector<vector<double>> &L, const vector<double> &rhs)
   {
     vector<double> temp;
-    // vector<vector<double>> x=rhs;
     double sm;
 
     for(unsigned i=0; i<L.size(); i++)
       {
-	// for(unsigned j=0; j<)
-	temp.emplace_back(1);
+	temp.emplace_back(0);
       }
 
     for(unsigned i=0; i<L.size(); i++)
@@ -122,42 +120,32 @@ private:
 	  {
 	    sm+=L[i][j]*temp[j];
 	  }
-	for(unsigned k=0; k<rhs.size(); k++)
-	  {
-	    temp[i]=rhs[k]-sm;
-	  }
-	cout<<temp[i]<<'\n';
+	temp[i]=rhs[i]-sm;
       }
-
-
-    // for(unsigned i=0; i<L.size(); i++)
-    //   {
-    // 	temp=rhs[i];
-
-    // 	// for(unsigned j=0; j<i-1; j++)
-    // 	for(unsigned j=0; j<i; j++)
-    // 	  {
-    // 	    // cout<<"j "<<j<<" "<<i-1<<'\n';
-    // 	    for(unsigned k=0; k<temp.size(); k++){temp[k]-=L[i][j]*x[j][k];}
-    // 	  }
-    // 	for(unsigned k=0; k<temp.size(); k++){x[i][k]=temp[k]/L[i][i];}
-    //   }
     return temp;
   }
 
-  void BackU(const vector<vector<double>> &U, vector<vector<double>> &rhs)
+  vector<double> BackU(const vector<vector<double>> &U, const vector<double> &rhs)
   {
-    vector<double> v;
-    for(int i=U.size()-1; i>-1; i--)
-      {
-	v=rhs[i];
+    vector<double> temp;
+    double sm;
 
-	for(unsigned j=i+1; j<U.size(); j++)
-	  {
-	    for(unsigned k=0; k<v.size(); k++){v[k]-=U[i][j]*rhs[j][k];}
-	  }
-	for(unsigned k=0; k<v.size(); k++){rhs[i][k]=v[k]/U[i][i];}
+    for(unsigned i=0; i<U.size(); i++)
+      {
+	temp.emplace_back(0);
       }
+
+    for(int i=rhs.size()-1; i>-1; i--)
+      {
+	sm=0;
+
+	for(unsigned j=i+1; j<rhs.size(); j++)
+	  {
+	    sm+=U[i][j]*temp[j];
+	  }
+	temp[i]=(rhs[i]-sm)/U[i][i];
+      }
+    return temp;
   }
 
   void lu(Matrix &m, vector<double> &gridE, vector<double> &E)
@@ -280,12 +268,13 @@ private:
 	//   {
 	  //   row1.emplace_back(1);
 	  // // }
-	result.emplace_back(0);
+	result.emplace_back(1);
 	// row1.clear();
       }
     // // cout<<L.size()<<" "<<L[0].size()<<'\n';
+    result={-4,3,9,7};
     vector<double> r1=BackL(L, result);
-    // // BackU(U, result);
+    r1=BackU(U, r1);
     print2(r1, "res.txt");
   }
 public:
