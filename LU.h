@@ -84,22 +84,44 @@ private:
 
   vector<vector<double>> BackL(const vector<vector<double>> &L, vector<vector<double>> &rhs)
   {
-    vector<double> temp;
+    vector<vector<double>> temp;
     vector<vector<double>> x=rhs;
+    double sm;
 
     for(unsigned i=0; i<L.size(); i++)
       {
-	temp=rhs[i];
+	// for(unsigned j=0; j<)
+	temp[i].emplace_back(0);
+      }
 
-	// for(unsigned j=0; j<i-1; j++)
+    for(unsigned i=0; i<L.size(); i++)
+      {
+	sm=0;
+
 	for(unsigned j=0; j<i; j++)
 	  {
-	    // cout<<"j "<<j<<" "<<i-1<<'\n';
-	    for(unsigned k=0; k<temp.size(); k++){temp[k]-=L[i][j]*x[j][k];}
+	    sm+=L[i][j]*temp[j][0];
 	  }
-	for(unsigned k=0; k<temp.size(); k++){x[i][k]=temp[k]/L[i][i];}
+	for(unsigned k=0; k<rhs.size(); k++)
+	  {
+	    temp[i][0]=rhs[k][i]-sm;
+	  }
       }
-    return x;
+
+
+    // for(unsigned i=0; i<L.size(); i++)
+    //   {
+    // 	temp=rhs[i];
+
+    // 	// for(unsigned j=0; j<i-1; j++)
+    // 	for(unsigned j=0; j<i; j++)
+    // 	  {
+    // 	    // cout<<"j "<<j<<" "<<i-1<<'\n';
+    // 	    for(unsigned k=0; k<temp.size(); k++){temp[k]-=L[i][j]*x[j][k];}
+    // 	  }
+    // 	for(unsigned k=0; k<temp.size(); k++){x[i][k]=temp[k]/L[i][i];}
+    //   }
+    return temp;
   }
 
   void BackU(const vector<vector<double>> &U, vector<vector<double>> &rhs)
@@ -119,10 +141,13 @@ private:
 
   void lu(Matrix &m, vector<double> &gridE, vector<double> &E)
   {
+    // vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
+    // m.matrix=aaa;
+    // m.N=aaa.size();
     const unsigned size=m.N-1;
+    cout<<size<<'\n';
     vector<double> row;
-
-    // row.reserve(size);
+    row.reserve(size);
 
     // print2(gridE, E);
     // // // print4(size, deltaE);
@@ -196,7 +221,7 @@ private:
       }
     cout<<L.size()<<" "<<L[0].size()<<'\n';
     result=BackL(L, result);
-    // BackU(U, result);
+    BackU(U, result);
     print(result, "res.txt");
   }
 public:
