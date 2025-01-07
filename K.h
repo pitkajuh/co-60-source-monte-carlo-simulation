@@ -16,57 +16,70 @@ struct K
   }
   void emplace_back(const double v){t1.emplace_back(v);}
 
-  K operator+(K t)
+  // K &operator[](unsigned i){return t1[i];}
+
+  K operator[](unsigned i) const {return t1[i];}
+
+  K operator-(K t)
   {
-    const int size=t1.size();
+    const unsigned size=t1.size();
     K result(size);
 
-    for(int i=0; i<size; i++) result.t1.push_back(t1[i]+t.t1[i]);
+    for(unsigned i=0; i<size; i++) result.t1.push_back(t1[i]-t.t1[i]);
+    return result;
+  }
+
+  K operator+(K t)
+  {
+    const unsigned size=t1.size();
+    K result(size);
+
+    for(unsigned i=0; i<size; i++) result.t1.push_back(t1[i]+t.t1[i]);
     return result;
   }
 
   K operator+(double t)
   {
-    const int size=t1.size();
+    const unsigned size=t1.size();
     K result(size);
 
-    for(int i=0; i<size; i++) result.t1.push_back(t1[i]+t);
+    for(unsigned i=0; i<size; i++) result.t1.push_back(t1[i]+t);
     return result;
   }
 
   K operator*(K t)
   {
-    const int size=t1.size();
+    const unsigned size=t1.size();
     K result(size);
 
-    for(int i=0; i<size; i++) result.t1.push_back(t1[i]*t.t1[i]);
+    for(unsigned i=0; i<size; i++) result.t1.push_back(t1[i]*t.t1[i]);
     return result;
   }
 
   K operator*(const double t)
   {
-    const int size=t1.size();
+    const unsigned size=t1.size();
     K result(size);
 
-    for(int i=0; i<size; i++) result.emplace_back(t1[i]*t);
+    for(unsigned i=0; i<size; i++) result.emplace_back(t1[i]*t);
     return result;
   }
 
   K operator/(K t)
   {
-    const int size=t1.size();
+    const unsigned size=t1.size();
     K result(size);
 
-    for(int i=0; i<size; i++) result.t1.push_back(t1[i]/t.t1[i]);
+    for(unsigned i=0; i<size; i++) result.t1.push_back(t1[i]/t.t1[i]);
     return result;
   }
 
   K operator/(double t)
   {
-    const int size=t1.size();
+    const unsigned size=t1.size();
     K result(size);
 
-    for(int i=0; i<size; i++) result.t1.push_back(t1[i]/t);
+    for(unsigned i=0; i<size; i++) result.t1.push_back(t1[i]/t);
     return result;
   }
 
