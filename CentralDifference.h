@@ -58,24 +58,16 @@ private:
     unsigned i=1;
     unsigned j=1;
     double mu=-1;
-
-
-
     Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
-
-    // const unsigned size=crossSection.map1.size()-1;
-    const double Emax=1.00000E+4;//crossSection.energy.back();
+    const double Emax=2.00000E+6;
     const unsigned size=100;
     const double deltaMu=(double) 2.0/size;
-
-
     double E=crossSection.energy[0];
     double Eprime=E/(1+(E/m_e)*(1-mu));
-
     vector<double> result;
     // result.reserve(size);
     double deltaEnergy=(double)Emax/size;
-    double width=deltaEnergy;
+    double width=deltaEnergy/2;
     // double deltaEnergy;
     double d2sigmadmudE;
     // double dsigmadmu;
@@ -100,7 +92,7 @@ private:
 	// cout<<j<<" "<<size<<" "<<E<<" "<<Emax<<" "<<Eprime<<" "<<deltaEnergy<<'\n';
 	while(i<size)
 	  {
-
+	    Eprime=E/(1+(E/m_e)*(1-mu));
 	    d2sigmadmudE=(distribution->Getd2sigma(E, Eprime+deltaEnergy, mu+deltaMu, width)
 			  -distribution->Getd2sigma(E, Eprime+deltaEnergy, mu-deltaMu, width)
 			  -distribution->Getd2sigma(E, Eprime-deltaEnergy, mu+deltaMu, width)
@@ -112,20 +104,13 @@ private:
 	    // E1.emplace_back(E);
 	    i++;
 	    E+=deltaEnergy;
-	    Eprime+=deltaEnergy;
+	    // Eprime+=deltaEnergy;
 	  }
-	// E=crossSection.energy[j-1];
-	// Eprime=E/(1+(E/m_e)*(1-mu));
-	// deltaEnergy=crossSection.energy[j]-E;
-	// deltaEnergy=deltaEnergy/(1+(deltaEnergy/m_e)*(1-mu));
-	// cout<<E<<" "<<Eprime<<" "<<deltaEnergy<<" tot "<<Eprime+deltaEnergy<<'\n';
-	// gridE.emplace_back(Eprime+deltaEnergy);
-	// gridE.emplace_back(E+deltaEnergy);
+
 	discretized.emplace_back(row);
 	row.clear();
 	i=1;
 	E=crossSection.energy[0];
-	Eprime=E/(1+(E/m_e)*(1-mu));
 	mu+=deltaMu;
 	j++;
       }
