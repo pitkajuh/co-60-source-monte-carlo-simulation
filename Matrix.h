@@ -41,9 +41,9 @@ struct Matrix
   }
   void init2(const unsigned n)
   {
-    matrix.reserve(n);
+    // matrix.reserve(n);
     vector<double> row;
-    row.reserve(n);
+    // row.reserve(n);
     N=n;
 
     for(unsigned i=0; i<n; i++)
@@ -60,8 +60,8 @@ struct Matrix
   Matrix(){}
   Matrix(const unsigned n)
   {
-    matrix.reserve(n);
-    N=n;
+    // matrix.reserve(n);
+    // N=n;
   }
   ~Matrix(){}
 };

@@ -68,7 +68,7 @@ private:
     file.close();
   }
 
-  void print2(const vector<double> &matrix, const vector<double> &matrix2)
+  void print2(const vector<double> &matrix)
   {
     std::ofstream file;
     file.open("E.txt");
@@ -301,7 +301,7 @@ private:
     const double deltaMu=(double) 2/E.size();
 
     print2(r1, "res.txt");
-    print2(gridE, E);
+    print2(gridE);
     saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
     return r1;
   }
@@ -310,9 +310,12 @@ public:
   LU(Matrix &m, vector<double> &gridE, vector<double> &E)
   {
     // vector<double> res=lu(m, gridE, E);
-    print2(gridE, E);
-    const double deltaMu=(double) 2/gridE.size();
-    saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
+    // print2(gridE);
+    // const double deltaMu=(double) 2/100;
+    // const double deltaE=(double) (1e5-1)/100;
+    // cout<<deltaMu<<" "<<deltaE<<" "<<gridE.size()<<'\n';
+    // saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
+    // saveFile(1+deltaE, 1e5, deltaE, "E.txt");
     subs(m);
   }
   ~LU(){}
