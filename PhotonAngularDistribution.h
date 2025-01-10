@@ -37,15 +37,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   double DiracDelta(const double x, const double width)
   {
     // Dirac delta is approximated as Gaussian function
-    // cout<<x<<" "<<width<<" "<<Gaussian(x, width)<<'\n';
-    // return 1/1e-3;
-    // cout<<x<<'\n';
-    // if(abs(x)<width/2) return 1;
-    // return 0;
     return Gaussian(x, width);
-    // if(x==0) return 0;
-    // return 1;
-    // return (width/M_PI)*(1/(x*x+width*width));
   }
 
   double Eprimev(const double E, const double mu)
