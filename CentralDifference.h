@@ -78,9 +78,6 @@ private:
     saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
     saveFile(1+deltaEnergy, Emax, deltaEnergy, "E.txt");
 
-    cout<<"Central difference "<<"E "<<E<<" Eprime "<<Eprime<<" delta "<<deltaEnergy<<" "<<size<<'\n';
-
-
     while(j<size)
       {
 	while(i<size)
