@@ -238,46 +238,6 @@ private:
 
     print(L, "L.txt");
     print(U, "U.txt");
-    // const unsigned size=m.N;
-    // vector<vector<double>> L;
-    // L.reserve(size);
-
-    // vector<double> row;
-    // row.reserve(size);
-
-    // for(unsigned i=0; i<size; i++)
-    //   {
-    // 	for(unsigned j=0; j<size; j++)
-    // 	  {
-    // 	    row.emplace_back(0);
-    // 	  }
-    // 	L.emplace_back(row);
-    // 	row.clear();
-    //   }
-
-    // vector<vector<double>> U=m.matrix;
-
-    // for(unsigned i=0; i<size-1; i++)
-    //   {
-    // 	L[i][i]=1;
-    // 	// cout<<"i "<<i<<" "<<size-1<<'\n';
-    // 	for(unsigned j=i+1; j<size-1; j++)
-    // 	  {
-    // 	    // cout<<"j "<<j<<" "<<size-1<<'\n';
-    // 	    L[j][i]=U[j][i]/U[i][i];
-
-    // 	    for(unsigned k=0; k<size-1; k++)
-    // 	      {
-    // 		// cout<<"k "<<k<<" "<<size-1<<'\n';
-    // 		U[j][k]=U[j][k]-L[j][i]*U[i][k];
-    // 	      }
-    // 	  }
-    //   }
-
-    // cout<<"AOE"<<'\n';
-    // print(L, "L.txt");
-    // print(U, "U.txt");
-
 
     vector<double> result;
     result.reserve(size);
@@ -293,7 +253,7 @@ private:
 	result.emplace_back(1);
 	// row1.clear();
       }
-    // // cout<<L.size()<<" "<<L[0].size()<<'\n';
+
     // result={-4,3,9,7};
     vector<double> r1=BackL(L, result);
     r1=BackU(U, r1);
