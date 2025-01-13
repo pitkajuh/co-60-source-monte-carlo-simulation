@@ -69,11 +69,10 @@ private:
     double deltaEnergy=(double)Emax/size;
     const double width=deltaEnergy/2;
     double d2sigmadmudE;
-    // gridmu.init(size);
     discretized.init(size);
     vector<double> row;
     row.reserve(size);
-    // discretized.matrix.reserve(size);
+    discretized.matrix.reserve(size);
 
     saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
     saveFile(1+deltaEnergy, Emax, deltaEnergy, "E.txt");
@@ -104,7 +103,6 @@ private:
 public:
   vector<double> gridE;
   vector<double> E1;
-  Matrix gridmu;
   Matrix discretized;
 
   CentralDifference(){}
