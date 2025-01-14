@@ -8,27 +8,7 @@ const double r_e=2.8179403227E-15;
 
 class PhotonAngularDistribution
 {
- public:
-  Tape *tape=nullptr;
-  virtual double GetV(const double E, const double Eprime, const double mu, const double width)=0;
-  virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
-  virtual double Getdsigma(const double E, const double Eprime, const double mu)=0;
-  PhotonAngularDistribution(){}
-  virtual ~PhotonAngularDistribution(){delete tape;}
-};
-
-class IncoherentAngularDistribution: public PhotonAngularDistribution
-{
- private:
-  Records *function=nullptr;
-
-  double x(const double E, const double mu)
-  {
-    const double h=4.135667696e-15;
-    const double c=299792458;
-    return (E/(h*c))*sqrt((1-mu)/2);
-  }
-
+protected:
   double Gaussian(const double x, const double width)
   {
     return exp(-x*x/(2*width*width))/(width*sqrt(2*M_PI));
@@ -39,6 +19,25 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     // Dirac delta is approximated as Gaussian function
     return Gaussian(x, width);
   }
+
+  double x(const double E, const double mu)
+  {
+    const double h=4.135667696e-15;
+    const double c=299792458;
+    return (E/(h*c))*sqrt((1-mu)/2);
+  }
+public:
+  Tape *tape=nullptr;
+  virtual double GetV(const double E, const double Eprime, const double mu, const double width)=0;
+  virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
+  PhotonAngularDistribution(){}
+  virtual ~PhotonAngularDistribution(){delete tape;}
+};
+
+class IncoherentAngularDistribution: public PhotonAngularDistribution
+{
+ private:
+  Records *function=nullptr;
 
   double Eprimev(const double E, const double mu)
   {
@@ -70,14 +69,12 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   {
     return d2sigmadEdmu(E, Eprime, mu, width);
   }
+
   double Getd2sigma(const double E, const double Eprime, const double mu, const double width) override
   {
     return d2sigmadEdmu(E, Eprime, mu, width);
   }
-  double Getdsigma(const double E, const double Eprime, const double mu) override
-  {
-    return dsigmadmu(E, mu);
-  }
+
   IncoherentAngularDistribution(){}
   IncoherentAngularDistribution(Tape *tape)
   {
@@ -90,12 +87,12 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 class CoherentAngularDistribution: public PhotonAngularDistribution
 {
  private:
-  double ThomsonCrossSection(const double E, const double mu)
+  double ThomsonCrossSection(const double mu)
   {
     return M_PI*r_e*r_e*(1+mu*mu);
   }
 
-  double CoherentScatteringCrossSection(const double E, const double mu)
+  double dsigmadmu(const double E, const double mu)
   {
     // Coherent scattering form factor
     const double F=0;
@@ -104,9 +101,19 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     // Imaginary anomalous scattering factor
     const double Fprimeprime=0;
     // mu is the cosine unit (cos(theta))
-    return ThomsonCrossSection(E, mu)*((F+Fprime)*(F+Fprime)+Fprimeprime*Fprimeprime);
+    return ThomsonCrossSection(mu)*((F+Fprime)*(F+Fprime)+Fprimeprime*Fprimeprime);
+  }
+
+  double d2sigmadEdmu(const double E, const double Eprime, const double mu, const double width)
+  {
+    return dsigmadmu(E, mu)*DiracDelta(Eprime-E, width);
   }
  public:
+  double Getd2sigma(const double E, const double Eprime, const double mu, const double width) override
+  {
+    return d2sigmadEdmu(E, Eprime, mu, width);
+  }
+
   CoherentAngularDistribution(){}
   ~CoherentAngularDistribution(){}
 };
