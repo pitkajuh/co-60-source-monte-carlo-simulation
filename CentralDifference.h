@@ -18,8 +18,6 @@ private:
       {
 	for(const auto &j: i)
 	  {
-	    // cout<<j<<'\n';
-	    // file<<j*r[k];
 	    file<<j;
 
 	    if(k<i.size()-1) file<<';';
