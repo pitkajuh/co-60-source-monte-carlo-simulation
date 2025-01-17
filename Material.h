@@ -2,7 +2,6 @@
 #define MATERIAL_H
 
 #include "MassAttenuation.h"
-#include "CrossSectionData.h"
 
 const double GetMuValue(const double photonEnergy, map<double, pair<double, double>> &muMap, const double density)
   {
