@@ -53,14 +53,14 @@ private:
 
   void cd()
   {
+    const unsigned size=100;
     unsigned i=1;
     unsigned j=1;
     double mu=-1;
     Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
-    const double Emax=2.00000E+6;
-    const unsigned size=100;
-    const double deltaMu=(double) 2.0/size;
     double E=crossSection.energy[0];
+    const double Emax=2.00000E+6;
+    const double deltaMu=(double) 2.0/size;
     double Eprime=E/(1+(E/m_e)*(1-mu));
     vector<double> result;
     result.reserve(size);
