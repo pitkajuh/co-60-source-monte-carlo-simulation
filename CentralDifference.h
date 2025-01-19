@@ -64,8 +64,8 @@ private:
     double Eprime=E/(1+(E/m_e)*(1-mu));
     vector<double> result;
     result.reserve(size);
-    double deltaEnergy=(double)Emax/size;
-    const double width=deltaEnergy/2;
+    double deltaE=(double)Emax/size;
+    const double width=deltaE/2;
     double d2sigmadmudE;
     discretized.init(size);
     vector<double> row;
@@ -73,21 +73,22 @@ private:
     discretized.matrix.reserve(size);
 
     saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
-    saveFile(1+deltaEnergy, Emax, deltaEnergy, "E.txt");
+    saveFile(1+deltaE, Emax, deltaE, "E.txt");
+
 
     while(j<size)
       {
 	while(i<size)
 	  {
 	    Eprime=E/(1+(E/m_e)*(1-mu));
-	    d2sigmadmudE=(distribution->Getd2sigma(E, Eprime+deltaEnergy, mu+deltaMu, width)
-			  -distribution->Getd2sigma(E, Eprime+deltaEnergy, mu-deltaMu, width)
-			  -distribution->Getd2sigma(E, Eprime-deltaEnergy, mu+deltaMu, width)
-			  +distribution->Getd2sigma(E, Eprime-deltaEnergy, mu-deltaMu, width)
-			  )/(4*deltaEnergy*deltaMu);
+	    d2sigmadmudE=(distribution->Getd2sigma(E, Eprime+deltaE, mu+deltaMu, width)
+			  -distribution->Getd2sigma(E, Eprime+deltaE, mu-deltaMu, width)
+			  -distribution->Getd2sigma(E, Eprime-deltaE, mu+deltaMu, width)
+			  +distribution->Getd2sigma(E, Eprime-deltaE, mu-deltaMu, width)
+			  )/(4*deltaE*deltaMu);
 	    row.emplace_back(d2sigmadmudE);
 	    i++;
-	    E+=deltaEnergy;
+	    E+=deltaE;
 	  }
 
 	discretized.emplace_back(row);
