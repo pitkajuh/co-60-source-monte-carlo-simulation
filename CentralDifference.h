@@ -59,7 +59,8 @@ private:
     double mu=-1;
     Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
     double E=crossSection.energy[0];
-    const double Emax=2.00000E+6;
+    // const double Emax=2.00000E+6;
+    const double Emax=1.00000E+4;
     const double deltaMu=(double) 2.0/size;
     double Eprime=E/(1+(E/m_e)*(1-mu));
     vector<double> result;

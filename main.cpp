@@ -152,18 +152,20 @@ int main()
   // Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
   // steelENDF->Get(1332e3);
 
-  PhotonAngularDistribution *steelIncoherent=new IncoherentAngularDistribution(steelENDF);
+  // PhotonAngularDistribution *steelIncoherent=new IncoherentAngularDistribution(steelENDF);
 
-  CentralDifference cd(steelIncoherent);
+  // CentralDifference cd(steelIncoherent);
 
-  delete steelIncoherent;
+  // delete steelIncoherent;
 
 
-  // PhotonAngularDistribution *steelCoherent=new CoherentAngularDistribution(steelENDF);
+  PhotonAngularDistribution *steelCoherent=new CoherentAngularDistribution(steelENDF);
 
-  // CentralDifference cd1(steelCoherent);
+  CentralDifference cd1(steelCoherent);
 
-  // delete steelCoherent;
+  delete steelCoherent;
+
+
 
   // PhotonAngularDistribution *nitrogenAngular=new IncoherentAngularDistribution(nitrogenENDF);
   // delete nitrogenAngular;

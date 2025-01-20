@@ -102,7 +102,8 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     const double F=coherentFactor->GetValue(x(E, mu));
     const double Fprime=realFactor->GetValue(E);
     const double Fprimeprime=imaginaryFactor->GetValue(E);
-    return ThomsonCrossSection(mu)*((F+Fprime)*(F+Fprime)+Fprimeprime*Fprimeprime);
+    const double FF=F+Fprime;
+    return ThomsonCrossSection(mu)*(FF*FF+Fprimeprime*Fprimeprime);
   }
 
   double d2sigmadEdmu(const double E, const double Eprime, const double mu, const double width)
@@ -128,12 +129,7 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     imaginaryFactor=&tape->MF27->imaginaryFactor->recordsAll[0].r;
     realFactor=&tape->MF27->realFactor->recordsAll[0].r;
   }
-  ~CoherentAngularDistribution()
-  {
-    delete coherentFactor;
-    delete imaginaryFactor;
-    delete realFactor;
-  }
+  ~CoherentAngularDistribution(){}
 };
 
 #endif
