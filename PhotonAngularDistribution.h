@@ -28,6 +28,7 @@ protected:
   }
 public:
   Tape *tape=nullptr;
+
   virtual double GetV(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
   PhotonAngularDistribution(){}
@@ -37,7 +38,7 @@ public:
 class IncoherentAngularDistribution: public PhotonAngularDistribution
 {
  private:
-  Records *function=nullptr;
+  Records *incoherentFunction=nullptr;
 
   double Eprimev(const double E, const double mu)
   {
@@ -56,7 +57,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 
   double dsigmadmu(const double E, const double mu)
   {
-    return function->GetValue(x(E, mu))*KleinNishinaCrossSection(E, mu);
+    return incoherentFunction->GetValue(x(E, mu))*KleinNishinaCrossSection(E, mu);
   }
 
   double d2sigmadEdmu(const double E, const double Eprime, const double mu, const double width)
@@ -79,7 +80,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   IncoherentAngularDistribution(Tape *tape)
   {
     this->tape=tape;
-    function=&tape->MF27->incoherentFunction->recordsAll[0].r;
+    incoherentFunction=&tape->MF27->incoherentFunction->recordsAll[0].r;
   }
   ~IncoherentAngularDistribution(){}
 };
@@ -87,6 +88,10 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 class CoherentAngularDistribution: public PhotonAngularDistribution
 {
  private:
+  Records *coherentFactor=nullptr;
+  Records *imaginaryFactor=nullptr;
+  Records *realFactor=nullptr;
+
   double ThomsonCrossSection(const double mu)
   {
     return M_PI*r_e*r_e*(1+mu*mu);
@@ -94,13 +99,9 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
 
   double dsigmadmu(const double E, const double mu)
   {
-    // Coherent scattering form factor
-    const double F=0;
-    // Real anomalous scattering factor
-    const double Fprime=0;
-    // Imaginary anomalous scattering factor
-    const double Fprimeprime=0;
-    // mu is the cosine unit (cos(theta))
+    const double F=coherentFactor->GetValue(x(E, mu));
+    const double Fprime=realFactor->GetValue(E);
+    const double Fprimeprime=imaginaryFactor->GetValue(E);
     return ThomsonCrossSection(mu)*((F+Fprime)*(F+Fprime)+Fprimeprime*Fprimeprime);
   }
 
@@ -114,8 +115,25 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     return d2sigmadEdmu(E, Eprime, mu, width);
   }
 
+  double GetV(const double E, const double Eprime, const double mu, const double width) override
+  {
+    return d2sigmadEdmu(E, Eprime, mu, width);
+  }
+
   CoherentAngularDistribution(){}
-  ~CoherentAngularDistribution(){}
+  CoherentAngularDistribution(Tape *tape)
+  {
+    this->tape=tape;
+    coherentFactor=&tape->MF27->coherentFactor->recordsAll[0].r;
+    imaginaryFactor=&tape->MF27->imaginaryFactor->recordsAll[0].r;
+    realFactor=&tape->MF27->realFactor->recordsAll[0].r;
+  }
+  ~CoherentAngularDistribution()
+  {
+    delete coherentFactor;
+    delete imaginaryFactor;
+    delete realFactor;
+  }
 };
 
 #endif
