@@ -75,7 +75,6 @@ private:
     saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
     saveFile(1+deltaE, Emax, deltaE, "E.txt");
 
-
     while(j<size)
       {
 	while(i<size)
