@@ -73,6 +73,7 @@ private:
     row.reserve(size);
     discretized.matrix.reserve(size);
 
+
     saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
     saveFile(1+deltaE, Emax, deltaE, "E.txt");
 
