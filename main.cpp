@@ -153,16 +153,11 @@ int main()
   // steelENDF->Get(1332e3);
 
   // PhotonAngularDistribution *steelIncoherent=new IncoherentAngularDistribution(steelENDF);
-
   // CentralDifference cd(steelIncoherent);
-
   // delete steelIncoherent;
 
-
   PhotonAngularDistribution *steelCoherent=new CoherentAngularDistribution(steelENDF);
-
   CentralDifference cd1(steelCoherent);
-
   delete steelCoherent;
 
 
