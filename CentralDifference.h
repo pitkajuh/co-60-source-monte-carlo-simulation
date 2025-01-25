@@ -51,51 +51,42 @@ private:
   }
   PhotonAngularDistribution *distribution=nullptr;
 
-  void cd()
+  void cd(const double xFrom, const double xTo, const double yFrom, const double yTo, const double N)
   {
-    const unsigned size=100;
-    unsigned i=1;
-    unsigned j=1;
-    double mu=-1;
-    Records &crossSection=distribution->tape->MF23->incoherentScattering->recordsAll[0].r;
-    double E=crossSection.energy[0];
-    // const double Emax=2.00000E+6;
-    const double Emax=1.00000E+4;
-    const double deltaMu=(double) 2.0/size;
-    double Eprime=E/(1+(E/m_e)*(1-mu));
+    double x=xFrom;
+    double y=yFrom;
+    const double deltaX=(double) (xTo-xFrom)/N;
+    double Eprime=y/(1+(y/m_e)*(1-x));
     vector<double> result;
-    result.reserve(size);
-    double deltaE=(double)Emax/size;
-    const double width=deltaE/2;
+    result.reserve(N);
+    double deltaY=(double) (yTo-xFrom)/N;
+    const double width=deltaY/2;
     double d2sigmadmudE;
-    discretized.init(size);
+    discretized.init(N);
     vector<double> row;
-    row.reserve(size);
-    discretized.matrix.reserve(size);
-    saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
-    saveFile(1+deltaE, Emax, deltaE, "E.txt");
+    row.reserve(N);
+    discretized.matrix.reserve(N);
+    saveFile(xFrom, xTo, deltaX, "mu.txt");
+    saveFile(yFrom, yTo, deltaY, "E.txt");
 
-    while(j<size)
+    while(x<xTo)
       {
-	while(i<size)
+	while(y<yTo)
 	  {
-	    Eprime=E/(1+(E/m_e)*(1-mu));
-	    d2sigmadmudE=(distribution->Getd2sigma(E, Eprime+deltaE, mu+deltaMu, width)
-			  -distribution->Getd2sigma(E, Eprime+deltaE, mu-deltaMu, width)
-			  -distribution->Getd2sigma(E, Eprime-deltaE, mu+deltaMu, width)
-			  +distribution->Getd2sigma(E, Eprime-deltaE, mu-deltaMu, width)
-			  )/(4*deltaE*deltaMu);
+	    Eprime=y/(1+(y/m_e)*(1-x));
+	    d2sigmadmudE=(distribution->Getd2sigma(y, Eprime+deltaY, x+deltaX, width)
+			  -distribution->Getd2sigma(y, Eprime+deltaY, x-deltaX, width)
+			  -distribution->Getd2sigma(y, Eprime-deltaY, x+deltaX, width)
+			  +distribution->Getd2sigma(y, Eprime-deltaY, x-deltaX, width)
+			  )/(4*deltaY*deltaX);
 	    row.emplace_back(d2sigmadmudE);
-	    i++;
-	    E+=deltaE;
+	    y+=deltaY;
 	  }
 
 	discretized.emplace_back(row);
 	row.clear();
-	i=1;
-	E=crossSection.energy[0];
-	mu+=deltaMu;
-	j++;
+	y=yFrom;
+	x+=deltaX;
       }
   }
 public:
@@ -104,10 +95,10 @@ public:
   Matrix discretized;
 
   CentralDifference(){}
-  CentralDifference(PhotonAngularDistribution *d)
+  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N)
   {
     this->distribution=d;
-    cd();
+    cd(xFrom, xTo, yFrom, yTo, N);
     // GaussSeidel gs(discretized, gridE, E1);
     // write();
     LU lu(discretized, gridE, E1);

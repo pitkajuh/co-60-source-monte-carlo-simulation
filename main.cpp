@@ -145,26 +145,22 @@ int main()
   // // GetCrossSection();
   // MonteCarlo(time, source, co60);
 
-  Tape *steelENDF=new Tape("./cross-sections/photoat-026_Fe_000.endf");
+  // Tape *steelENDF=new Tape("./cross-sections/photoat-026_Fe_000.endf");
   // Tape *nitrogenENDF=new Tape("./cross-sections/photoat-007_N_000.endf");
   // Tape *sodiumENDF=new Tape("./cross-sections/photoat-011_Na_000.endf");
   // Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
   // Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
   // steelENDF->Get(1332e3);
-
-  // PhotonAngularDistribution *steelIncoherent=new IncoherentAngularDistribution(steelENDF);
-  // CentralDifference cd(steelIncoherent);
-  // delete steelIncoherent;
-
-  PhotonAngularDistribution *steelCoherent=new CoherentAngularDistribution(steelENDF);
-  CentralDifference cd1(steelCoherent);
-  delete steelCoherent;
+  Material *steelTest=new Steel(7.874, "./cross-sections/photoat-026_Fe_000.endf");
+  delete steelTest;
 
 
 
 
   // PhotonAngularDistribution *nitrogenAngular=new IncoherentAngularDistribution(nitrogenENDF);
+  // CentralDifference cd1(nitrogenAngular);
   // delete nitrogenAngular;
+
   // PhotonAngularDistribution *sodiumAngular=new IncoherentAngularDistribution(sodiumENDF);
   // delete sodiumAngular;
   // PhotonAngularDistribution *titaniumAngular=new IncoherentAngularDistribution(titaniumENDF);

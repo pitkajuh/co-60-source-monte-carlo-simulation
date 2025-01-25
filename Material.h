@@ -2,6 +2,9 @@
 #define MATERIAL_H
 
 #include "MassAttenuation.h"
+#include "Tape.h"
+#include "PhotonAngularDistribution.h"
+#include "CentralDifference.h"
 
 const double GetMuValue(const double photonEnergy, map<double, pair<double, double>> &muMap, const double density)
   {
@@ -24,12 +27,38 @@ const double GetMuValue(const double photonEnergy, map<double, pair<double, doub
 class Material
 {
 public:
+  Tape *endf=nullptr;
+  PhotonAngularDistribution *incoherent=nullptr;
+  PhotonAngularDistribution *coherent=nullptr;
   unsigned ZA;
   double density=0; // in g/cm3
   map<double, pair<double, double>> muMap;
   // CrossSections crossSections;
   virtual const double GetMu(const double photonEnergy)=0;
-  virtual ~Material(){}
+  virtual ~Material()
+  {
+    delete incoherent;
+    delete coherent;
+  }
+};
+
+class Steel: public Material
+{
+public:
+  Steel(const double d, const string &endfTape)
+  {
+    this->endf=new Tape(endfTape);
+    // incoherent=new IncoherentAngularDistribution(endf);
+    // CentralDifference cd(incoherent, -1, 1, 1, 2e6, 100);
+    coherent=new CoherentAngularDistribution(endf);
+    CentralDifference cd1(coherent, -1, 1, 1, 1e4, 100);
+    ZA=26000;
+    density=d;
+    muMap=muMapSteel;
+    // crossSections=steelCrossSections;
+  }
+  const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
+
 };
 
 class Sodium: public Material
@@ -68,19 +97,6 @@ public:
     // crossSections=nitrogenCrossSections;
   }
 
-  const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
-};
-
-class Steel: public Material
-{
-public:
-  Steel(const double d)
-  {
-    ZA=26000;
-    density=d;
-    muMap=muMapSteel;
-    // crossSections=steelCrossSections;
-  }
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
 };
 
