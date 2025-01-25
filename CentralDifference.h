@@ -27,13 +27,14 @@ private:
 	file<<'\n';
       }
   }
-  void saveFile(double from, const double to, const double delta, const string &file)
+  void saveFile(double from, const double to, const double delta, const string &file, vector<double> v)
   {
     std::ofstream file1;
     file1.open(file);
 
     while(from<=to)
       {
+	v.emplace_back(from);
 	file1<<from;
 	file1<<'\n';
 	from+=delta;
@@ -66,8 +67,8 @@ private:
     vector<double> row;
     row.reserve(N);
     discretized.matrix.reserve(N);
-    saveFile(xFrom, xTo, deltaX, "mu.txt");
-    saveFile(yFrom, yTo, deltaY, "E.txt");
+    saveFile(xFrom, xTo, deltaX, "mu.txt", X);
+    saveFile(yFrom, yTo, deltaY, "E.txt", Y);
 
     while(x<xTo)
       {
@@ -90,8 +91,8 @@ private:
       }
   }
 public:
-  vector<double> gridE;
-  vector<double> E1;
+  vector<double> X;
+  vector<double> Y;
   Matrix discretized;
 
   CentralDifference(){}
@@ -99,9 +100,9 @@ public:
   {
     this->distribution=d;
     cd(xFrom, xTo, yFrom, yTo, N);
-    // GaussSeidel gs(discretized, gridE, E1);
+    // GaussSeidel gs(discretized, Y, X);
     // write();
-    LU lu(discretized, gridE, E1);
+    LU lu(discretized, X, Y);
   }
   ~CentralDifference(){}
 };

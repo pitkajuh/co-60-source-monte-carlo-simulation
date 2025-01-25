@@ -200,8 +200,7 @@ private:
   {
     const unsigned size=m.N-1;
     const double deltaMu=(double) 2/size;
-    const double deltaE=(double) (E.back()-E[0])/size;
-    vector<vector<double>> result;
+    vector<vector<double>> result=m.matrix;
     vector<vector<double>> resultOld;
     vector<double> row;
     vector<double> row2;
@@ -212,21 +211,15 @@ private:
     // // print4(size, deltaE);
     // print3(size);
 
-    // saveFile(deltaE, E.back(), deltaE, "E.txt");
-    saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
-
-    for(unsigned i=0; i<size; i++)
-      {
-	for(unsigned j=0; j<size; j++)
-	  {
-	    row.emplace_back(0);
-	  }
-	result.emplace_back(row);
-	row.clear();
-      }
-
-    cout<<"size "<<m.N<<" dE"<<deltaE<<" dmu"<<deltaMu<<'\n';
-
+    // for(unsigned i=0; i<size; i++)
+    //   {
+    // 	for(unsigned j=0; j<size; j++)
+    // 	  {
+    // 	    row.emplace_back(0);
+    // 	  }
+    // 	result.emplace_back(row);
+    // 	row.clear();
+    //   }
 
     bool convergence=0;
 
@@ -240,20 +233,8 @@ private:
 
      	    for(unsigned j=1; j<size-1; j++)
      	      {
-		// cout<<gridE[j]<<'\n';
 		result[i][j]=0.25*(result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1]
 				   +result[i-1][j-1]-4*gridE[j]*deltaMu*row2[j]);
-				   // +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]);
-
-		/////////////////////////////////////////////////////////////////////////////
-
-
-		// result[i][j]=0.25*(result[i+1][j+1]-result[i+1][j-1]-result[i-1][j+1]
-		// 		   -result[i-1][j-1]-4*deltaE*deltaMu*row2[j]);
-
-		// result[i][j]=result[i+1][j+1]-result[i+1][j-1]-result[i-1][j+1]
-		//   -result[i-1][j-1]-4*deltaE*deltaMu*row2[j];
-
      	      }
      	  }
      	convergence=CheckConvergence(result, resultOld, 1e-24);

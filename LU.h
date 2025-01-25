@@ -170,7 +170,7 @@ private:
     return temp;
   }
 
-  vector<double> lu(Matrix &m, vector<double> &gridE, vector<double> &E)
+  vector<double> lu(Matrix &m, vector<double> &X, vector<double> &Y)
   {
     // vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
     vector<vector<double>> aaa=m.matrix;
@@ -236,8 +236,8 @@ private:
 	  }
       }
 
-    print(L, "L.txt");
-    print(U, "U.txt");
+    // print(L, "L.txt");
+    // print(U, "U.txt");
 
     vector<double> result;
     result.reserve(size);
@@ -258,18 +258,18 @@ private:
     vector<double> r1=BackL(L, result);
     r1=BackU(U, r1);
 
-    const double deltaMu=(double) 2/E.size();
+    // const double deltaMu=(double) 2/E.size();
 
     print2(r1, "res.txt");
-    print2(gridE);
-    saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
+    // print2(gridE);
+    // saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
     return r1;
   }
 public:
   LU(){}
-  LU(Matrix &m, vector<double> &gridE, vector<double> &E)
+  LU(Matrix &m, vector<double> &X, vector<double> &Y)
   {
-    // vector<double> res=lu(m, gridE, E);
+    vector<double> res=lu(m, X, Y);
     // print2(gridE);
     // const double deltaMu=(double) 2/100;
     // const double deltaE=(double) (1e5-1)/100;
