@@ -29,23 +29,32 @@ private:
 	file<<'\n';
       }
   }
-  void print2(const vector<double> &matrix, const string &name)
+  void print2(const vector<vector<double>> &matrix, const string &name)
   {
     std::ofstream file;
     file.open(name);
-    // unsigned i=0;
-    for(const auto &row: matrix)
+    for(unsigned i=0; i<matrix.size(); i++)
       {
-	// for(const auto &columnValue: row)
-	//   {
-	    file<<row;
-
-	    // if(i<row.size()-1) file<<';';
-	    // i++;
-	  // }
-	// i=0;
+	for(unsigned j=0; j<matrix[i].size(); j++)
+	  {
+	    file<<matrix[i][j];
+	    if(j<matrix[i].size()-1) file<<';';
+	  }
 	file<<'\n';
       }
+    // unsigned i=0;
+    // for(const auto &row: matrix)
+    //   {
+    // 	// for(const auto &columnValue: row)
+    // 	//   {
+    // 	    file<<row;
+
+    // 	    // if(i<row.size()-1) file<<';';
+    // 	    // i++;
+    // 	  // }
+    // 	// i=0;
+    // 	file<<'\n';
+    //   }
     file.close();
   }
   void print(const vector<vector<double>> &matrix, const string &name)
@@ -124,14 +133,20 @@ private:
       }
   }
 
-  vector<double> BackL(const vector<vector<double>> &L, const vector<double> &rhs)
+  vector<vector<double>> BackL(const vector<vector<double>> &L, const vector<vector<double>> &rhs)
   {
-    vector<double> temp;
+    vector<vector<double>> temp;
+    vector<double> row;
     double sm;
 
     for(unsigned i=0; i<L.size(); i++)
       {
-	temp.emplace_back(0);
+	for(unsigned j=0; j<L.size(); j++)
+	  {
+	    row.emplace_back(0);
+	  }
+	temp.emplace_back(row);
+	row.clear();
       }
 
     for(unsigned i=0; i<L.size(); i++)
@@ -140,21 +155,36 @@ private:
 
 	for(unsigned j=0; j<i; j++)
 	  {
-	    sm+=L[i][j]*temp[j];
+	    for(unsigned k=0; k<rhs[0].size(); k++)
+	      {
+		sm+=L[i][j]*temp[j][k];
+		// cout<<"k "<<k<<" "<<sm<<'\n';
+	      }
 	  }
-	temp[i]=rhs[i]-sm;
+	for(unsigned k1=0; k1<rhs[0].size(); k1++)
+	  {
+	    temp[i][k1]=rhs[i][k1]-sm;
+	    // cout<<"k1 "<<k1<<" "<<temp[i][k1]<<'\n';
+	  }
       }
+    cout<<" "<<'\n';
     return temp;
   }
 
-  vector<double> BackU(const vector<vector<double>> &U, const vector<double> &rhs)
+vector<vector<double>> BackU(const vector<vector<double>> &U, const vector<vector<double>> &rhs, const unsigned size)
   {
-    vector<double> temp;
+    vector<vector<double>> temp;
+    vector<double> row;
     double sm;
 
     for(unsigned i=0; i<U.size(); i++)
       {
-	temp.emplace_back(0);
+	for(unsigned j=0; j<U.size(); j++)
+	  {
+	    row.emplace_back(0);
+	  }
+	temp.emplace_back(row);
+	row.clear();
       }
 
     for(int i=rhs.size()-1; i>-1; i--)
@@ -163,35 +193,32 @@ private:
 
 	for(unsigned j=i+1; j<rhs.size(); j++)
 	  {
-	    sm+=U[i][j]*temp[j];
+	    for(unsigned k=0; k<size; k++)
+	      {
+		sm+=U[i][j]*temp[j][k];
+	      }
 	  }
-	temp[i]=(rhs[i]-sm)/U[i][i];
+	for(unsigned k1=0; k1<size; k1++)
+	  {
+	    temp[i][k1]=(rhs[i][k1]-sm)/U[i][i];
+	    cout<<k1<<" "<<temp[i][k1]<<'\n';
+	  }
       }
     return temp;
   }
 
-  vector<double> lu(Matrix &m, vector<double> &X, vector<double> &Y)
+  vector<vector<double>> lu(Matrix &m, vector<double> &X, vector<double> &Y)
   {
     vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
     // vector<vector<double>> aaa=m.matrix;
-    // m.matrix=aaa;
-    // m.N=aaa.size();
     const unsigned size=aaa.size();
 
     cout<<size<<'\n';
     vector<double> row;
     row.reserve(size);
 
-    // print2(gridE, E);
-    // // // print4(size, deltaE);
-    // // print3(size);
-
-    // // saveFile(deltaE, E.back(), deltaE, "E.txt");
-    // saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
-
     vector<vector<double>> L;
     L.reserve(size);
-    // vector<vector<double>> U=L;
 
     for(unsigned i=0; i<size; i++)
       {
@@ -236,27 +263,24 @@ private:
 	  }
       }
 
-    // print(L, "L.txt");
-    // print(U, "U.txt");
-
-    vector<double> result;
-    result.reserve(size);
+    vector<vector<double>> rhs;
+    rhs.reserve(size);
     vector<double> row1;
     row1.reserve(size);
     // cout<<L.size()<<" "<<L[0].size()<<'\n';
     for(unsigned i=0; i<size; i++)
       {
-	// for(unsigned j=0; j<size; j++)
-	//   {
+	for(unsigned j=0; j<size; j++)
+	  {
 	    row1.emplace_back(1);
-	//   }
-	// result.emplace_back(1);
-	// row1.clear();
+	  }
+	rhs.emplace_back(1);
+	row1.clear();
       }
 
-    result={-4,3,9,7};
-    vector<double> r1=BackL(L, result);
-    r1=BackU(U, r1);
+    rhs={{-4},{3},{9},{7}};
+    vector<vector<double>> r1=BackL(L, rhs);
+    r1=BackU(U, r1, rhs[0].size());
 
     // const double deltaMu=(double) 2/E.size();
 
@@ -269,7 +293,7 @@ public:
   LU(){}
   LU(Matrix &m, vector<double> &X, vector<double> &Y)
   {
-    vector<double> res=lu(m, X, Y);
+    vector<vector<double>> res=lu(m, X, Y);
     // print2(gridE);
     // const double deltaMu=(double) 2/100;
     // const double deltaE=(double) (1e5-1)/100;
