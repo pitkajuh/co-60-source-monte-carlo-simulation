@@ -172,8 +172,8 @@ private:
 
   vector<double> lu(Matrix &m, vector<double> &X, vector<double> &Y)
   {
-    // vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
-    vector<vector<double>> aaa=m.matrix;
+    vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
+    // vector<vector<double>> aaa=m.matrix;
     // m.matrix=aaa;
     // m.N=aaa.size();
     const unsigned size=aaa.size();
@@ -241,20 +241,20 @@ private:
 
     vector<double> result;
     result.reserve(size);
-    // vector<double> row1;
-    // row1.reserve(size);
+    vector<double> row1;
+    row1.reserve(size);
     // cout<<L.size()<<" "<<L[0].size()<<'\n';
     for(unsigned i=0; i<size; i++)
       {
 	// for(unsigned j=0; j<size; j++)
 	//   {
-	  //   row1.emplace_back(1);
-	  // // }
-	result.emplace_back(1);
+	    row1.emplace_back(1);
+	//   }
+	// result.emplace_back(1);
 	// row1.clear();
       }
 
-    // result={-4,3,9,7};
+    result={-4,3,9,7};
     vector<double> r1=BackL(L, result);
     r1=BackU(U, r1);
 
