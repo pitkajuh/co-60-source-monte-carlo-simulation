@@ -8,18 +8,16 @@
 struct LU
 {
 private:
-  // void subs(Matrix m, vector<double> &r)
   void subs(Matrix m)
   {
     std::ofstream file;
     file.open("LU.txt");
     unsigned k=0;
+
     for(const auto &i: m.matrix)
       {
 	for(const auto &j: i)
 	  {
-	    // cout<<j<<'\n';
-	    // file<<j*r[k];
 	    file<<j;
 
 	    if(k<i.size()-1) file<<';';
@@ -42,95 +40,7 @@ private:
 	  }
 	file<<'\n';
       }
-    // unsigned i=0;
-    // for(const auto &row: matrix)
-    //   {
-    // 	// for(const auto &columnValue: row)
-    // 	//   {
-    // 	    file<<row;
-
-    // 	    // if(i<row.size()-1) file<<';';
-    // 	    // i++;
-    // 	  // }
-    // 	// i=0;
-    // 	file<<'\n';
-    //   }
     file.close();
-  }
-  void print(const vector<vector<double>> &matrix, const string &name)
-  {
-    std::ofstream file;
-    file.open(name);
-    unsigned i=0;
-    for(const auto &row: matrix)
-      {
-	for(const auto &columnValue: row)
-	  {
-	    file<<columnValue;
-
-	    if(i<row.size()-1) file<<';';
-	    i++;
-	  }
-	i=0;
-	file<<'\n';
-      }
-    file.close();
-  }
-
-  void print2(const vector<double> &matrix)
-  {
-    std::ofstream file;
-    file.open("E.txt");
-    for(unsigned i=0; i<matrix.size(); i++)
-      {
-	// file<<std::to_string(matrix[i]+matrix2[i])+'\n';
-	file<<std::to_string(matrix[i])+'\n';
-      }
-    file.close();
-  }
-
-  void print3(const unsigned size)
-  {
-    string m="";
-    std::ofstream file;
-    file.open("mu.txt");
-    const double delta=(double)2/size;
-    double mu=-1+delta;
-
-    while(mu<=1)
-      {
-	file<<std::to_string(mu)+'\n';
-	mu+=delta;
-      }
-    file.close();
-  }
-
-  void print4(const unsigned size, const double delta)
-  {
-    string m="";
-    std::ofstream file;
-    file.open("E.txt");
-    double mu=0;
-
-    while(mu<=1)
-      {
-	file<<std::to_string(mu)+'\n';
-	mu+=delta;
-      }
-    file.close();
-  }
-
-  void saveFile(double from, const double to, const double delta, const string &file)
-  {
-    std::ofstream file1;
-    file1.open(file);
-
-    while(from<=to)
-      {
-	file1<<from;
-	file1<<'\n';
-	from+=delta;
-      }
   }
 
   vector<vector<double>> BackL(const vector<vector<double>> &L, const vector<vector<double>> &rhs)
@@ -158,16 +68,13 @@ private:
 	    for(unsigned k=0; k<rhs[0].size(); k++)
 	      {
 		sm+=L[i][j]*temp[j][k];
-		// cout<<"k "<<k<<" "<<sm<<'\n';
 	      }
 	  }
 	for(unsigned k1=0; k1<rhs[0].size(); k1++)
 	  {
 	    temp[i][k1]=rhs[i][k1]-sm;
-	    // cout<<"k1 "<<k1<<" "<<temp[i][k1]<<'\n';
 	  }
       }
-    cout<<" "<<'\n';
     return temp;
   }
 
@@ -267,7 +174,7 @@ vector<vector<double>> BackU(const vector<vector<double>> &U, const vector<vecto
     rhs.reserve(size);
     vector<double> row1;
     row1.reserve(size);
-    // cout<<L.size()<<" "<<L[0].size()<<'\n';
+
     for(unsigned i=0; i<size; i++)
       {
 	for(unsigned j=0; j<size; j++)
@@ -282,11 +189,7 @@ vector<vector<double>> BackU(const vector<vector<double>> &U, const vector<vecto
     vector<vector<double>> r1=BackL(L, rhs);
     r1=BackU(U, r1, rhs[0].size());
 
-    // const double deltaMu=(double) 2/E.size();
-
     print2(r1, "res.txt");
-    // print2(gridE);
-    // saveFile(-1+deltaMu, 1, deltaMu, "mu.txt");
     return r1;
   }
 public:
