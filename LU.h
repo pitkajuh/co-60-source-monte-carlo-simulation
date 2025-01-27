@@ -8,6 +8,20 @@
 struct LU
 {
 private:
+  void print1(const vector<vector<double>> &v)
+  {
+    string a="";
+    for(const auto &i: v)
+      {
+	for(const auto &j: i)
+	  {
+	    cout<<j<<'\n';
+	    a+=j;
+	  }
+	a="";
+      }
+    cout<<a<<'\n';
+  }
   void subs(Matrix m)
   {
     std::ofstream file;
@@ -53,7 +67,7 @@ private:
       {
 	for(unsigned j=0; j<L.size(); j++)
 	  {
-	    row.emplace_back(0);
+	    row.emplace_back(1);
 	  }
 	temp.emplace_back(row);
 	row.clear();
@@ -62,17 +76,21 @@ private:
     for(unsigned i=0; i<L.size(); i++)
       {
 	sm=0;
-
+	// print1(temp);
 	for(unsigned j=0; j<i; j++)
 	  {
+	    // cout<<j<<" "<<i<<" "<<rhs[0].size()<<'\n';
+	    // cout<<temp[i][j]<<'\n';
 	    for(unsigned k=0; k<rhs[0].size(); k++)
 	      {
-		sm+=L[i][j]*temp[j][k];
+		sm+=(double) L[i][j]*temp[j][k];
+		// cout<<L[i][j]<<" "<<temp[j][k]<<'\n';
 	      }
 	  }
 	for(unsigned k1=0; k1<rhs[0].size(); k1++)
 	  {
-	    temp[i][k1]=rhs[i][k1]-sm;
+	    temp[i][k1]=(double) rhs[i][k1]-sm;
+	    cout<<rhs[i][k1]<<" "<<sm<<" "<<rhs[i][k1]-sm<<'\n';
 	  }
       }
     return temp;
@@ -103,12 +121,13 @@ vector<vector<double>> BackU(const vector<vector<double>> &U, const vector<vecto
 	    for(unsigned k=0; k<size; k++)
 	      {
 		sm+=U[i][j]*temp[j][k];
+		// cout<<U[i][j]<<" "<<temp[j][k]<<'\n';
 	      }
 	  }
 	for(unsigned k1=0; k1<size; k1++)
 	  {
 	    temp[i][k1]=(rhs[i][k1]-sm)/U[i][i];
-	    cout<<k1<<" "<<temp[i][k1]<<'\n';
+	    // cout<<k1<<" "<<temp[i][k1]<<'\n';
 	  }
       }
     return temp;
@@ -116,11 +135,10 @@ vector<vector<double>> BackU(const vector<vector<double>> &U, const vector<vecto
 
   vector<vector<double>> lu(Matrix &m, vector<double> &X, vector<double> &Y)
   {
-    vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
-    // vector<vector<double>> aaa=m.matrix;
+    // vector<vector<double>> aaa={{2, 1, 4, 1}, {3, 4, -1, -1}, {1, -4, 1, 5}, {2, -2, 1, 3}};
+    vector<vector<double>> aaa=m.matrix;
     const unsigned size=aaa.size();
 
-    cout<<size<<'\n';
     vector<double> row;
     row.reserve(size);
 
@@ -149,12 +167,14 @@ vector<vector<double>> BackU(const vector<vector<double>> &U, const vector<vecto
 	  {
 	    sum1=0;
 
-	    for(unsigned k=0; k<j; k++)
+	    for(unsigned k=0; k<i; k++)
 	      {
 		sum1+=L[i][k]*U[k][j];
+		// cout<<"k="<<k<<" j="<<j<<" "<<L[i][k]*U[k][j]<<" "<<L[i][k]<<" "<<U[k][j]<<'\n';
 	      }
 
 	    U[i][j]=aaa[i][j]-sum1;
+	    // cout<<U[i][j]<<" "<<aaa[i][j]<<" "<<sum1<<" "<<size<<" i="<<i<<" j="<<j<<" "<<U[i].size()<<" "<<'\n';
 
 	  }
 	for(unsigned i=j; i<size; i++)
@@ -166,10 +186,14 @@ vector<vector<double>> BackU(const vector<vector<double>> &U, const vector<vecto
 		sum2+=L[i][k]*U[k][j];
 	      }
 	    L[i][j]=aaa[i][j]-sum2;
+	    // cout<<L[i][j]<<" "<<aaa[i][j]<<" "<<sum2<<'\n';
 	    L[i][j]/=U[j][j];
+	    // cout<<L[i][j]<<'\n';
 	  }
+	// cout<<" "<<'\n';
       }
-
+    print2(L, "L.txt");
+    print2(U, "U.txt");
     vector<vector<double>> rhs;
     rhs.reserve(size);
     vector<double> row1;
@@ -179,15 +203,16 @@ vector<vector<double>> BackU(const vector<vector<double>> &U, const vector<vecto
       {
 	for(unsigned j=0; j<size; j++)
 	  {
-	    row1.emplace_back(1);
+	    row1.emplace_back(0);
 	  }
-	rhs.emplace_back(1);
+	rhs.emplace_back(row1);
 	row1.clear();
       }
 
-    rhs={{-4},{3},{9},{7}};
+    // rhs={{-4},{3},{9},{7}};
     vector<vector<double>> r1=BackL(L, rhs);
-    r1=BackU(U, r1, rhs[0].size());
+    // print2(r1, "res.txt");
+    // r1=BackU(U, r1, rhs[0].size());
 
     print2(r1, "res.txt");
     return r1;

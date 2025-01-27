@@ -24,7 +24,7 @@ class Section
 protected:
   void FindSection(ifstream &tape, streampos &from, const string &MT, const string &MF)
   {
-    cout<<"ReadTape "<<MT<<MF<<" from "<<from<<" At "<<tape.tellg()<<'\n';
+    cout<<"ReadTape "<<MT<<MF<<'\n';
     string record;
     string id;
     unsigned size;
@@ -32,8 +32,8 @@ protected:
     const string id2=MT+MF;
 
     getline(tape, record);
-
-    if(record[74]=='0' and record[71]=='0') changeFile=1;
+    cout<<" start at "<<record[74]<<" "<<record[71]<<" "<<id2<<" "<<record<<'\n';
+    // if(record[74]=='0' and record[71]=='0') changeFile=1;
 
     tape.seekg(from);
 
@@ -41,13 +41,18 @@ protected:
       {
 	size=record.size();
 	id=record.substr(size-id2.size(), size);
+	// cout<<";"<<record<<";"<<'\n';
 
 	if(id==id2 or changeFile) break;
       }
 
     from=tape.tellg();
 
-    if(!changeFile) from+=76*2;
+    if(!changeFile)
+      {
+	// cout<<"change"<<'\n';
+	from+=76*2;
+      }
   }
 public:
   bool changeFile=0;

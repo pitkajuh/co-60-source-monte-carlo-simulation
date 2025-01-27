@@ -200,6 +200,7 @@ private:
   {
     const unsigned size=m.N-1;
     const double deltaMu=(double) 2/size;
+    const double deltaE=2e4;
     vector<vector<double>> result=m.matrix;
     vector<vector<double>> resultOld;
     vector<double> row;
@@ -207,7 +208,7 @@ private:
     result.reserve(size);
     row.reserve(size);
 
-    print2(gridE, E);
+    // print2(gridE, E);
     // // print4(size, deltaE);
     // print3(size);
 
@@ -234,10 +235,10 @@ private:
      	    for(unsigned j=1; j<size-1; j++)
      	      {
 		result[i][j]=0.25*(result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1]
-				   +result[i-1][j-1]-4*gridE[j]*deltaMu*row2[j]);
+				   +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]);
      	      }
      	  }
-     	convergence=CheckConvergence(result, resultOld, 1e-24);
+     	convergence=CheckConvergence(result, resultOld, 1e-32);
       }
     print(result);
   }

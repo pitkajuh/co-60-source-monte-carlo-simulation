@@ -67,12 +67,12 @@ private:
     vector<double> row;
     row.reserve(N);
     discretized.matrix.reserve(N);
-    saveFile(xFrom, xTo, deltaX, "mu.txt", X);
-    saveFile(yFrom, yTo, deltaY, "E.txt", Y);
+    saveFile(xFrom, xTo-deltaX, deltaX, "mu.txt", X);
+    saveFile(yFrom, yTo-deltaY, deltaY, "E.txt", Y);
 
-    while(x<xTo)
+    while(x<xTo-deltaX)
       {
-	while(y<yTo)
+	while(y<yTo-deltaY)
 	  {
 	    Eprime=y/(1+(y/m_e)*(1-x));
 	    d2sigmadmudE=(distribution->Getd2sigma(y, Eprime+deltaY, x+deltaX, width)
@@ -100,9 +100,9 @@ public:
   {
     this->distribution=d;
     cd(xFrom, xTo, yFrom, yTo, N);
-    // GaussSeidel gs(discretized, Y, X);
+    GaussSeidel gs(discretized, X, Y);
     // write();
-    LU lu(discretized, X, Y);
+    // LU lu(discretized, X, Y);
   }
   ~CentralDifference(){}
 };

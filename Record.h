@@ -19,6 +19,17 @@ struct Record
 public:
   vector<double> recordv;
 
+  void SaveRecord(std::ofstream &file)
+  {
+    for(const auto &i: recordv)
+      {
+	file<<i;
+	file<<';';
+      }
+
+    file<<'\n';
+  }
+
   void clear(){recordv.clear();}
   void CreateRecord(string &record)
   {
@@ -110,7 +121,8 @@ public:
     unsigned size2;
     Record r;
     tape.seekg(from);
-
+    std::ofstream file;
+    file.open(MT+MF+".txt");
     while(getline(tape, record))
       {
 	size2=record.size();
@@ -118,9 +130,12 @@ public:
 	if(id!=MFstr) break;
 	record=record.substr(0, 66);
 	r.CreateRecord(record);
+	// r.SaveRecord(file);
 	AddToMap(r);
 	r.clear();
       }
+    cout<<"end at "<<record<<'\n';
+    file.close();
     from=tape.tellg();
     cout<<" "<<'\n';
   }
