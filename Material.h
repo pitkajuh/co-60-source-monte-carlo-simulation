@@ -47,10 +47,10 @@ public:
   Steel(const double d, const string &endfTape)
   {
     this->endf=new Tape(endfTape);
-    incoherent=new IncoherentAngularDistribution(endf);
-    CentralDifference cd(incoherent, -1, 1, 1, 2e6, 100);
-    // coherent=new CoherentAngularDistribution(endf);
-    // CentralDifference cd1(coherent, -1, 1, 1, 1e4, 100);
+    // incoherent=new IncoherentAngularDistribution(endf);
+    // CentralDifference cd(incoherent, -1, 1, 1, 2e6, 100);
+    coherent=new CoherentAngularDistribution(endf);
+    CentralDifference cd1(coherent, -1, 1, 1, 1e4, 100);
     density=d;
     muMap=muMapSteel;
     // crossSections=steelCrossSections;

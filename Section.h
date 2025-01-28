@@ -32,30 +32,20 @@ protected:
     const string id2=MT+MF;
 
     getline(tape, record);
-    cout<<" start at "<<record[74]<<" "<<record[71]<<" "<<id2<<" "<<record<<'\n';
-    // if(record[74]=='0' and record[71]=='0') changeFile=1;
-
     tape.seekg(from);
 
     while(getline(tape, record))
       {
 	size=record.size();
 	id=record.substr(size-id2.size(), size);
-	// cout<<";"<<record<<";"<<'\n';
 
-	if(id==id2 or changeFile) break;
+	if(id==id2) break;
       }
 
     from=tape.tellg();
-
-    if(!changeFile)
-      {
-	// cout<<"change"<<'\n';
-	from+=76*2;
-      }
+    from+=76*2;
   }
 public:
-  bool changeFile=0;
   Records records;
   vector<CrossSectionPair> recordsAll;
 

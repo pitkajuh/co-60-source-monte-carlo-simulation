@@ -4,12 +4,11 @@
 #include "PhotonAngularDistribution.h"
 #include "Matrix.h"
 #include "GaussSeidel.h"
-#include "LU.h"
 
 struct CentralDifference
 {
 private:
-  void subs(Matrix m)
+  void subs(Matrix &m)
   {
     std::ofstream file;
     file.open("centraldifference.txt");
@@ -40,16 +39,7 @@ private:
 	from+=delta;
       }
   }
-  void write()
-  {
-    for(const auto &i: discretized.matrix)
-      {
-	for(const auto &j: i)
-	  {
-	    cout<<j<<'\n';
-	  }
-      }
-  }
+
   PhotonAngularDistribution *distribution=nullptr;
 
   void cd(const double xFrom, const double xTo, const double yFrom, const double yTo, const double N)
@@ -100,7 +90,8 @@ public:
   {
     this->distribution=d;
     cd(xFrom, xTo, yFrom, yTo, N);
-    GaussSeidel gs(discretized, X, Y);
+    GaussSeidel gs(discretized, xFrom, xTo, yFrom, yTo, N);
+    subs(discretized);
     // write();
     // LU lu(discretized, X, Y);
   }

@@ -121,8 +121,8 @@ public:
     unsigned size2;
     Record r;
     tape.seekg(from);
-    std::ofstream file;
-    file.open(MT+MF+".txt");
+    // std::ofstream file;
+    // file.open(MT+MF+".txt");
     while(getline(tape, record))
       {
 	size2=record.size();
@@ -134,8 +134,8 @@ public:
 	AddToMap(r);
 	r.clear();
       }
-    cout<<"end at "<<record<<'\n';
-    file.close();
+
+    // file.close();
     from=tape.tellg();
     cout<<" "<<'\n';
   }

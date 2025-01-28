@@ -30,7 +30,6 @@ public:
   virtual const double CellDistanceTest(const Coordinate &positionAt, Coordinate &directionTo)=0;
   virtual ~Cell()
   {
-    delete material;
     delete surface;
     delete next;
   }
