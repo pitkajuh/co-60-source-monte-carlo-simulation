@@ -1,16 +1,13 @@
 #ifndef CELL_H
 #define CELL_H
 
-#include <string>
 #include "Surface.h"
 #include "Material.h"
-
-using std::string;
 
 class Cell
 {
 public:
-  int hits=0;
+  unsigned hits=0;
   string name;
   Material *material=nullptr;
   Surface *surface=nullptr;
