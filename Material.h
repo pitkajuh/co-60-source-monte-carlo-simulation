@@ -54,6 +54,7 @@ public:
     density=d;
     muMap=muMapSteel;
     // crossSections=steelCrossSections;
+
   }
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
 
