@@ -54,7 +54,6 @@ public:
     density=d;
     muMap=muMapSteel;
     // crossSections=steelCrossSections;
-
   }
 };
 
