@@ -92,8 +92,6 @@ public:
     cd(xFrom, xTo, yFrom, yTo, N);
     GaussSeidel gs(discretized, xFrom, xTo, yFrom, yTo, N);
     subs(discretized);
-    // write();
-    // LU lu(discretized, X, Y);
   }
   ~CentralDifference(){}
 };
