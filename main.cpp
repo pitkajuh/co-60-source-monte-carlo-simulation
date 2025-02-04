@@ -94,24 +94,20 @@ int main()
   // const unsigned time=1;
   // const unsigned sourceActivity=100;
   // const double v3=1;
-  // Material *steel1=new Steel(7.874);
-  // Material *steel2=new Steel(7.874);
-  // Material *steel3=new Steel(7.874);
+
 
   // Coordinate centeredAt(0, 0, 0);
   // const double v1=0.1;
   // const double v2=0.2;
 
-  // Cell *source=new CellCylinderTruncatedZ("Source", v1, v1, -v1, steel1, centeredAt);
-  // Cell *cladding=new CellCylinderTruncatedZ("Cladding", v2, v1, -v1, steel2, centeredAt);
-  // Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v2, -v2, steel3);
+  // Cell *source=new CellCylinderTruncatedZ("Source", v1, v1, -v1, steel, centeredAt);
+  // Cell *cladding=new CellCylinderTruncatedZ("Cladding", v2, v1, -v1, steel, centeredAt);
+  // Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v2, -v2, steel);
 
   // source->next=cladding;
   // cladding->next=outside;
 
 
-    // Material *steel4=new Steel(7.874);
-  // Material *steel5=new Steel(7.874);
   // const double sourceWidth=1e-6;
   // const double sourceRadius=35e-3/2;
 
@@ -128,13 +124,13 @@ int main()
   // const double calibrationToolBottomWidth=1e-3;
 
   // // Source and its metal cladding
-  // Cell *sourceAirBelow=new CellCylinderTruncatedZ("Source air below", sourceRadius, sourceAirBelowHeight, calibrationToolBottomWidth, steel1, centeredAt);
-  // Cell *source=new CellCylinderTruncatedZ("Source", sourceRadius, sourceWidth+sourceAirBelowHeight, sourceAirBelowHeight+calibrationToolBottomWidth, steel2, centeredAt);
-  // Cell *sourceAirAbove=new CellCylinderTruncatedZ("Source air above", sourceRadius, sourceAirAboveHeight+sourceAirBelowHeight+sourceWidth, sourceAirBelowHeight+sourceWidth, steel3, centeredAt);
+  // Cell *sourceAirBelow=new CellCylinderTruncatedZ("Source air below", sourceRadius, sourceAirBelowHeight, calibrationToolBottomWidth, steel, centeredAt);
+  // Cell *source=new CellCylinderTruncatedZ("Source", sourceRadius, sourceWidth+sourceAirBelowHeight, sourceAirBelowHeight+calibrationToolBottomWidth, steel, centeredAt);
+  // Cell *sourceAirAbove=new CellCylinderTruncatedZ("Source air above", sourceRadius, sourceAirAboveHeight+sourceAirBelowHeight+sourceWidth, sourceAirBelowHeight+sourceWidth, steel, centeredAt);
 
-  // Cell *sourceCladding=new CellCylinderTruncatedZ("Source cladding", sourceCladdingRadius, sourceCladdingWidth, 0, steel5, centeredAt);
+  // Cell *sourceCladding=new CellCylinderTruncatedZ("Source cladding", sourceCladdingRadius, sourceCladdingWidth, 0, steel, centeredAt);
 
-  // Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v3, -v3, steel4);
+  // Cell *outside=new CellBox3D("Outside world", -v3, v3, v3, -v3, v3, -v3, steel);
 
   // source->next=sourceAirBelow;
   // sourceAirBelow->next=sourceAirAbove;
@@ -151,8 +147,8 @@ int main()
   // Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
   // Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
   // steelENDF->Get(1332e3);
-  Material *steelTest=new Steel(7.874, "./cross-sections/photoat-026_Fe_000.endf");
-  delete steelTest;
+  Material *steel=new Steel(7.874, "./cross-sections/photoat-026_Fe_000.endf");
+  delete steel;
 
 
 
