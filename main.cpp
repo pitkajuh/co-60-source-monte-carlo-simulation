@@ -151,8 +151,6 @@ int main()
   delete steel;
 
 
-
-
   // PhotonAngularDistribution *nitrogenAngular=new IncoherentAngularDistribution(nitrogenENDF);
   // CentralDifference cd1(nitrogenAngular);
   // delete nitrogenAngular;
