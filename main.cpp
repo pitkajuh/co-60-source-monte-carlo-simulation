@@ -147,7 +147,7 @@ int main()
   // Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
   // Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
   // steelENDF->Get(1332e3);
-  Material *steel=new Steel(7.874, "./cross-sections/photoat-026_Fe_000.endf");
+  Material *steel=new Steel("./cross-sections/photoat-026_Fe_000.endf", 2e6, 1e4);
   delete steel;
 
 

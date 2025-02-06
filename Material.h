@@ -44,14 +44,14 @@ public:
 class Steel: public Material
 {
 public:
-  Steel(const double d, const string &endfTape)
+  Steel(const string &endfTape, const double limIncoherent, const double limCoherent)
   {
     this->endf=new Tape(endfTape);
     // incoherent=new IncoherentAngularDistribution(endf);
-    // CentralDifference cd(incoherent, -1, 1, 1, 2e6, 100);
+    // CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, 100);
     coherent=new CoherentAngularDistribution(endf);
-    CentralDifference cd1(coherent, -1, 1, 1, 1e4, 100);
-    density=d;
+    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100);
+    density=7.874;
     muMap=muMapSteel;
     // crossSections=steelCrossSections;
   }
