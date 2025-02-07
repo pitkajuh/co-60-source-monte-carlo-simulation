@@ -150,7 +150,6 @@ int main()
   Material *steel=new Steel("./cross-sections/photoat-026_Fe_000.endf", 2e6, 1e4);
   delete steel;
 
-
   // PhotonAngularDistribution *nitrogenAngular=new IncoherentAngularDistribution(nitrogenENDF);
   // CentralDifference cd1(nitrogenAngular);
   // delete nitrogenAngular;
