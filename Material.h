@@ -32,7 +32,6 @@ public:
   PhotonAngularDistribution *coherent=nullptr;
   double density=0; // in g/cm3
   map<double, pair<double, double>> muMap;
-  // CrossSections crossSections;
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
   virtual ~Material()
   {
