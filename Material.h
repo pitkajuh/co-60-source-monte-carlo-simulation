@@ -62,7 +62,6 @@ public:
   {
     density=d;
     muMap=muMapSodium;
-    // crossSections=sodiumCrossSections;
   }
 };
 
