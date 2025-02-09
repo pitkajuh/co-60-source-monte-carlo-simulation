@@ -52,7 +52,6 @@ public:
     CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100);
     density=7.874;
     muMap=muMapSteel;
-    // crossSections=steelCrossSections;
   }
 };
 
