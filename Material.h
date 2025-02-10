@@ -72,7 +72,6 @@ public:
   {
     density=d;
     muMap=muMapTitanium;
-    // crossSections=titaniumCrossSections;
   }
 };
 
