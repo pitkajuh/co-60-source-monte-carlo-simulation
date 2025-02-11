@@ -32,7 +32,7 @@ public:
   virtual double GetV(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
   PhotonAngularDistribution(){}
-  virtual ~PhotonAngularDistribution(){delete tape;}
+  virtual ~PhotonAngularDistribution(){}
 };
 
 class IncoherentAngularDistribution: public PhotonAngularDistribution

@@ -7,10 +7,10 @@
 struct GaussSeidel
 {
 private:
-  void print(const vector<vector<double>> &matrix)
+  void print(const vector<vector<double>> &matrix, const string &name)
   {
     std::ofstream file;
-    file.open("gaussseidel.txt");
+    file.open(name+"gaussseidel.txt");
     unsigned i=0;
     for(const auto &row: matrix)
       {
@@ -63,7 +63,7 @@ private:
     return largest<tolerance;
   }
 
-  void GS(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N)
+  void GS(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
   {
     const unsigned size=N-1;
     const double deltaMu=(double) (xTo-xFrom)/N;
@@ -93,13 +93,13 @@ private:
      	  }
      	convergence=CheckConvergence(result, resultOld, 1e-32);
       }
-    print(result);
+    print(result, name);
   }
 public:
   GaussSeidel(){}
-  GaussSeidel(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N)
+  GaussSeidel(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
   {
-    GS(m, xFrom, xTo, yFrom, yTo, N);
+    GS(m, xFrom, xTo, yFrom, yTo, N, name);
   }
   ~GaussSeidel(){}
 };

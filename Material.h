@@ -28,12 +28,13 @@ protected:
   }
   void CreateAngularDistribution(const double limIncoherent, const double limCoherent)
   {
-    // incoherent=new IncoherentAngularDistribution(endf);
-    // CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, 100);
+    incoherent=new IncoherentAngularDistribution(endf);
+    CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, 100, name+"incoherent");
     coherent=new CoherentAngularDistribution(endf);
-    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100);
+    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100, name+"coherent");
   }
 public:
+  string name;
   Tape *endf=nullptr;
   PhotonAngularDistribution *incoherent=nullptr;
   PhotonAngularDistribution *coherent=nullptr;
@@ -42,6 +43,7 @@ public:
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
   virtual ~Material()
   {
+    delete endf;
     delete incoherent;
     delete coherent;
   }
@@ -50,8 +52,9 @@ public:
 class Steel: public Material
 {
 public:
-  Steel(const string &endfTape, const double limIncoherent, const double limCoherent)
+  Steel(const string &endfTape, const double limIncoherent, const double limCoherent, const string &name)
   {
+    this->name=name;
     this->endf=new Tape(endfTape);
     CreateAngularDistribution(limIncoherent, limCoherent);
     density=7.874;
@@ -62,8 +65,9 @@ public:
 class Sodium: public Material
 {
 public:
-  Sodium(const string &endfTape, const double limIncoherent, const double limCoherent)
+  Sodium(const string &endfTape, const double limIncoherent, const double limCoherent, const string &name)
   {
+    this->name=name;
     this->endf=new Tape(endfTape);
     CreateAngularDistribution(limIncoherent, limCoherent);
     density=1;
@@ -74,8 +78,9 @@ public:
 class Titanium: public Material
 {
 public:
-  Titanium(const string &endfTape, const double limIncoherent, const double limCoherent)
+  Titanium(const string &endfTape, const double limIncoherent, const double limCoherent, const string &name)
   {
+    this->name=name;
     this->endf=new Tape(endfTape);
     CreateAngularDistribution(limIncoherent, limCoherent);
     density=1;
@@ -86,8 +91,9 @@ public:
 class Nitrogen: public Material
 {
 public:
-  Nitrogen(const string &endfTape, const double limIncoherent, const double limCoherent)
+  Nitrogen(const string &endfTape, const double limIncoherent, const double limCoherent, const string &name)
   {
+    this->name=name;
     this->endf=new Tape(endfTape);
     CreateAngularDistribution(limIncoherent, limCoherent);
     density=1;
@@ -98,8 +104,9 @@ public:
 class Iodine: public Material
 {
 public:
-  Iodine(const string &endfTape, const double limIncoherent, const double limCoherent)
+  Iodine(const string &endfTape, const double limIncoherent, const double limCoherent, const string &name)
   {
+    this->name=name;
     this->endf=new Tape(endfTape);
     CreateAngularDistribution(limIncoherent, limCoherent);
     density=1;

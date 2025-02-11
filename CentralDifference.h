@@ -8,10 +8,10 @@
 struct CentralDifference
 {
 private:
-  void subs(Matrix &m)
+  void subs(Matrix &m, const string &name)
   {
     std::ofstream file;
-    file.open("centraldifference.txt");
+    file.open(name+"centraldifference.txt");
     unsigned k=0;
     for(const auto &i: m.matrix)
       {
@@ -42,7 +42,7 @@ private:
 
   PhotonAngularDistribution *distribution=nullptr;
 
-  void cd(const double xFrom, const double xTo, const double yFrom, const double yTo, const double N)
+  void cd(const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
   {
     double x=xFrom;
     double y=yFrom;
@@ -57,8 +57,8 @@ private:
     vector<double> row;
     row.reserve(N);
     discretized.matrix.reserve(N);
-    saveFile(xFrom, xTo-deltaX, deltaX, "mu.txt", X);
-    saveFile(yFrom, yTo-deltaY, deltaY, "E.txt", Y);
+    saveFile(xFrom, xTo-deltaX, deltaX, name+"mu.txt", X);
+    saveFile(yFrom, yTo-deltaY, deltaY, name+"E.txt", Y);
 
     while(x<xTo-deltaX)
       {
@@ -86,12 +86,12 @@ public:
   Matrix discretized;
 
   CentralDifference(){}
-  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N)
+  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
   {
     this->distribution=d;
-    cd(xFrom, xTo, yFrom, yTo, N);
-    GaussSeidel gs(discretized, xFrom, xTo, yFrom, yTo, N);
-    subs(discretized);
+    cd(xFrom, xTo, yFrom, yTo, N, name);
+    GaussSeidel gs(discretized, xFrom, xTo, yFrom, yTo, N, name);
+    subs(discretized, name);
   }
   ~CentralDifference(){}
 };
