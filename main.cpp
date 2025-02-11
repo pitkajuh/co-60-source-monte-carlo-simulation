@@ -141,30 +141,18 @@ int main()
   // // GetCrossSection();
   // MonteCarlo(time, source, co60);
 
-  // Tape *steelENDF=new Tape("./cross-sections/photoat-026_Fe_000.endf");
-  // Tape *nitrogenENDF=new Tape("./cross-sections/photoat-007_N_000.endf");
-  // Tape *sodiumENDF=new Tape("./cross-sections/photoat-011_Na_000.endf");
-  // Tape *titaniumENDF=new Tape("./cross-sections/photoat-022_Ti_000.endf");
-  // Tape *iodineENDF=new Tape("./cross-sections/photoat-053_I_000.endf");
-  // steelENDF->Get(1332e3);
+
   Material *steel=new Steel("./cross-sections/photoat-026_Fe_000.endf", 2e6, 1e4);
+  Material *nitrogen=new Nitrogen("./cross-sections/photoat-007_N_000.endf", 2e6, 1e4);
+  Material *sodium=new Sodium("./cross-sections/photoat-011_Na_000.endf", 2e6, 1e4);
+  Material *titanium=new Titanium("./cross-sections/photoat-022_Ti_000.endf", 2e6, 1e4);
+  Material *iodine=new Iodine("./cross-sections/photoat-053_I_000.endf", 2e6, 1e4);
+
   delete steel;
-
-  // PhotonAngularDistribution *nitrogenAngular=new IncoherentAngularDistribution(nitrogenENDF);
-  // CentralDifference cd1(nitrogenAngular);
-  // delete nitrogenAngular;
-
-  // PhotonAngularDistribution *sodiumAngular=new IncoherentAngularDistribution(sodiumENDF);
-  // delete sodiumAngular;
-  // PhotonAngularDistribution *titaniumAngular=new IncoherentAngularDistribution(titaniumENDF);
-  // delete titaniumAngular;
-  // PhotonAngularDistribution *iodineAngular=new IncoherentAngularDistribution(iodineENDF);
-  // delete iodineAngular;
-  // delete steelENDF;
-  // delete nitrogenENDF;
-  // delete sodiumENDF;
-  // delete titaniumENDF;
-  // delete iodineENDF;
+  delete nitrogen;
+  delete sodium;
+  delete titanium;
+  delete iodine;
 
   // delete source;
   // delete co60;

@@ -26,6 +26,13 @@ protected:
     // Use linear interpolation to get the mass attenuation value corresponding to photonEnergy and turns it to linear attenuation coefficient. Returns the value in 1/m.
     return 100*density*(muMap[energyPrevious].first+(photonEnergy-energyPrevious)*(muMap[energyCurrent].first-muMap[energyPrevious].first)/(energyCurrent-energyPrevious));
   }
+  void CreateAngularDistribution(const double limIncoherent, const double limCoherent)
+  {
+    // incoherent=new IncoherentAngularDistribution(endf);
+    // CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, 100);
+    coherent=new CoherentAngularDistribution(endf);
+    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100);
+  }
 public:
   Tape *endf=nullptr;
   PhotonAngularDistribution *incoherent=nullptr;
@@ -46,10 +53,7 @@ public:
   Steel(const string &endfTape, const double limIncoherent, const double limCoherent)
   {
     this->endf=new Tape(endfTape);
-    // incoherent=new IncoherentAngularDistribution(endf);
-    // CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, 100);
-    coherent=new CoherentAngularDistribution(endf);
-    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100);
+    CreateAngularDistribution(limIncoherent, limCoherent);
     density=7.874;
     muMap=muMapSteel;
   }
@@ -58,9 +62,11 @@ public:
 class Sodium: public Material
 {
 public:
-  Sodium(const double d)
+  Sodium(const string &endfTape, const double limIncoherent, const double limCoherent)
   {
-    density=d;
+    this->endf=new Tape(endfTape);
+    CreateAngularDistribution(limIncoherent, limCoherent);
+    density=1;
     muMap=muMapSodium;
   }
 };
@@ -68,9 +74,11 @@ public:
 class Titanium: public Material
 {
 public:
-  Titanium(const double d)
+  Titanium(const string &endfTape, const double limIncoherent, const double limCoherent)
   {
-    density=d;
+    this->endf=new Tape(endfTape);
+    CreateAngularDistribution(limIncoherent, limCoherent);
+    density=1;
     muMap=muMapTitanium;
   }
 };
@@ -78,11 +86,12 @@ public:
 class Nitrogen: public Material
 {
 public:
-  Nitrogen(const double d)
+  Nitrogen(const string &endfTape, const double limIncoherent, const double limCoherent)
   {
-    density=d;
+    this->endf=new Tape(endfTape);
+    CreateAngularDistribution(limIncoherent, limCoherent);
+    density=1;
     muMap=muMapNitrogen;
-    // crossSections=nitrogenCrossSections;
   }
 };
 
