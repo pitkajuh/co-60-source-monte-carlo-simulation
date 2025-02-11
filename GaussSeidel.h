@@ -65,17 +65,16 @@ private:
 
   void GS(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
   {
-    const unsigned size=N-1;
-    const double deltaMu=(double) (xTo-xFrom)/N;
-    const double deltaE=(double) (yTo-xFrom)/N;
+    bool convergence=0;
     vector<vector<double>> result=m.matrix;
     vector<vector<double>> resultOld;
     vector<double> row;
     vector<double> row2;
     result.reserve(size);
     row.reserve(size);
-
-    bool convergence=0;
+    const unsigned size=N-1;
+    const double deltaMu=(double) (xTo-xFrom)/N;
+    const double deltaE=(double) (yTo-xFrom)/N;
 
     while(!convergence)
       {
