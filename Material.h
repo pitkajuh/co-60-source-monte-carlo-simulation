@@ -95,4 +95,16 @@ public:
   }
 };
 
+class Iodine: public Material
+{
+public:
+  Iodine(const string &endfTape, const double limIncoherent, const double limCoherent)
+  {
+    this->endf=new Tape(endfTape);
+    CreateAngularDistribution(limIncoherent, limCoherent);
+    density=1;
+    muMap=muMapIodine;
+  }
+};
+
 #endif

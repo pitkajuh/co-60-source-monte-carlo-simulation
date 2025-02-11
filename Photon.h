@@ -3,7 +3,6 @@
 
 #include "Coordinate.h"
 #include "RadioNuclide.h"
-// #include "math.h"
 
 class Photon
 {
@@ -24,6 +23,7 @@ public:
     to=direction*(-1/source->material->GetMu(energy))*log(RNG(0, 1));
     mfp=origin+to;
   }
+  ~Photon(){}
 };
 
 

@@ -20,10 +20,10 @@ void PhysicsRoutine(Cell *cell, double &photonEnergy)
 void SurfaceTracking(Cell *cellHead, Photon photon)
 {
   bool collision=0;
-  Coordinate surfaceLocation;
-  Cell *current=cellHead;
   double boundaryDistance=0;
   double collisionDistance=0;
+  Coordinate surfaceLocation;
+  Cell *current=cellHead;
 
   photon.mfp.print();
 
@@ -143,16 +143,16 @@ int main()
 
 
   Material *steel=new Steel("./cross-sections/photoat-026_Fe_000.endf", 2e6, 1e4);
-  Material *nitrogen=new Nitrogen("./cross-sections/photoat-007_N_000.endf", 2e6, 1e4);
-  Material *sodium=new Sodium("./cross-sections/photoat-011_Na_000.endf", 2e6, 1e4);
-  Material *titanium=new Titanium("./cross-sections/photoat-022_Ti_000.endf", 2e6, 1e4);
-  Material *iodine=new Iodine("./cross-sections/photoat-053_I_000.endf", 2e6, 1e4);
+  // Material *nitrogen=new Nitrogen("./cross-sections/photoat-007_N_000.endf", 2e6, 1e4);
+  // Material *sodium=new Sodium("./cross-sections/photoat-011_Na_000.endf", 2e6, 1e4);
+  // Material *titanium=new Titanium("./cross-sections/photoat-022_Ti_000.endf", 2e6, 1e4);
+  // Material *iodine=new Iodine("./cross-sections/photoat-053_I_000.endf", 2e6, 1e4);
 
   delete steel;
-  delete nitrogen;
-  delete sodium;
-  delete titanium;
-  delete iodine;
+  // delete nitrogen;
+  // delete sodium;
+  // delete titanium;
+  // delete iodine;
 
   // delete source;
   // delete co60;
