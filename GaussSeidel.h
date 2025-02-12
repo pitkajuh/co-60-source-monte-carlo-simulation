@@ -70,9 +70,9 @@ private:
     vector<vector<double>> resultOld;
     vector<double> row;
     vector<double> row2;
+    const unsigned size=N-1;
     result.reserve(size);
     row.reserve(size);
-    const unsigned size=N-1;
     const double deltaMu=(double) (xTo-xFrom)/N;
     const double deltaE=(double) (yTo-xFrom)/N;
 

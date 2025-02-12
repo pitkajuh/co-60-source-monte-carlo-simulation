@@ -46,12 +46,12 @@ private:
   {
     double x=xFrom;
     double y=yFrom;
-    const double deltaX=(double) (xTo-xFrom)/N;
     double Eprime=y/(1+(y/m_e)*(1-x));
     vector<double> result;
     result.reserve(N);
     double deltaY=(double) (yTo-xFrom)/N;
     const double width=deltaY/2;
+    const double deltaX=(double) (xTo-xFrom)/N;
     double d2sigmadmudE;
     discretized.init(N);
     vector<double> row;
