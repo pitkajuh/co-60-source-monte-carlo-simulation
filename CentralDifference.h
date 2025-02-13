@@ -8,6 +8,16 @@
 struct CentralDifference
 {
 private:
+  void CreateVector(const double from, const double to, const double delta, vector<double> &v)
+  {
+    double f=from;
+
+    while(f<to)
+      {
+	v.emplace_back(f);
+	f+=delta;
+      }
+  }
   void subs(Matrix &m, const string &name)
   {
     std::ofstream file;
@@ -26,43 +36,35 @@ private:
 	file<<'\n';
       }
   }
-  void saveFile(double from, const double to, const double delta, const string &file, vector<double> v)
+  void saveFile(const string &file, vector<double> v)
   {
     std::ofstream file1;
     file1.open(file);
 
-    while(from<=to)
+    for(const auto &w:v)
       {
-	v.emplace_back(from);
-	file1<<from;
+	file1<<w;
 	file1<<'\n';
-	from+=delta;
       }
   }
 
   PhotonAngularDistribution *distribution=nullptr;
 
-  void cd(const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
+  void cd(const unsigned N, const string &name, const double deltaX, const double deltaY)
   {
-    double x=xFrom;
-    double y=yFrom;
-    double Eprime=y/(1+(y/m_e)*(1-x));
+    double Eprime;
     vector<double> result;
     result.reserve(N);
-    double deltaY=(double) (yTo-xFrom)/N;
     const double width=deltaY/2;
-    const double deltaX=(double) (xTo-xFrom)/N;
     double d2sigmadmudE;
     discretized.init(N);
     vector<double> row;
     row.reserve(N);
     discretized.matrix.reserve(N);
-    saveFile(xFrom, xTo-deltaX, deltaX, name+"mu.txt", X);
-    saveFile(yFrom, yTo-deltaY, deltaY, name+"E.txt", Y);
 
-    while(x<xTo-deltaX)
+    for(const auto &x:X)
       {
-	while(y<yTo-deltaY)
+	for(const auto &y:Y)
 	  {
 	    Eprime=y/(1+(y/m_e)*(1-x));
 	    d2sigmadmudE=(distribution->Getd2sigma(y, Eprime+deltaY, x+deltaX, width)
@@ -71,13 +73,9 @@ private:
 			  +distribution->Getd2sigma(y, Eprime-deltaY, x-deltaX, width)
 			  )/(4*deltaY*deltaX);
 	    row.emplace_back(d2sigmadmudE);
-	    y+=deltaY;
 	  }
-
 	discretized.emplace_back(row);
 	row.clear();
-	y=yFrom;
-	x+=deltaX;
       }
   }
 public:
@@ -86,10 +84,17 @@ public:
   Matrix discretized;
 
   CentralDifference(){}
-  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name, const double accuracy)
+  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const unsigned N, const string &name, const double accuracy)
   {
     this->distribution=d;
-    cd(xFrom, xTo, yFrom, yTo, N, name);
+    const double deltaX=(double)(xTo-xFrom)/N;
+    const double deltaY=(double)(yTo-yFrom)/N;
+    CreateVector(xFrom, xTo, deltaX, X);
+    CreateVector(yFrom, yTo-deltaY, deltaY, Y);
+    saveFile(name+"mu.txt", X);
+    saveFile(name+"E.txt", Y);
+    cd(N, name, deltaX, deltaY);
+    cout<<discretized.matrix.size()<<'\n';
     GaussSeidel gs(discretized, xFrom, xTo, yFrom, yTo, N, name, accuracy);
     subs(discretized, name);
   }
