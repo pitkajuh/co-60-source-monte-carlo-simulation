@@ -26,12 +26,12 @@ protected:
     // Use linear interpolation to get the mass attenuation value corresponding to photonEnergy and turns it to linear attenuation coefficient. Returns the value in 1/m.
     return 100*density*(muMap[energyPrevious].first+(photonEnergy-energyPrevious)*(muMap[energyCurrent].first-muMap[energyPrevious].first)/(energyCurrent-energyPrevious));
   }
-  void CreateAngularDistribution(const double limIncoherent, const double limCoherent)
+  void CreateAngularDistribution(const double limIncoherent, const double limCoherent, const double accuracyIncoherent, const double accuracyCoherent)
   {
     incoherent=new IncoherentAngularDistribution(endf);
-    CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, 100, name+"incoherent");
+    CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, 100, name+"incoherent", accuracyIncoherent);
     coherent=new CoherentAngularDistribution(endf);
-    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100, name+"coherent");
+    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100, name+"coherent", accuracyCoherent);
   }
 public:
   string name;
@@ -56,7 +56,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent);
+    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-34);
     density=7.874;
     muMap=muMapSteel;
   }
@@ -69,7 +69,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent);
+    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-32);
     density=1;
     muMap=muMapSodium;
   }
@@ -82,7 +82,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent);
+    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-32);
     density=1;
     muMap=muMapTitanium;
   }
@@ -95,7 +95,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent);
+    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-32);
     density=1;
     muMap=muMapNitrogen;
   }
@@ -108,7 +108,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent);
+    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-35);
     density=1;
     muMap=muMapIodine;
   }

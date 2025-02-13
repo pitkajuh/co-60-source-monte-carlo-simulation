@@ -86,11 +86,11 @@ public:
   Matrix discretized;
 
   CentralDifference(){}
-  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
+  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name, const double accuracy)
   {
     this->distribution=d;
     cd(xFrom, xTo, yFrom, yTo, N, name);
-    GaussSeidel gs(discretized, xFrom, xTo, yFrom, yTo, N, name);
+    GaussSeidel gs(discretized, xFrom, xTo, yFrom, yTo, N, name, accuracy);
     subs(discretized, name);
   }
   ~CentralDifference(){}

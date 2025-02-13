@@ -63,7 +63,7 @@ private:
     return largest<tolerance;
   }
 
-  void GS(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
+  void GS(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name, const double accuracy)
   {
     bool convergence=0;
     vector<vector<double>> result=m.matrix;
@@ -90,15 +90,15 @@ private:
 				   +result[i-1][j-1]-4*deltaE*deltaMu*row2[j]);
      	      }
      	  }
-     	convergence=CheckConvergence(result, resultOld, 1e-32);
+     	convergence=CheckConvergence(result, resultOld, accuracy);
       }
     print(result, name);
   }
 public:
   GaussSeidel(){}
-  GaussSeidel(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name)
+  GaussSeidel(Matrix &m, const double xFrom, const double xTo, const double yFrom, const double yTo, const double N, const string &name, const double accuracy)
   {
-    GS(m, xFrom, xTo, yFrom, yTo, N, name);
+    GS(m, xFrom, xTo, yFrom, yTo, N, name, accuracy);
   }
   ~GaussSeidel(){}
 };
