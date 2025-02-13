@@ -29,25 +29,49 @@ protected:
   }
   void CreateAngularDistribution(const double limIncoherent, const double limCoherent, const double accuracyIncoherent, const double accuracyCoherent)
   {
-    // const unsigned N=100;
-    // const double deltaX=(double)(2)/N;
-    // const double deltaY=(double)(limIncoherent-1)/N;
+    const unsigned N=100;
+    const double deltaX=(double)(2)/N;
+    const double deltaY=(double)(limIncoherent-1)/N;
     incoherent=new IncoherentAngularDistribution(endf);
 
-    // CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
-
-    // GaussSeidel gs(cd.discretized, deltaX, deltaY, N, name, accuracyIncoherent, cd.X, cd.Y);
-
-    // incoherent->gs()=gs;
+    CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
+    incoherent->mu=cd.X;
+    incoherent->Eprime=cd.Y;
+    GaussSeidel gs(cd.discretized, deltaX, deltaY, N, name, accuracyIncoherent, cd.X, cd.Y);
+    incoherent->d2sigmadmudE=gs.result;
 
     coherent=new CoherentAngularDistribution(endf);
     CentralDifference cd1(coherent, -1, 1, 1, limCoherent, N, name+"coherent", accuracyCoherent);
     GaussSeidel gs1(cd1.discretized, deltaX, deltaY, N, name, accuracyCoherent, cd1.X, cd1.Y);
+    coherent->mu=cd1.X;
+    coherent->Eprime=cd1.Y;
+    coherent->d2sigmadmudE=gs1.result;
   }
   void GetIncoherentScattering(const double crossSection)
   {
+    bool found1=0;
+    unsigned column;
+    unsigned row;
 
-
+    for(unsigned i=0; i<incoherent->d2sigmadmudE.size(); i++)
+      {
+	for(unsigned j=0; i<incoherent->d2sigmadmudE[i].size(); j++)
+	  {
+	    if(incoherent->d2sigmadmudE[i][j]<crossSection)
+	      {
+		cout<<"found "<<i<<" "<<j<<'\n';
+		found1=1;
+		column=j;
+		row=i;
+		break;
+	      }
+	  }
+	if(found1)
+	  {
+	    break;
+	  }
+      }
+    cout<<row<<" "<<column<<" "<<incoherent->mu[row]<<" "<<incoherent->Eprime[column]<<'\n';
   }
 public:
   string name;
@@ -76,6 +100,7 @@ public:
     CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-34);
     density=7.874;
     muMap=muMapSteel;
+    GetIncoherentScattering(3e-30);
   }
 };
 
