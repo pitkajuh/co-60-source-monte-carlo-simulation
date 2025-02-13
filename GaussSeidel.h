@@ -1,7 +1,8 @@
 #ifndef GAUSSSEIDEL_H
 #define GAUSSSEIDEL_H
 
-#include "CentralDifference.h"
+// #include "CentralDifference.h"
+#include "Matrix.h"
 #include <algorithm>
 
 struct GaussSeidel
@@ -66,7 +67,7 @@ private:
   void GS(Matrix &m, const double deltaX, const double deltaY, const unsigned N, const string &name, const double accuracy)
   {
     bool convergence=0;
-    vector<vector<double>> result=m.matrix;
+    result=m.matrix;
     vector<vector<double>> resultOld;
     vector<double> row;
     vector<double> row2;
@@ -93,8 +94,10 @@ private:
     print(result, name);
   }
 public:
+  vector<vector<double>> result;
+
   GaussSeidel(){}
-  GaussSeidel(Matrix &m, const double deltaX, const double deltaY, const unsigned N, const string &name, const double accuracy)
+  GaussSeidel(Matrix &m, const double deltaX, const double deltaY, const unsigned N, const string &name, const double accuracy, const vector<double> &X, const vector<double> &Y)
   {
     GS(m, deltaX, deltaY, N, name, accuracy);
   }

@@ -3,7 +3,6 @@
 
 #include "PhotonAngularDistribution.h"
 #include "Matrix.h"
-#include "GaussSeidel.h"
 
 struct CentralDifference
 {
@@ -50,18 +49,23 @@ private:
 
   PhotonAngularDistribution *distribution=nullptr;
 
-  vector<double> cd1(const unsigned N, const string &name, const double deltaX, const double deltaY)
+  void cd1(const unsigned N, const string &name, const double deltaX, const double deltaY)
   {
     double dsigmadmu;
-    vector<double> d;
-    d.reserve(N);
+    vector<double> row;
+    row.reserve(N);
+    discretized.matrix.reserve(N);
 
-    // for(const auto &x:X)
-    //   {
-    // 	dsigmadmu=(distribution->Getdsigma(y, x+deltaX)-distribution->Getdsigma(y, x-deltaX))/(2*deltaX);
-    // 	d.emplace_back(dsigmadmu);
-    //   }
-    return d;
+    for(const auto &y:Y)
+      {
+	for(const auto &x:X)
+	  {
+	    dsigmadmu=(distribution->Getdsigma(y, x+deltaX)-distribution->Getdsigma(y, x-deltaX))/(2*deltaX);
+	    row.emplace_back(dsigmadmu);
+	  }
+	discretized.emplace_back(row);
+	row.clear();
+      }
   }
 
   void cd(const unsigned N, const string &name, const double deltaX, const double deltaY)
@@ -106,8 +110,7 @@ public:
     saveFile(name+"mu.txt", X);
     saveFile(name+"E.txt", Y);
     cd(N, name, deltaX, deltaY);
-    cout<<discretized.matrix.size()<<'\n';
-    GaussSeidel gs(discretized, deltaX, deltaY, N, name, accuracy);
+    // cd1(N, name, deltaX, deltaY);
     subs(discretized, name);
   }
   ~CentralDifference(){}

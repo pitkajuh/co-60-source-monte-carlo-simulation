@@ -2,6 +2,7 @@
 #define PHOTONANGULARDISTRIBUTION_H
 
 #include "Tape.h"
+#include "GaussSeidel.h"
 
 const double m_e=0.51099895069E+06;
 const double r_e=2.8179403227E-15;
@@ -28,8 +29,8 @@ protected:
   }
 public:
   Tape *tape=nullptr;
+  // GaussSeidel &gs();
 
-  virtual double GetV(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getdsigma(const double E, const double mu)=0;
   PhotonAngularDistribution(){}
@@ -67,11 +68,6 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   }
 
  public:
-  double GetV(const double E, const double Eprime, const double mu, const double width) override
-  {
-    return d2sigmadEdmu(E, Eprime, mu, width);
-  }
-
   double Getd2sigma(const double E, const double Eprime, const double mu, const double width) override
   {
     return d2sigmadEdmu(E, Eprime, mu, width);
@@ -87,6 +83,15 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   {
     this->tape=tape;
     incoherentFunction=&tape->MF27->incoherentFunction->recordsAll[0].r;
+
+
+    const unsigned N=100;
+    const double deltaX=(double)(2)/N;
+    const double deltaY=(double)(limIncoherent-1)/N;
+
+    CentralDifference cd(this, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
+
+    GaussSeidel gs(cd.discretized, deltaX, deltaY, N, name, accuracyIncoherent, cd.X, cd.Y);
   }
   ~IncoherentAngularDistribution(){}
 };
@@ -118,11 +123,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
   }
  public:
   double Getd2sigma(const double E, const double Eprime, const double mu, const double width) override
-  {
-    return d2sigmadEdmu(E, Eprime, mu, width);
-  }
-
-  double GetV(const double E, const double Eprime, const double mu, const double width) override
   {
     return d2sigmadEdmu(E, Eprime, mu, width);
   }

@@ -5,6 +5,7 @@
 #include "Tape.h"
 #include "PhotonAngularDistribution.h"
 #include "CentralDifference.h"
+#include "GaussSeidel.h"
 
 class Material
 {
@@ -28,10 +29,25 @@ protected:
   }
   void CreateAngularDistribution(const double limIncoherent, const double limCoherent, const double accuracyIncoherent, const double accuracyCoherent)
   {
+    // const unsigned N=100;
+    // const double deltaX=(double)(2)/N;
+    // const double deltaY=(double)(limIncoherent-1)/N;
     incoherent=new IncoherentAngularDistribution(endf);
-    CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, 100, name+"incoherent", accuracyIncoherent);
+
+    // CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
+
+    // GaussSeidel gs(cd.discretized, deltaX, deltaY, N, name, accuracyIncoherent, cd.X, cd.Y);
+
+    // incoherent->gs()=gs;
+
     coherent=new CoherentAngularDistribution(endf);
-    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, 100, name+"coherent", accuracyCoherent);
+    CentralDifference cd1(coherent, -1, 1, 1, limCoherent, N, name+"coherent", accuracyCoherent);
+    GaussSeidel gs1(cd1.discretized, deltaX, deltaY, N, name, accuracyCoherent, cd1.X, cd1.Y);
+  }
+  void GetIncoherentScattering(const double crossSection)
+  {
+
+
   }
 public:
   string name;
@@ -41,6 +57,7 @@ public:
   double density=0; // in g/cm3
   map<double, pair<double, double>> muMap;
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
+
   virtual ~Material()
   {
     delete endf;
