@@ -31,6 +31,7 @@ public:
 
   virtual double GetV(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
+  virtual double Getdsigma(const double E, const double mu)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){}
 };
@@ -76,6 +77,11 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return d2sigmadEdmu(E, Eprime, mu, width);
   }
 
+  double Getdsigma(const double E, const double mu) override
+  {
+    return dsigmadmu(E, mu);
+  }
+
   IncoherentAngularDistribution(){}
   IncoherentAngularDistribution(Tape *tape)
   {
@@ -119,6 +125,11 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
   double GetV(const double E, const double Eprime, const double mu, const double width) override
   {
     return d2sigmadEdmu(E, Eprime, mu, width);
+  }
+
+  double Getdsigma(const double E, const double mu) override
+  {
+    return dsigmadmu(E, mu);
   }
 
   CoherentAngularDistribution(){}

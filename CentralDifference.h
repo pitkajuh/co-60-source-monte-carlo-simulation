@@ -50,11 +50,23 @@ private:
 
   PhotonAngularDistribution *distribution=nullptr;
 
+  vector<double> cd1(const unsigned N, const string &name, const double deltaX, const double deltaY)
+  {
+    double dsigmadmu;
+    vector<double> d;
+    d.reserve(N);
+
+    // for(const auto &x:X)
+    //   {
+    // 	dsigmadmu=(distribution->Getdsigma(y, x+deltaX)-distribution->Getdsigma(y, x-deltaX))/(2*deltaX);
+    // 	d.emplace_back(dsigmadmu);
+    //   }
+    return d;
+  }
+
   void cd(const unsigned N, const string &name, const double deltaX, const double deltaY)
   {
     double Eprime;
-    vector<double> result;
-    result.reserve(N);
     const double width=deltaY/2;
     double d2sigmadmudE;
     discretized.init(N);
