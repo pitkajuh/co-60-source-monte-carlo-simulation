@@ -95,7 +95,7 @@ public:
     saveFile(name+"E.txt", Y);
     cd(N, name, deltaX, deltaY);
     cout<<discretized.matrix.size()<<'\n';
-    GaussSeidel gs(discretized, xFrom, xTo, yFrom, yTo, N, name, accuracy);
+    GaussSeidel gs(discretized, deltaX, deltaY, N, name, accuracy);
     subs(discretized, name);
   }
   ~CentralDifference(){}
