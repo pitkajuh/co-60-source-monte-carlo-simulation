@@ -3,6 +3,7 @@
 
 #include "MassAttenuation.h"
 #include "Tape.h"
+#include "Reactions.h"
 #include "PhotonAngularDistribution.h"
 #include "CentralDifference.h"
 #include "GaussSeidel.h"
@@ -107,7 +108,7 @@ public:
     density=7.874;
     muMap=muMapSteel;
     microscopic=new MicroscopicCrossSection(endf);
-    microscopic->GetCrossSection(1.17e6);
+    microscopic->GetCrossSection(1.332e6);
     // GetIncoherentScattering(3e-30);
   }
 };

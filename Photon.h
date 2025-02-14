@@ -12,15 +12,14 @@ public:
   Coordinate origin;
   Coordinate to;
   Coordinate mfp;
-  Photon *next=nullptr;
 
   Photon(){}
-  Photon(Cell *source, RadioNuclide *nuclide)
+  Photon(const double energy, const double mu, Coordinate origin)
   {
-    origin=source->GetInitialPosition();
+    this->origin=origin;
+    this->energy=energy;
     direction=RandomEmissionDirection();
-    energy=nuclide->PDF();
-    to=direction*(-1/source->material->GetMu(energy))*log(RNG(0, 1));
+    to=direction*(-1/mu)*log(RNG(0, 1));
     mfp=origin+to;
   }
   ~Photon(){}

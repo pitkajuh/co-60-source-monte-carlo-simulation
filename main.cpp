@@ -4,12 +4,12 @@
 #include "math.h"
 #include "Material.h"
 #include "Cell.h"
-#include "Tape.h"
+// #include "Tape.h"
 #include "Coordinate.h"
 #include "RadioNuclide.h"
 #include "Photon.h"
-#include "PhotonAngularDistribution.h"
-#include "CentralDifference.h"
+// #include "PhotonAngularDistribution.h"
+// #include "CentralDifference.h"
 
 void PhysicsRoutine(Cell *cell, double &photonEnergy)
 {
@@ -55,12 +55,14 @@ void SurfaceTracking(Cell *cellHead, Photon photon)
 
 void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time)
 {
+  double energy;
   const unsigned activityRandom=PoissonRNG(radioNuclide->GetActivity(), time);
 
   for(unsigned i=0; i<activityRandom; i++)
     {
-      Photon gamma(cellHead, radioNuclide);
-      SurfaceTracking(cellHead, gamma);
+      energy=radioNuclide->PDF();
+      Photon photon(energy, cellHead->material->GetMu(energy), cellHead->GetInitialPosition());
+      SurfaceTracking(cellHead, photon);
     }
 }
 
