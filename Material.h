@@ -6,6 +6,7 @@
 #include "PhotonAngularDistribution.h"
 #include "CentralDifference.h"
 #include "GaussSeidel.h"
+#include "CrossSection.h"
 
 class Material
 {
@@ -30,56 +31,58 @@ protected:
   void CreateAngularDistribution(const double limIncoherent, const double limCoherent, const double accuracyIncoherent, const double accuracyCoherent)
   {
     const unsigned N=100;
-    const double deltaX=(double)(2)/N;
+    const double deltaX=(double)2/N;
     double deltaY=(double)(limIncoherent-1)/N;
     incoherent=new IncoherentAngularDistribution(endf);
 
     CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
     incoherent->mu=cd.X;
     incoherent->Eprime=cd.Y;
-    GaussSeidel gs(cd.discretized, deltaX, deltaY, N, name, accuracyIncoherent);
+    GaussSeidel gs(cd.discretized, deltaX*deltaY, N, name, accuracyIncoherent);
     incoherent->d2sigmadmudE=gs.result;
 
     coherent=new CoherentAngularDistribution(endf);
     deltaY=(double)(limCoherent-1)/N;
     CentralDifference cd1(coherent, -1, 1, 1, limCoherent, N, name+"coherent", accuracyCoherent);
-    GaussSeidel gs1(cd1.discretized, deltaX, deltaY, N, name, accuracyCoherent);
+    GaussSeidel gs1(cd1.discretized, deltaX*deltaY, N, name, accuracyCoherent);
     coherent->mu=cd1.X;
     coherent->Eprime=cd1.Y;
     coherent->d2sigmadmudE=gs1.result;
   }
-  void GetIncoherentScattering(const double crossSection)
-  {
-    bool found1=0;
-    unsigned column;
-    unsigned row;
+  // void GetIncoherentScattering(const double crossSection)
+  // {
+  //   bool found1=0;
+  //   unsigned column;
+  //   unsigned row;
 
-    for(unsigned i=0; i<incoherent->d2sigmadmudE.size(); i++)
-      {
-	for(unsigned j=0; i<incoherent->d2sigmadmudE[i].size(); j++)
-	  {
-	    cout<<incoherent->d2sigmadmudE[i][j]<<'\n';
-	    if(incoherent->d2sigmadmudE[i][j]<crossSection)
-	      {
-		cout<<"found "<<i<<" "<<j<<'\n';
-		found1=1;
-		column=j;
-		row=i;
-		break;
-	      }
-	  }
-	if(found1)
-	  {
-	    break;
-	  }
-      }
-    cout<<row<<" "<<column<<" "<<incoherent->mu[row]<<" "<<incoherent->Eprime[column]<<'\n';
-  }
+  //   for(unsigned i=0; i<incoherent->d2sigmadmudE.size(); i++)
+  //     {
+  // 	for(unsigned j=0; i<incoherent->d2sigmadmudE[i].size(); j++)
+  // 	  {
+  // 	    cout<<incoherent->d2sigmadmudE[i][j]<<'\n';
+  // 	    if(incoherent->d2sigmadmudE[i][j]<crossSection)
+  // 	      {
+  // 		cout<<"found "<<i<<" "<<j<<'\n';
+  // 		found1=1;
+  // 		column=j;
+  // 		row=i;
+  // 		break;
+  // 	      }
+  // 	  }
+  // 	if(found1)
+  // 	  {
+  // 	    break;
+  // 	  }
+  //     }
+  //   cout<<row<<" "<<column<<" "<<incoherent->mu[row]<<" "<<incoherent->Eprime[column]<<'\n';
+  // }
 public:
   string name;
   Tape *endf=nullptr;
   PhotonAngularDistribution *incoherent=nullptr;
   PhotonAngularDistribution *coherent=nullptr;
+  MicroscopicCrossSection *microscopic=nullptr;
+
   double density=0; // in g/cm3
   map<double, pair<double, double>> muMap;
   const double GetMu(const double photonEnergy){return GetMuValue(photonEnergy, muMap, density);}
@@ -89,6 +92,7 @@ public:
     delete endf;
     delete incoherent;
     delete coherent;
+    delete microscopic;
   }
 };
 
@@ -102,7 +106,8 @@ public:
     CreateAngularDistribution(limIncoherent, limCoherent, 1e-24, 1e-24);
     density=7.874;
     muMap=muMapSteel;
-    GetIncoherentScattering(3e-30);
+    microscopic=new MicroscopicCrossSection(endf);
+    // GetIncoherentScattering(3e-30);
   }
 };
 

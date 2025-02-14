@@ -92,6 +92,7 @@ public:
   PhotoIonization(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
     CrossSectionPair p;
+
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);

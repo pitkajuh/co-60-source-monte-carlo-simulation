@@ -63,39 +63,38 @@ private:
     return largest<tolerance;
   }
 
-  void GS(Matrix &m, const double deltaX, const double deltaY, const unsigned N, const string &name, const double accuracy)
+  void GS(Matrix &m, const double delta, const unsigned N, const double accuracy)
   {
-    bool convergence=0;
-    result=m.matrix;
-    vector<vector<double>> resultOld;
     vector<double> row;
-    const unsigned size=N-1;
+    vector<vector<double>> resultOld;
+    bool convergence=0;
 
     while(!convergence)
       {
      	resultOld=result;
 
-     	for(unsigned i=1; i<size-1; i++)
+     	for(unsigned i=1; i<N-2; i++)
      	  {
      	    row=m.GetRow(i);
 
-     	    for(unsigned j=1; j<size-1; j++)
+     	    for(unsigned j=1; j<N-2; j++)
      	      {
 		result[i][j]=0.25*(result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1]
-				   +result[i-1][j-1]-4*deltaY*deltaX*row[j]);
+				   +result[i-1][j-1]-4*delta*row[j]);
      	      }
      	  }
      	convergence=CheckConvergence(result, resultOld, accuracy);
       }
-    Save(result, name);
   }
 public:
   vector<vector<double>> result;
 
   GaussSeidel(){}
-  GaussSeidel(Matrix &m, const double deltaX, const double deltaY, const unsigned N, const string &name, const double accuracy)
+  GaussSeidel(Matrix &m, const double delta, const unsigned N, const string &name, const double accuracy)
   {
-    GS(m, deltaX, deltaY, N, name, accuracy);
+    result=m.matrix;
+    GS(m, delta, N, accuracy);
+    Save(result, name);
   }
   ~GaussSeidel(){}
 };
