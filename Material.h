@@ -107,6 +107,7 @@ public:
     density=7.874;
     muMap=muMapSteel;
     microscopic=new MicroscopicCrossSection(endf);
+    microscopic->GetCrossSection(1.17e6);
     // GetIncoherentScattering(3e-30);
   }
 };

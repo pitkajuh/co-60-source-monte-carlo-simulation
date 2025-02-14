@@ -21,7 +21,7 @@ public:
 
   void GetCrossSection(const double photonEnergy)
   {
-    // double total=0;
+    double total=0;
     vector<pair<unsigned, double>> reactions;
     const vector<Section*> sections={pairFormation, photoIonization, coherentScattering, incoherentScattering};
 
@@ -29,9 +29,12 @@ public:
       {
 	for(const auto &reaction:section->GetValue(photonEnergy))
 	  {
+	    total+=reaction.second;
+	    cout<<reaction.first<<" "<<reaction.second<<'\n';
 	    reactions.emplace_back(reaction);
 	    // cout<<reaction[0]<<" "<<reaction[1]<<'\n';
 	  }
+	cout<<" "<<'\n';
       }
   }
 
