@@ -82,6 +82,7 @@ public:
 
   void clear(){map1.clear();}
   unsigned size(){return map1.size();}
+
   double GetValue(const double photonEnergy)
   {
     double energyPrevious=0;
@@ -121,8 +122,9 @@ public:
     unsigned size2;
     Record r;
     tape.seekg(from);
-    // std::ofstream file;
-    // file.open(MT+MF+".txt");
+    std::ofstream file;
+    file.open("text/"+MT+MF+".txt");
+
     while(getline(tape, record))
       {
 	size2=record.size();
@@ -130,14 +132,13 @@ public:
 	if(id!=MFstr) break;
 	record=record.substr(0, 66);
 	r.CreateRecord(record);
-	// r.SaveRecord(file);
+	r.SaveRecord(file);
 	AddToMap(r);
 	r.clear();
       }
 
-    // file.close();
+    file.close();
     from=tape.tellg();
-    cout<<" "<<'\n';
   }
 
   Records(){}

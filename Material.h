@@ -29,6 +29,7 @@ protected:
     // Use linear interpolation to get the mass attenuation value corresponding to photonEnergy and turns it to linear attenuation coefficient. Returns the value in 1/m.
     return 100*density*(muMap[energyPrevious].first+(photonEnergy-energyPrevious)*(muMap[energyCurrent].first-muMap[energyPrevious].first)/(energyCurrent-energyPrevious));
   }
+
   void CreateAngularDistribution(const double limIncoherent, const double limCoherent, const double accuracyIncoherent, const double accuracyCoherent)
   {
     const unsigned N=100;
@@ -50,33 +51,7 @@ protected:
     coherent->Eprime=cd1.Y;
     coherent->d2sigmadmudE=gs1.result;
   }
-  // void GetIncoherentScattering(const double crossSection)
-  // {
-  //   bool found1=0;
-  //   unsigned column;
-  //   unsigned row;
 
-  //   for(unsigned i=0; i<incoherent->d2sigmadmudE.size(); i++)
-  //     {
-  // 	for(unsigned j=0; i<incoherent->d2sigmadmudE[i].size(); j++)
-  // 	  {
-  // 	    cout<<incoherent->d2sigmadmudE[i][j]<<'\n';
-  // 	    if(incoherent->d2sigmadmudE[i][j]<crossSection)
-  // 	      {
-  // 		cout<<"found "<<i<<" "<<j<<'\n';
-  // 		found1=1;
-  // 		column=j;
-  // 		row=i;
-  // 		break;
-  // 	      }
-  // 	  }
-  // 	if(found1)
-  // 	  {
-  // 	    break;
-  // 	  }
-  //     }
-  //   cout<<row<<" "<<column<<" "<<incoherent->mu[row]<<" "<<incoherent->Eprime[column]<<'\n';
-  // }
 public:
   string name;
   Tape *endf=nullptr;
@@ -108,8 +83,7 @@ public:
     density=7.874;
     muMap=muMapSteel;
     microscopic=new MicroscopicCrossSection(endf);
-    microscopic->GetCrossSection(1.332e6);
-    // GetIncoherentScattering(3e-30);
+    microscopic->GetCrossSection(1000);
   }
 };
 

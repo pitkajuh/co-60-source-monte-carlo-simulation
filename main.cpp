@@ -1,3 +1,4 @@
+#include <queue>
 #include <iostream>
 #include <cmath>
 #include <utility>
@@ -53,15 +54,52 @@ void SurfaceTracking(Cell *cellHead, Photon photon)
   cout<<" "<<'\n';
 }
 
+// void SurfaceTracking2(Cell *&cellHead, std::queue<Photon> &photons)
+// {
+//   bool collision=0;
+//   double boundaryDistance=0;
+//   double collisionDistance=0;
+//   Coordinate surfaceLocation;
+//   Cell *current=cellHead;
+
+//   // photon.mfp.print();
+
+//   while(photons.size()>0)
+//     {
+//       collision=current->CellTest(photons.front().mfp);
+
+//       boundaryDistance=current->CellDistanceTest(photons.front().origin, photons.front().direction);
+//       collisionDistance=photons.front().GetLength();
+
+//       if(collisionDistance<boundaryDistance)
+// 	{
+// 	  cout<<"No boundary crossed! "<<photon.energy<<'\n';
+// 	  // Call physics routine
+// 	  PhysicsRoutine(current, photons.front().energy);
+// 	}
+//       else
+// 	{
+// 	  cout<<"Boundary crossed! "<<photons.front().energy<<'\n';
+// 	  surfaceLocation=photons.front().direction*boundaryDistance;
+// 	  // SurfaceTracking(current->next, gamma);
+// 	}
+
+//       std::cout<<current->name<<" "<<collision<<" distance to surface "<<boundaryDistance<<" collision at "<<collisionDistance<<'\n';
+//     }
+
+// }
+
 void ParseCells2(Cell *cellHead, RadioNuclide *radioNuclide, const unsigned time)
 {
   double energy;
   const unsigned activityRandom=PoissonRNG(radioNuclide->GetActivity(), time);
+  std::queue<Photon> photons;
 
   for(unsigned i=0; i<activityRandom; i++)
     {
       energy=radioNuclide->PDF();
       Photon photon(energy, cellHead->material->GetMu(energy), cellHead->GetInitialPosition());
+      photons.push(photon);
       SurfaceTracking(cellHead, photon);
     }
 }

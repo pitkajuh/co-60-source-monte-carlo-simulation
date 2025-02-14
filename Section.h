@@ -24,7 +24,6 @@ class Section
 protected:
   void FindSection(ifstream &tape, streampos &from, const string &MT, const string &MF)
   {
-    cout<<"ReadTape "<<MT<<MF<<'\n';
     string record;
     string id;
     unsigned size;
@@ -72,6 +71,7 @@ public:
   PairFormation(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
     CrossSectionPair p;
+
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
@@ -88,6 +88,8 @@ public:
 class PhotoIonization: public Section
 {
 public:
+  double ionizationEnergy;
+
   PhotoIonization(){}
   PhotoIonization(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
@@ -100,7 +102,22 @@ public:
 	p.MT=std::stoi(MF);
 	p.r=records;
 	recordsAll.emplace_back(p);
+	// ionizationEnergy=recordsAll.back().r.energy[0];
+	ionizationEnergy=records.map1.begin()->first;
+	cout<<MF<<" ionizationEnergy "<<ionizationEnergy<<'\n';
+	records.clear();
       }
+    // for(const auto &i:recordsAll)
+    //   {
+    // 	cout<<"MT "<<i.MT<<'\n';
+    // 	for(const auto &j:i.r.energy)
+    // 	  {
+    // 	    cout<<j<<'\n';
+    // 	  }
+    // 	cout<<" "<<'\n';
+    //   }
+    // ionizationEnergy=recordsAll[0].r.energy[0];
+    // cout<<"ionizationEnergy "<<ionizationEnergy<<'\n';
     records.clear();
   }
   ~PhotoIonization(){}

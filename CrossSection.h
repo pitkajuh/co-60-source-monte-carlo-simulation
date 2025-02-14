@@ -36,7 +36,7 @@ public:
 	for(const auto &reaction:section->GetValue(photonEnergy))
 	  {
 	    total+=reaction.second;
-	    cout<<reaction.first<<" "<<reaction.second<<'\n';
+	    cout<<"Reaction "<<reaction.first<<" "<<reaction.second<<'\n';
 	    reactions.emplace_back(reaction);
 	  }
 	cout<<" "<<'\n';
