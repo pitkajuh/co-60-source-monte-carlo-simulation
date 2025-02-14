@@ -31,7 +31,7 @@ protected:
   {
     const unsigned N=100;
     const double deltaX=(double)(2)/N;
-    const double deltaY=(double)(limIncoherent-1)/N;
+    double deltaY=(double)(limIncoherent-1)/N;
     incoherent=new IncoherentAngularDistribution(endf);
 
     CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
@@ -41,6 +41,7 @@ protected:
     incoherent->d2sigmadmudE=gs.result;
 
     coherent=new CoherentAngularDistribution(endf);
+    deltaY=(double)(limCoherent-1)/N;
     CentralDifference cd1(coherent, -1, 1, 1, limCoherent, N, name+"coherent", accuracyCoherent);
     GaussSeidel gs1(cd1.discretized, deltaX, deltaY, N, name, accuracyCoherent, cd1.X, cd1.Y);
     coherent->mu=cd1.X;
@@ -57,6 +58,7 @@ protected:
       {
 	for(unsigned j=0; i<incoherent->d2sigmadmudE[i].size(); j++)
 	  {
+	    cout<<incoherent->d2sigmadmudE[i][j]<<'\n';
 	    if(incoherent->d2sigmadmudE[i][j]<crossSection)
 	      {
 		cout<<"found "<<i<<" "<<j<<'\n';
@@ -97,7 +99,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-34);
+    CreateAngularDistribution(limIncoherent, limCoherent, 1e-24, 1e-24);
     density=7.874;
     muMap=muMapSteel;
     GetIncoherentScattering(3e-30);

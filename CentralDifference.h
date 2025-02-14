@@ -109,8 +109,8 @@ public:
     CreateVector(yFrom, yTo-deltaY, deltaY, Y);
     saveFile(name+"mu.txt", X);
     saveFile(name+"E.txt", Y);
-    cd(N, name, deltaX, deltaY);
-    // cd1(N, name, deltaX, deltaY);
+    // cd(N, name, deltaX, deltaY);
+    cd1(N, name, deltaX, deltaY);
     subs(discretized, name);
   }
   ~CentralDifference(){}

@@ -60,7 +60,7 @@ private:
 	    if(delta>largest) largest=delta;
 	  }
       }
-    cout<<largest<<" tolerance "<<tolerance<<'\n';
+    // cout<<largest<<" tolerance "<<tolerance<<'\n';
     return largest<tolerance;
   }
 
@@ -72,7 +72,7 @@ private:
     vector<double> row;
     vector<double> row2;
     const unsigned size=N-1;
-    result.reserve(size);
+    // result.reserve(size);
     row.reserve(size);
 
     while(!convergence)
