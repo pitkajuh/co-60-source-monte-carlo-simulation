@@ -37,13 +37,13 @@ protected:
     CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
     incoherent->mu=cd.X;
     incoherent->Eprime=cd.Y;
-    GaussSeidel gs(cd.discretized, deltaX, deltaY, N, name, accuracyIncoherent, cd.X, cd.Y);
+    GaussSeidel gs(cd.discretized, deltaX, deltaY, N, name, accuracyIncoherent);
     incoherent->d2sigmadmudE=gs.result;
 
     coherent=new CoherentAngularDistribution(endf);
     deltaY=(double)(limCoherent-1)/N;
     CentralDifference cd1(coherent, -1, 1, 1, limCoherent, N, name+"coherent", accuracyCoherent);
-    GaussSeidel gs1(cd1.discretized, deltaX, deltaY, N, name, accuracyCoherent, cd1.X, cd1.Y);
+    GaussSeidel gs1(cd1.discretized, deltaX, deltaY, N, name, accuracyCoherent);
     coherent->mu=cd1.X;
     coherent->Eprime=cd1.Y;
     coherent->d2sigmadmudE=gs1.result;

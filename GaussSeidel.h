@@ -1,18 +1,18 @@
 #ifndef GAUSSSEIDEL_H
 #define GAUSSSEIDEL_H
 
-// #include "CentralDifference.h"
 #include "Matrix.h"
 #include <algorithm>
 
 struct GaussSeidel
 {
 private:
-  void print(const vector<vector<double>> &matrix, const string &name)
+  void Save(const vector<vector<double>> &matrix, const string &name)
   {
     std::ofstream file;
     file.open(name+"gaussseidel.txt");
     unsigned i=0;
+
     for(const auto &row: matrix)
       {
 	for(const auto &columnValue: row)
@@ -60,7 +60,6 @@ private:
 	    if(delta>largest) largest=delta;
 	  }
       }
-    // cout<<largest<<" tolerance "<<tolerance<<'\n';
     return largest<tolerance;
   }
 
@@ -70,10 +69,7 @@ private:
     result=m.matrix;
     vector<vector<double>> resultOld;
     vector<double> row;
-    vector<double> row2;
     const unsigned size=N-1;
-    // result.reserve(size);
-    row.reserve(size);
 
     while(!convergence)
       {
@@ -81,23 +77,23 @@ private:
 
      	for(unsigned i=1; i<size-1; i++)
      	  {
-     	    row2=m.GetRow(i);
+     	    row=m.GetRow(i);
 
      	    for(unsigned j=1; j<size-1; j++)
      	      {
 		result[i][j]=0.25*(result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1]
-				   +result[i-1][j-1]-4*deltaY*deltaX*row2[j]);
+				   +result[i-1][j-1]-4*deltaY*deltaX*row[j]);
      	      }
      	  }
      	convergence=CheckConvergence(result, resultOld, accuracy);
       }
-    print(result, name);
+    Save(result, name);
   }
 public:
   vector<vector<double>> result;
 
   GaussSeidel(){}
-  GaussSeidel(Matrix &m, const double deltaX, const double deltaY, const unsigned N, const string &name, const double accuracy, const vector<double> &X, const vector<double> &Y)
+  GaussSeidel(Matrix &m, const double deltaX, const double deltaY, const unsigned N, const string &name, const double accuracy)
   {
     GS(m, deltaX, deltaY, N, name, accuracy);
   }
