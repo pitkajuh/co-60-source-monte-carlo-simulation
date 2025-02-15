@@ -110,6 +110,7 @@ public:
     for(unsigned i=1; i<v.size(); i+=2)
       {
 	energy.emplace_back(v[i-1]);
+	cout<<v[i-1]<<" "<<v[i]<<'\n';
 	map1[v[i-1]]=v[i];
       }
   }
@@ -117,13 +118,14 @@ public:
   {
     string record;
     string id;
-    const string MFstr=MT+MF;
-    const unsigned size=MFstr.size();
-    unsigned size2;
     Record r;
+    unsigned size2;
     tape.seekg(from);
     std::ofstream file;
     file.open("text/"+MT+MF+".txt");
+    const string MFstr=MT+MF;
+    const unsigned size=MFstr.size();
+    cout<<"ID="<<MFstr<<" "<<map1.size()<<'\n';
 
     while(getline(tape, record))
       {
@@ -135,6 +137,7 @@ public:
 	r.SaveRecord(file);
 	AddToMap(r);
 	r.clear();
+	cout<<" "<<'\n';
       }
 
     file.close();
