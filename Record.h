@@ -78,7 +78,7 @@ protected:
   }
 public:
   map<double, double> map1;
-  vector<double> energy;
+  // vector<double> energy;
 
   void clear(){map1.clear();}
   unsigned size(){return map1.size();}
@@ -109,8 +109,8 @@ public:
 
     for(unsigned i=1; i<v.size(); i+=2)
       {
-	energy.emplace_back(v[i-1]);
-	cout<<v[i-1]<<" "<<v[i]<<'\n';
+	// energy.emplace_back(v[i-1]);
+	// cout<<v[i-1]<<" "<<v[i]<<'\n';
 	map1[v[i-1]]=v[i];
       }
   }
@@ -137,7 +137,7 @@ public:
 	r.SaveRecord(file);
 	AddToMap(r);
 	r.clear();
-	cout<<" "<<'\n';
+	// cout<<" "<<'\n';
       }
 
     file.close();
