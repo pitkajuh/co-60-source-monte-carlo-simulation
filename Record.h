@@ -77,13 +77,13 @@ protected:
     cout<<s<<'\n';
   }
 public:
-  map<double, double> map1;
+  // map<double, double> map1;
   // vector<double> energy;
 
-  void clear(){map1.clear();}
-  unsigned size(){return map1.size();}
+  // void clear(){map1.clear();}
+  // unsigned size(){return map1.size();}
 
-  double GetValue(const double photonEnergy)
+  double GetValue(const double photonEnergy, map<double, double> &map1)
   {
     double energyPrevious=0;
     double energyCurrent=0;
@@ -103,7 +103,7 @@ public:
     return previousValue+(photonEnergy-energyPrevious)*(map1[energyCurrent]-previousValue)/(energyCurrent-energyPrevious);
 
   }
-  void AddToMap(const Record &r)
+  void AddToMap(const Record &r, map<double, double> &map1)
   {
     const vector<double> v=r.recordv;
 
@@ -114,12 +114,13 @@ public:
 	map1[v[i-1]]=v[i];
       }
   }
-  void GetRecords(ifstream &tape, streampos &from, const string &MF, const string &MT)
+  map<double, double> GetRecords(ifstream &tape, streampos &from, const string &MF, const string &MT)
   {
     string record;
     string id;
     Record r;
     unsigned size2;
+    map<double, double> map1;
     tape.seekg(from);
     std::ofstream file;
     file.open("text/"+MT+MF+".txt");
@@ -135,13 +136,14 @@ public:
 	record=record.substr(0, 66);
 	r.CreateRecord(record);
 	r.SaveRecord(file);
-	AddToMap(r);
+	AddToMap(r, map1);
 	r.clear();
 	// cout<<" "<<'\n';
       }
 
     file.close();
     from=tape.tellg();
+    return map1;
   }
 
   Records(){}

@@ -11,9 +11,9 @@ public:
   unsigned MT;
   Records r;
 
-  double GetValue(const double photonEnergy)
+  double GetValue(const double photonEnergy, map<double, double> &map1)
   {
-    return r.GetValue(photonEnergy);
+    return r.GetValue(photonEnergy, map1);
   }
   CrossSectionPair(){}
   ~CrossSectionPair(){}
@@ -47,12 +47,19 @@ protected:
 public:
   Records records;
   vector<CrossSectionPair> recordsAll;
+  map<unsigned, map<double, double>> sections;
 
   vector<pair<unsigned, double>> GetValue(const double photonEnergy)
   {
     vector<pair<unsigned, double>> crossSections;
     crossSections.reserve(recordsAll.size());
     pair<unsigned, double> p;
+
+
+    // for(const auto &section: sections)
+    //   {
+
+    //   }
 
     for(auto &record: recordsAll)
       {
@@ -75,7 +82,7 @@ public:
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
-	records.GetRecords(tape, from, MF, MT);
+	sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
 	p.MT=std::stoi(MF);
 	p.r=records;
 	recordsAll.emplace_back(p);
@@ -98,7 +105,7 @@ public:
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
-	records.GetRecords(tape, from, MF, MT);
+	sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
 	p.MT=std::stoi(MF);
 	p.r=records;
 	recordsAll.emplace_back(p);
@@ -135,7 +142,7 @@ public:
   CoherentScattering(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecords(tape, from, MF, MT);
+    sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
     p.MT=std::stoi(MF);
     p.r=records;
@@ -152,7 +159,7 @@ public:
   IncoherentScattering(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecords(tape, from, MF, MT);
+    sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
     p.MT=std::stoi(MF);
     p.r=records;
@@ -174,7 +181,7 @@ public:
   CoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecords(tape, from, MF, MT);
+    sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
     p.MT=std::stoi(MF);
     p.r=records;
@@ -191,7 +198,7 @@ public:
   IncoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecords(tape, from, MF, MT);
+    sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
     p.MT=std::stoi(MF);
     p.r=records;
@@ -208,7 +215,7 @@ public:
   ImaginaryFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecords(tape, from, MF, MT);
+    sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
     p.MT=std::stoi(MF);
     p.r=records;
@@ -225,7 +232,7 @@ public:
   RealFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
     FindSection(tape, from, MT, MF);
-    records.GetRecords(tape, from, MF, MT);
+    sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
     p.MT=std::stoi(MF);
     p.r=records;
