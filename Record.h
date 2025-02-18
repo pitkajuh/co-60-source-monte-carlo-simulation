@@ -138,7 +138,6 @@ public:
 	r.SaveRecord(file);
 	AddToMap(r, map1);
 	r.clear();
-	// cout<<" "<<'\n';
       }
 
     file.close();
