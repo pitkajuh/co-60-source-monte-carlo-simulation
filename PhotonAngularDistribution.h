@@ -41,7 +41,7 @@ public:
 class IncoherentAngularDistribution: public PhotonAngularDistribution
 {
  private:
-  Records *incoherentFunction=nullptr;
+  Section *incoherentFunction=nullptr;
 
   double Eprimev(const double E, const double mu)
   {
@@ -60,7 +60,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 
   double dsigmadmu(const double E, const double mu)
   {
-    return incoherentFunction->GetValue(x(E, mu))*KleinNishinaCrossSection(E, mu);
+    return incoherentFunction->GetLibraryValue(x(E, mu), 504)*KleinNishinaCrossSection(E, mu);
   }
 
   double d2sigmadEdmu(const double E, const double Eprime, const double mu, const double width)
@@ -83,7 +83,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   IncoherentAngularDistribution(Tape *tape)
   {
     this->tape=tape;
-    incoherentFunction=&tape->MF27->incoherentFunction->recordsAll[0].r;
+    incoherentFunction=tape->MF27->incoherentFunction;
   }
   ~IncoherentAngularDistribution(){}
 };
@@ -91,9 +91,9 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 class CoherentAngularDistribution: public PhotonAngularDistribution
 {
  private:
-  Records *coherentFactor=nullptr;
-  Records *imaginaryFactor=nullptr;
-  Records *realFactor=nullptr;
+  Section *coherentFactor=nullptr;
+  Section *imaginaryFactor=nullptr;
+  Section *realFactor=nullptr;
 
   double ThomsonCrossSection(const double mu)
   {
@@ -102,9 +102,9 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
 
   double dsigmadmu(const double E, const double mu)
   {
-    const double F=coherentFactor->GetValue(x(E, mu));
-    const double Fprime=realFactor->GetValue(E);
-    const double Fprimeprime=imaginaryFactor->GetValue(E);
+    const double F=coherentFactor->GetLibraryValue(x(E, mu), 502);
+    const double Fprime=realFactor->GetLibraryValue(E, 506);
+    const double Fprimeprime=imaginaryFactor->GetLibraryValue(E, 505);
     const double FF=F+Fprime;
     return ThomsonCrossSection(mu)*(FF*FF+Fprimeprime*Fprimeprime);
   }
@@ -128,9 +128,9 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
   CoherentAngularDistribution(Tape *tape)
   {
     this->tape=tape;
-    coherentFactor=&tape->MF27->coherentFactor->recordsAll[0].r;
-    imaginaryFactor=&tape->MF27->imaginaryFactor->recordsAll[0].r;
-    realFactor=&tape->MF27->realFactor->recordsAll[0].r;
+    coherentFactor=tape->MF27->coherentFactor;
+    imaginaryFactor=tape->MF27->imaginaryFactor;
+    realFactor=tape->MF27->realFactor;
   }
   ~CoherentAngularDistribution(){}
 };

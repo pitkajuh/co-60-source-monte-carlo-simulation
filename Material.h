@@ -35,18 +35,18 @@ protected:
     const unsigned N=100;
     const double deltaX=(double)2/N;
     double deltaY=(double)(limIncoherent-1)/N;
-    incoherent=new IncoherentAngularDistribution(endf);
+    // incoherent=new IncoherentAngularDistribution(endf);
 
-    CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
-    incoherent->mu=cd.X;
-    incoherent->Eprime=cd.Y;
-    GaussSeidel gs(cd.discretized, deltaX*deltaY, N, name, accuracyIncoherent);
-    incoherent->d2sigmadmudE=gs.result;
+    // CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent", accuracyIncoherent);
+    // incoherent->mu=cd.X;
+    // incoherent->Eprime=cd.Y;
+    // GaussSeidel gs(cd.discretized, deltaX*deltaY, N, name+"incoherent", accuracyIncoherent);
+    // incoherent->d2sigmadmudE=gs.result;
 
     coherent=new CoherentAngularDistribution(endf);
     deltaY=(double)(limCoherent-1)/N;
     CentralDifference cd1(coherent, -1, 1, 1, limCoherent, N, name+"coherent", accuracyCoherent);
-    GaussSeidel gs1(cd1.discretized, deltaX*deltaY, N, name, accuracyCoherent);
+    GaussSeidel gs1(cd1.discretized, deltaX*deltaY, N, name+"coherent", accuracyCoherent);
     coherent->mu=cd1.X;
     coherent->Eprime=cd1.Y;
     coherent->d2sigmadmudE=gs1.result;
@@ -79,7 +79,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent, 1e-24, 1e-24);
+    CreateAngularDistribution(limIncoherent, limCoherent, 1e-24, 1e-27);
     density=7.874;
     muMap=muMapSteel;
     microscopic=new MicroscopicCrossSection(endf);

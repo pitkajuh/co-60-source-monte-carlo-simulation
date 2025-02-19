@@ -83,26 +83,26 @@ public:
   // void clear(){map1.clear();}
   // unsigned size(){return map1.size();}
 
-  double GetValue(const double photonEnergy, map<double, double> &map1)
-  {
-    double energyPrevious=0;
-    double energyCurrent=0;
+  // double GetValue(const double photonEnergy, map<double, double> &map1)
+  // {
+  //   double energyPrevious=0;
+  //   double energyCurrent=0;
 
-    for(const auto& [energy, record]: map1)
-      {
-	if(energy>=photonEnergy)
-	  {
-	    energyCurrent=energy;
-	    break;
-	  }
-	energyPrevious=energy;
-      }
+  //   for(const auto& [energy, record]: map1)
+  //     {
+  // 	if(energy>=photonEnergy)
+  // 	  {
+  // 	    energyCurrent=energy;
+  // 	    break;
+  // 	  }
+  // 	energyPrevious=energy;
+  //     }
 
-    if(energyPrevious==0) return 0;
-    const double previousValue=map1[energyPrevious];
-    return previousValue+(photonEnergy-energyPrevious)*(map1[energyCurrent]-previousValue)/(energyCurrent-energyPrevious);
+  //   if(energyPrevious==0) return 0;
+  //   const double previousValue=map1[energyPrevious];
+  //   return previousValue+(photonEnergy-energyPrevious)*(map1[energyCurrent]-previousValue)/(energyCurrent-energyPrevious);
 
-  }
+  // }
   void AddToMap(const Record &r, map<double, double> &map1)
   {
     const vector<double> v=r.recordv;
@@ -142,6 +142,7 @@ public:
 
     file.close();
     from=tape.tellg();
+    cout<<"ID="<<MFstr<<" SIZE "<<map1.size()<<'\n';
     return map1;
   }
 
