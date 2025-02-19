@@ -29,8 +29,6 @@ protected:
 public:
   Tape *tape=nullptr;
   vector<vector<double>> d2sigmadmudE;
-  vector<double> mu;
-  vector<double> Eprime;
 
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getdsigma(const double E, const double mu)=0;

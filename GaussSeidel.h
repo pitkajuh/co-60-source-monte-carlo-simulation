@@ -79,8 +79,9 @@ private:
 
      	    for(unsigned j=1; j<N-2; j++)
      	      {
-		result[i][j]=0.25*(result[i+1][j+1]+result[i+1][j-1]+result[i-1][j+1]
-				   +result[i-1][j-1]-4*delta*row[j]);
+		result[i][j]=0.25*(result[i+1][j+1]+result[i+1][j-1]
+				   +result[i-1][j+1]+result[i-1][j-1]
+				   -4*delta*row[j]);
      	      }
      	  }
      	convergence=CheckConvergence(result, resultOld, accuracy);

@@ -52,12 +52,6 @@ public:
     else if(size==10 and s1==empty and s2==empty) recordv.emplace_back(0);
     else recordv.emplace_back(stod(record));
   }
-  double GetEnergy()
-  {
-    const double energy=recordv[0];
-    recordv.erase(recordv.begin()+0);
-    return energy;
-  }
   Record(){recordv.reserve(6);}
   ~Record(){}
 };
@@ -77,40 +71,12 @@ protected:
     cout<<s<<'\n';
   }
 public:
-  // map<double, double> map1;
-  // vector<double> energy;
-
-  // void clear(){map1.clear();}
-  // unsigned size(){return map1.size();}
-
-  // double GetValue(const double photonEnergy, map<double, double> &map1)
-  // {
-  //   double energyPrevious=0;
-  //   double energyCurrent=0;
-
-  //   for(const auto& [energy, record]: map1)
-  //     {
-  // 	if(energy>=photonEnergy)
-  // 	  {
-  // 	    energyCurrent=energy;
-  // 	    break;
-  // 	  }
-  // 	energyPrevious=energy;
-  //     }
-
-  //   if(energyPrevious==0) return 0;
-  //   const double previousValue=map1[energyPrevious];
-  //   return previousValue+(photonEnergy-energyPrevious)*(map1[energyCurrent]-previousValue)/(energyCurrent-energyPrevious);
-
-  // }
   void AddToMap(const Record &r, map<double, double> &map1)
   {
     const vector<double> v=r.recordv;
 
     for(unsigned i=1; i<v.size(); i+=2)
       {
-	// energy.emplace_back(v[i-1]);
-	// cout<<v[i-1]<<" "<<v[i]<<'\n';
 	map1[v[i-1]]=v[i];
       }
   }

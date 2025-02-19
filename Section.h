@@ -70,23 +70,8 @@ public:
 
   double GetLibraryValue(const double photonEnergy, const unsigned MT)
   {
-    double energyPrevious=0;
-    double energyCurrent=0;
     map<double, double> map1=sections[MT];
-    cout<<MT<<" "<<sections.size()<<" "<<map1.size()<<'\n';
-    for(const auto& [energy, record]:map1)
-      {
-	if(energy>=photonEnergy)
-	  {
-	    energyCurrent=energy;
-	    break;
-	  }
-	energyPrevious=energy;
-      }
-
-    if(energyPrevious==0) return 0;
-    const double previousValue=map1[energyPrevious];
-    return previousValue+(photonEnergy-energyPrevious)*(map1[energyCurrent]-previousValue)/(energyCurrent-energyPrevious);
+    return GetValue1(photonEnergy, map1);
   }
 
   vector<pair<unsigned, double>> GetValue(const double photonEnergy)
@@ -103,12 +88,6 @@ public:
 	p={MT, energy};
 	crossSections.emplace_back(p);
       }
-
-    // for(auto &record: recordsAll)
-    //   {
-    // 	p={record.MT, record.r.GetValue(photonEnergy)};
-    // 	crossSections.emplace_back(p);
-    //   }
     return crossSections;
   }
   virtual ~Section(){}

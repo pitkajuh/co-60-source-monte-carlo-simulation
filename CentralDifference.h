@@ -47,7 +47,7 @@ private:
       }
   }
 
-  PhotonAngularDistribution *distribution=nullptr;
+  PhotonAngularDistribution *dist=nullptr;
 
   void cd1(const unsigned N, const string &name, const double deltaX, const double deltaY)
   {
@@ -60,7 +60,9 @@ private:
       {
 	for(const auto &x:X)
 	  {
-	    dsigmadmu=(distribution->Getdsigma(y, x+deltaX)-distribution->Getdsigma(y, x-deltaX))/(2*deltaX);
+	    dsigmadmu=(dist->Getdsigma(y, x+deltaX)
+		       -dist->Getdsigma(y, x-deltaX))
+	               /(2*deltaX);
 	    row.emplace_back(dsigmadmu);
 	  }
 	discretized.emplace_back(row);
@@ -83,10 +85,10 @@ private:
 	for(const auto &y:Y)
 	  {
 	    Eprime=y/(1+(y/m_e)*(1-x));
-	    d2sigmadmudE=(distribution->Getd2sigma(y, Eprime+deltaY, x+deltaX, width)
-			  -distribution->Getd2sigma(y, Eprime+deltaY, x-deltaX, width)
-			  -distribution->Getd2sigma(y, Eprime-deltaY, x+deltaX, width)
-			  +distribution->Getd2sigma(y, Eprime-deltaY, x-deltaX, width)
+	    d2sigmadmudE=(dist->Getd2sigma(y, Eprime+deltaY, x+deltaX, width)
+			 -dist->Getd2sigma(y, Eprime+deltaY, x-deltaX, width)
+			 -dist->Getd2sigma(y, Eprime-deltaY, x+deltaX, width)
+			 +dist->Getd2sigma(y, Eprime-deltaY, x-deltaX, width)
 			  )/(4*deltaY*deltaX);
 	    row.emplace_back(d2sigmadmudE);
 	  }
@@ -100,9 +102,9 @@ public:
   Matrix discretized;
 
   CentralDifference(){}
-  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const unsigned N, const string &name, const double accuracy)
+  CentralDifference(PhotonAngularDistribution *d, const double xFrom, const double xTo, const double yFrom, const double yTo, const unsigned N, const string &name)
   {
-    this->distribution=d;
+    this->dist=d;
     const double deltaX=(double)(xTo-xFrom)/N;
     const double deltaY=(double)(yTo-yFrom)/N;
     CreateVector(xFrom, xTo, deltaX, X);
