@@ -53,6 +53,7 @@ public:
     else recordv.emplace_back(stod(record));
   }
   Record(){recordv.reserve(6);}
+  Record(string &record){CreateRecord(record);}
   ~Record(){}
 };
 
@@ -87,6 +88,8 @@ public:
     Record r;
     unsigned size2;
     map<double, double> map1;
+    from=tape.tellg();
+    from+=76*2;
     tape.seekg(from);
     std::ofstream file;
     file.open("text/"+MT+MF+".txt");

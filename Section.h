@@ -26,10 +26,18 @@ protected:
 
 	if(id==id2) break;
       }
-
-    from=tape.tellg();
-    from+=76*2;
+    GetTAB1(tape, from, std::stoi(MF));
   }
+
+  void GetTAB1(ifstream &tape, streampos &from, const unsigned MT)
+  {
+    string record;
+
+    getline(tape, record);
+    Record tab1(record);
+    TAB1[MT]=tab1.recordv;
+  }
+
   double GetValue1(const double photonEnergy, map<double, double> &map1)
   {
     double energyPrevious=0;
@@ -52,6 +60,7 @@ protected:
 public:
   Records records;
   map<unsigned, map<double, double>> sections;
+  map<unsigned, vector<double>> TAB1;
 
   double GetLibraryValue(const double photonEnergy, const unsigned MT)
   {
@@ -61,9 +70,9 @@ public:
 
   vector<pair<unsigned, double>> GetValue(const double photonEnergy)
   {
+    double energy;
     vector<pair<unsigned, double>> crossSections;
     pair<unsigned, double> p;
-    double energy;
 
     for(auto &[MT, recordsMT]: sections)
       {
@@ -94,15 +103,18 @@ public:
 class PhotoIonization: public Section
 {
 public:
-  double ionizationEnergy;
+  vector<double> ionizationEnergy;
 
   PhotoIonization(){}
   PhotoIonization(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
+    ionizationEnergy.reserve(MFs.size());
+
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
 	sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
+	cout<<MT<<" "<<MF<<" "<<TAB1[std::stoi(MF)][0]<<" "<<'\n';
       }
   }
   ~PhotoIonization(){}
