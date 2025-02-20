@@ -28,7 +28,6 @@ public:
   {
     double total=0;
     vector<pair<unsigned, double>> reactions;
-    pair<double, vector<pair<unsigned, double>>> result;
     const vector<Section*> sections={pairFormation, photoIonization, coherentScattering, incoherentScattering};
 
     for(const auto &section:sections)
@@ -42,7 +41,8 @@ public:
 	cout<<" "<<'\n';
       }
     std::sort(reactions.begin(), reactions.end(), sortFunction);
-    return result;
+
+    return {total, reactions};
   }
 
   MicroscopicCrossSection(){}

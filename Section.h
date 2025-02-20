@@ -5,20 +5,6 @@
 
 using std::pair;
 
-struct CrossSectionPair
-{
-public:
-  unsigned MT;
-  Records r;
-
-  // double GetValue(const double photonEnergy, map<double, double> &map1)
-  // {
-  //   return r.GetValue(photonEnergy, map1);
-  // }
-  CrossSectionPair(){}
-  ~CrossSectionPair(){}
-};
-
 class Section
 {
 protected:
@@ -65,7 +51,6 @@ protected:
   }
 public:
   Records records;
-  vector<CrossSectionPair> recordsAll;
   map<unsigned, map<double, double>> sections;
 
   double GetLibraryValue(const double photonEnergy, const unsigned MT)
@@ -77,14 +62,12 @@ public:
   vector<pair<unsigned, double>> GetValue(const double photonEnergy)
   {
     vector<pair<unsigned, double>> crossSections;
-    crossSections.reserve(recordsAll.size());
     pair<unsigned, double> p;
     double energy;
 
     for(auto &[MT, recordsMT]: sections)
       {
 	energy=GetValue1(photonEnergy, recordsMT);
-	// cout<<MT<<" "<<energy<<'\n';
 	p={MT, energy};
 	crossSections.emplace_back(p);
       }
@@ -99,18 +82,11 @@ public:
   PairFormation(){}
   PairFormation(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
-    CrossSectionPair p;
-
     for(const auto &MF: MFs)
       {
-	// cout<<MF<<" "<<MT<<'\n';
 	FindSection(tape, from, MT, MF);
 	sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
-	p.MT=std::stoi(MF);
-	p.r=records;
-	recordsAll.emplace_back(p);
       }
-    // records.clear();
   }
   ~PairFormation(){}
 };
@@ -123,33 +99,11 @@ public:
   PhotoIonization(){}
   PhotoIonization(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
-    CrossSectionPair p;
-
     for(const auto &MF: MFs)
       {
-	// cout<<MF<<" "<<MT<<'\n';
 	FindSection(tape, from, MT, MF);
 	sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
-	p.MT=std::stoi(MF);
-	p.r=records;
-	recordsAll.emplace_back(p);
-	// ionizationEnergy=recordsAll.back().r.energy[0];
-	// ionizationEnergy=records.map1.begin()->first;
-	// cout<<MF<<" ionizationEnergy "<<ionizationEnergy<<'\n';
-	// records.clear();
       }
-    // for(const auto &i:recordsAll)
-    //   {
-    // 	cout<<"MT "<<i.MT<<'\n';
-    // 	for(const auto &j:i.r.energy)
-    // 	  {
-    // 	    cout<<j<<'\n';
-    // 	  }
-    // 	cout<<" "<<'\n';
-    //   }
-    // ionizationEnergy=recordsAll[0].r.energy[0];
-    // cout<<"ionizationEnergy "<<ionizationEnergy<<'\n';
-    // records.clear();
   }
   ~PhotoIonization(){}
 };
@@ -165,14 +119,8 @@ public:
   CoherentScattering(){}
   CoherentScattering(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
-    CrossSectionPair p;
-    p.MT=std::stoi(MF);
-    p.r=records;
-    recordsAll.emplace_back(p);
-    // records.clear();
   }
   ~CoherentScattering(){}
 };
@@ -183,14 +131,8 @@ public:
   IncoherentScattering(){}
   IncoherentScattering(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
-    CrossSectionPair p;
-    p.MT=std::stoi(MF);
-    p.r=records;
-    recordsAll.emplace_back(p);
-    // records.clear();
   }
   ~IncoherentScattering(){}
 };
@@ -206,14 +148,8 @@ public:
   CoherentFactor(){}
   CoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
-    CrossSectionPair p;
-    p.MT=std::stoi(MF);
-    p.r=records;
-    recordsAll.emplace_back(p);
-    // records.clear();
   }
   ~CoherentFactor(){}
 };
@@ -224,14 +160,8 @@ public:
   IncoherentFactor(){}
   IncoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
-    CrossSectionPair p;
-    p.MT=std::stoi(MF);
-    p.r=records;
-    recordsAll.emplace_back(p);
-    // records.clear();
   }
   ~IncoherentFactor(){}
 };
@@ -242,14 +172,8 @@ public:
   ImaginaryFactor(){}
   ImaginaryFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
-    CrossSectionPair p;
-    p.MT=std::stoi(MF);
-    p.r=records;
-    recordsAll.emplace_back(p);
-    // records.clear();
   }
   ~ImaginaryFactor(){}
 };
@@ -260,18 +184,8 @@ public:
   RealFactor(){}
   RealFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
-    CrossSectionPair p;
-    p.MT=std::stoi(MF);
-    p.r=records;
-    recordsAll.emplace_back(p);
-    // records.clear();
-    // for(const auto&[e, c]:sections[506])
-    //   {
-    // 	cout<<e<<" "<<c<<'\n';
-    //   }
   }
   ~RealFactor(){}
 };
