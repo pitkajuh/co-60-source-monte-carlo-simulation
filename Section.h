@@ -103,13 +103,9 @@ public:
 class PhotoIonization: public Section
 {
 public:
-  vector<double> ionizationEnergy;
-
   PhotoIonization(){}
   PhotoIonization(const string &MT, ifstream &tape, streampos &from, const vector<string> &MFs)
   {
-    ionizationEnergy.reserve(MFs.size());
-
     for(const auto &MF: MFs)
       {
 	FindSection(tape, from, MT, MF);
