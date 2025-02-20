@@ -92,7 +92,6 @@ public:
     file.open("text/"+MT+MF+".txt");
     const string MFstr=MT+MF;
     const unsigned size=MFstr.size();
-    cout<<"ID="<<MFstr<<" "<<map1.size()<<'\n';
 
     while(getline(tape, record))
       {
@@ -108,7 +107,6 @@ public:
 
     file.close();
     from=tape.tellg();
-    cout<<"ID="<<MFstr<<" SIZE "<<map1.size()<<'\n';
     return map1;
   }
 

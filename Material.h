@@ -47,7 +47,7 @@ protected:
     // AngularDistribution(new IncoherentAngularDistribution(endf), name+"incoherent", limIncoherent, accuracyIncoherent, deltaX, deltaY, N);
     incoherent=new IncoherentAngularDistribution(endf);
 
-    CentralDifference cd(incoherent, -1, 1, 1, limIncoherent, N, name+"incoherent");
+    CentralDifference cd(incoherent, -1+deltaX, 1-deltaX, 1, limIncoherent, N, name+"incoherent");
     GaussSeidel gs(cd.discretized, deltaX*deltaY, N, name+"incoherent", accuracyIncoherent);
     incoherent->d2sigmadmudE=gs.result;
 
@@ -89,7 +89,7 @@ public:
     density=7.874;
     muMap=muMapSteel;
     microscopic=new MicroscopicCrossSection(endf);
-    // microscopic->GetCrossSection(100);
+    microscopic->GetCrossSection(1e6);
   }
 };
 

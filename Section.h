@@ -84,7 +84,7 @@ public:
     for(auto &[MT, recordsMT]: sections)
       {
 	energy=GetValue1(photonEnergy, recordsMT);
-	cout<<MT<<" "<<energy<<'\n';
+	// cout<<MT<<" "<<energy<<'\n';
 	p={MT, energy};
 	crossSections.emplace_back(p);
       }
@@ -103,7 +103,7 @@ public:
 
     for(const auto &MF: MFs)
       {
-	cout<<MF<<" "<<MT<<'\n';
+	// cout<<MF<<" "<<MT<<'\n';
 	FindSection(tape, from, MT, MF);
 	sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
 	p.MT=std::stoi(MF);
@@ -127,7 +127,7 @@ public:
 
     for(const auto &MF: MFs)
       {
-	cout<<MF<<" "<<MT<<'\n';
+	// cout<<MF<<" "<<MT<<'\n';
 	FindSection(tape, from, MT, MF);
 	sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
 	p.MT=std::stoi(MF);
@@ -165,7 +165,7 @@ public:
   CoherentScattering(){}
   CoherentScattering(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    cout<<MF<<" "<<MT<<'\n';
+    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
@@ -183,7 +183,7 @@ public:
   IncoherentScattering(){}
   IncoherentScattering(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    cout<<MF<<" "<<MT<<'\n';
+    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
@@ -206,7 +206,7 @@ public:
   CoherentFactor(){}
   CoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    cout<<MF<<" "<<MT<<'\n';
+    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
@@ -224,7 +224,7 @@ public:
   IncoherentFactor(){}
   IncoherentFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    cout<<MF<<" "<<MT<<'\n';
+    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
@@ -242,7 +242,7 @@ public:
   ImaginaryFactor(){}
   ImaginaryFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    cout<<MF<<" "<<MT<<'\n';
+    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
@@ -260,7 +260,7 @@ public:
   RealFactor(){}
   RealFactor(const string &MT, ifstream &tape, streampos &from, const string &MF)
   {
-    cout<<MF<<" "<<MT<<'\n';
+    // cout<<MF<<" "<<MT<<'\n';
     FindSection(tape, from, MT, MF);
     sections[std::stoi(MF)]=records.GetRecords(tape, from, MF, MT);
     CrossSectionPair p;
@@ -268,6 +268,10 @@ public:
     p.r=records;
     recordsAll.emplace_back(p);
     // records.clear();
+    // for(const auto&[e, c]:sections[506])
+    //   {
+    // 	cout<<e<<" "<<c<<'\n';
+    //   }
   }
   ~RealFactor(){}
 };
