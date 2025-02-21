@@ -24,10 +24,10 @@ protected:
   }
 public:
 
-  pair<double, vector<pair<unsigned, double>>> GetCrossSection(const double photonEnergy)
+  vector<pair<unsigned, double>> GetCrossSection(const double photonEnergy)
   {
     double total=0;
-    vector<pair<unsigned, double>> reactions;
+    vector<pair<unsigned, double>> reactions={{0, 0}};
     const vector<Section*> sections={pairFormation, photoIonization, coherentScattering, incoherentScattering};
 
     for(const auto &section:sections)
@@ -40,45 +40,38 @@ public:
 	  }
 	cout<<" "<<'\n';
       }
+    reactions[0]={0, total};
     std::sort(reactions.begin(), reactions.end(), sortFunction);
-
-    return {total, reactions};
+    for(const auto &i:reactions)
+      {
+	cout<<i.first<<" "<<i.second<<'\n';
+      }
+    return reactions;
   }
 
   void GetReaction(const double photonEnergy)
   {
     bool b1;
-    // double i1;
+    bool b2;
+    double i1;
     double i2;
-    const pair<double, vector<pair<unsigned, double>>> crossSections=GetCrossSection(photonEnergy);
-    const double crossSectionRandom=RNG(0, 1)*crossSections.first;
+    const vector<pair<unsigned, double>> crossSections=GetCrossSection(photonEnergy);
+    const double crossSectionRandom=RNG(0, 1)*crossSections[0].second;
 
-    for(unsigned i=0; i<crossSections.second.size(); i++)
+    for(unsigned i=1; i<crossSections.size(); i++)
      {
-       // i1=crossSections.second[i-1].second;
-       i2=crossSections.second[i].second;
+       i1=crossSections[i-1].second;
+       i2=crossSections[i].second;
        b1=crossSectionRandom>i2;
+       b2=crossSectionRandom<=i1;
 
-       if(b1)
+       if(b1 and b2)
 	 {
-	   cout<<"found "<<" "<<crossSectionRandom<<" "<<i2<<" "<<crossSections.second[i].first<<'\n';
+	   cout<<i<<" REACTION1 "<<crossSections[i].first<<'\n';
+	   cout<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
 	   break;
 	 }
      }
-
-
-    // for(unsigned i=1; i<crossSections.second.size(); i++)
-    //  {
-    //    i1=crossSections.second[i-1].second;
-    //    i2=crossSections.second[i].second;
-    //    b1=crossSectionRandom>i2;
-
-    //    if(b1)
-    // 	 {
-    // 	   cout<<"found "<<crossSections.second[i-1].first<<" "<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
-    // 	   break;
-    // 	 }
-    //  }
   }
 
   MicroscopicCrossSection(){}
