@@ -182,7 +182,7 @@ int main()
   // MonteCarlo(time, source, co60);
 
 
-  Material *steel=new Steel("./cross-sections/photoat-026_Fe_000.endf", 10e6, 1e4, "steel");
+  Material *steel=new Steel("./cross-sections/photoat-026_Fe_000.endf", 1e9, 1e4, "steel");
   // Material *nitrogen=new Nitrogen("./cross-sections/photoat-007_N_000.endf", 2e6, 2e3, "nitrogen");
   // Material *sodium=new Sodium("./cross-sections/photoat-011_Na_000.endf", 2e6, 2e3, "sodium");
   // Material *titanium=new Titanium("./cross-sections/photoat-022_Ti_000.endf", 2e6, 1e4, "titanium");

@@ -167,8 +167,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 
   double Getdsigma(const double E, const double mu, const double E1) override
   {
-    // return 2*M_PI*dsigmadmu(E, mu)/incoherent->GetLibraryValue(E, 504);
-    return dsigmadmu(E, mu);
+    return 2*M_PI*dsigmadmu(E, mu)/E1;
   }
 
   IncoherentAngularDistribution(){}
@@ -176,15 +175,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   {
     incoherentFunction=tape->MF27->incoherentFunction;
     incoherent=tape->MF23->incoherentScattering;
-
-    // const double deltaX=(double)(xTo-xFrom)/N;
-    // const double deltaY=(double)(yTo-yFrom)/N;
-    // CreateVector(xFrom, xTo, deltaX, X);
-    // CreateVector(yFrom, yTo-deltaY, deltaY, Y);
-    // saveFile(name+"mu.txt", X);
-    // saveFile(name+"E.txt", Y);
-    // // Trapezoidal(N, deltaX, deltaY);
-    // subs(result, name);
+    Create(xFrom, xTo, yFrom, yTo, N, name);
   }
   IncoherentAngularDistribution(Tape *tape)
   {
@@ -233,8 +224,7 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
 
   double Getdsigma(const double E, const double mu, const double E1) override
   {
-    // return 2*M_PI*dsigmadmu(E, mu)/coherent->GetLibraryValue(E, 502);
-    // cout<<coherent->GetLibraryValue(E, 502)<<'\n';
+    // return 2*M_PI*dsigmadmu(E, mu)/E1;
     return dsigmadmu(E, mu);
   }
 

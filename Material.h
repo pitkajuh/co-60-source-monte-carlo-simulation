@@ -5,8 +5,6 @@
 #include "Tape.h"
 #include "Reactions.h"
 #include "PhotonAngularDistribution.h"
-#include "CentralDifference.h"
-#include "GaussSeidel.h"
 #include "CrossSection.h"
 
 class Material
@@ -42,22 +40,6 @@ protected:
   void CreateAngularDistribution(const double limIncoherent, const double limCoherent, const double accuracyIncoherent, const double accuracyCoherent)
   {
     const unsigned N=100;
-    // const double deltaX=(double)2/N;
-    // double deltaY=(double)(limIncoherent-1)/N;
-    // // AngularDistribution(new IncoherentAngularDistribution(endf), name+"incoherent", limIncoherent, accuracyIncoherent, deltaX, deltaY, N);
-    // incoherent=new IncoherentAngularDistribution(endf);
-
-    // CentralDifference cd(incoherent, -1+deltaX, 1-deltaX, 2, limIncoherent, N, name+"incoherent");
-    // GaussSeidel gs(cd.discretized, deltaX*deltaY, N, name+"incoherent", accuracyIncoherent);
-    // incoherent->d2sigmadmudE=gs.result;
-
-    // coherent=new CoherentAngularDistribution(endf);
-
-    // deltaY=(double)(limCoherent-1)/N;
-    // CentralDifference cd1(coherent, -1, 1, 2, limCoherent, N, name+"coherent");
-    // GaussSeidel gs1(cd1.discretized, deltaX*deltaY, N, name+"coherent", accuracyCoherent);
-    // coherent->d2sigmadmudE=gs1.result;
-
     // incoherent=new IncoherentAngularDistribution(endf, -1, 1, 2, limIncoherent, N, name+"incoherent");
     coherent=new CoherentAngularDistribution(endf, -1, 1, 2, limCoherent, N, name+"coherent");
   }
