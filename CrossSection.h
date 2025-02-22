@@ -24,7 +24,7 @@ protected:
   }
 public:
 
-  vector<pair<unsigned, double>> GetCrossSection(const double photonEnergy)
+  pair<double, vector<pair<unsigned, double>>> GetCrossSection(const double photonEnergy)
   {
     double total=0;
     vector<pair<unsigned, double>> reactions={{0, 0}};
@@ -40,38 +40,41 @@ public:
 	  }
 	cout<<" "<<'\n';
       }
-    reactions[0]={0, total};
+    // reactions[0]={0, total};
     std::sort(reactions.begin(), reactions.end(), sortFunction);
     for(const auto &i:reactions)
       {
 	cout<<i.first<<" "<<i.second<<'\n';
       }
-    return reactions;
+    return {total, reactions};
   }
 
   void GetReaction(const double photonEnergy)
   {
     bool b1;
-    bool b2;
-    double i1;
-    double i2;
-    const vector<pair<unsigned, double>> crossSections=GetCrossSection(photonEnergy);
-    const double crossSectionRandom=RNG(0, 1)*crossSections[0].second;
+    // bool b2;
+    // unsigned j=0;
+    const pair<double, vector<pair<unsigned, double>>> crossSections=GetCrossSection(photonEnergy);
+    const double crossSectionRandom=RNG(0, 1)*crossSections.first;
 
-    for(unsigned i=1; i<crossSections.size(); i++)
+    for(unsigned i=1; i<crossSections.second.size(); i++)
      {
-       i1=crossSections[i-1].second;
-       i2=crossSections[i].second;
-       b1=crossSectionRandom>i2;
-       b2=crossSectionRandom<=i1;
+       b1=crossSectionRandom>crossSections.second[i].second;
+       // b2=crossSectionRandom<=crossSections.second[i-1].second;
+       // cout<<i<<"REACTION "<<crossSections.second[i-1].first<<'\n';
+       // cout<<crossSections.second[i].second<<"<"<<crossSectionRandom<<"<="<<crossSections.second[i-1].second<<'\n';
 
-       if(b1 and b2)
+       // if(b1 and b2)
+       if(b1)
 	 {
-	   cout<<i<<" REACTION1 "<<crossSections[i].first<<'\n';
-	   cout<<i2<<"<"<<crossSectionRandom<<"<="<<i1<<'\n';
+	   cout<<i<<" FINAL REACTION1 "<<crossSections.second[i-1].first<<'\n';
+	   cout<<i<<" "<<crossSectionRandom<<">"<<crossSections.second[i].second<<'\n';
+	   // cout<<crossSections.second[i].second<<"<"<<crossSectionRandom<<"<="<<crossSections.second[i-1].second<<'\n';
+	   // j=i;
 	   break;
 	 }
      }
+    // return crossSections[j];
   }
 
   MicroscopicCrossSection(){}

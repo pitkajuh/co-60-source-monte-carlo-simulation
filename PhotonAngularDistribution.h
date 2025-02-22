@@ -9,6 +9,48 @@ const double r_e=2.8179403227E-15;
 class PhotonAngularDistribution
 {
 protected:
+  void CreateVector(const double from, const double to, const double delta, vector<double> &v)
+  {
+    double f=from;
+
+    while(f<to)
+      {
+	v.emplace_back(f);
+	f+=delta;
+      }
+  }
+
+  void saveFile(const string &file, vector<double> v)
+  {
+    std::ofstream file1;
+    file1.open(file);
+
+    for(const auto &w:v)
+      {
+	file1<<w;
+	file1<<'\n';
+      }
+  }
+
+  void subs(vector<vector<double>> &m, const string &name)
+  {
+    std::ofstream file;
+    file.open(name+"centraldifference.txt");
+    unsigned k=0;
+    for(const auto &i: m)
+      {
+	for(const auto &j: i)
+	  {
+	    file<<j;
+
+	    if(k<i.size()-1) file<<';';
+	    k++;
+	  }
+	k=0;
+	file<<'\n';
+      }
+  }
+
   double Gaussian(const double x, const double width)
   {
     return exp(-x*x/(2*width*width))/(width*sqrt(2*M_PI));
@@ -26,12 +68,57 @@ protected:
     const double c=299792458;
     return (E/(h*c))*sqrt((1-mu)/2);
   }
+  void Trapezoidal(const unsigned N, double xFrom, const double xTo, double yFrom, const double yTo)
+  {
+    double dsigmadmu;
+    double y;
+    vector<double> row;
+    const double deltaX=(double)(xTo-xFrom)/N;
+    const double deltaY=(double)(yTo-yFrom)/N;
+    double x=xFrom;
+    row.reserve(N);
+    result.reserve(N);
+    // xFrom+=deltaX;
+    // yFrom+=deltaY;
+
+      while(yFrom<yTo)
+      {
+	y=GetE(yFrom);
+
+	while(xFrom<xTo)
+	  {
+	    dsigmadmu=0.5*deltaX*(Getdsigma(yFrom, xFrom-deltaX, y)
+				 +Getdsigma(yFrom, xFrom, y));
+	    row.emplace_back(dsigmadmu);
+	    xFrom+=deltaX;
+	  }
+	result.emplace_back(row);
+	row.clear();
+	yFrom+=deltaY;
+	xFrom=x;
+      }
+  }
+
+  void Create(const double xFrom, const double xTo, const double yFrom, const double yTo, const unsigned N, const string &name)
+  {
+    const double deltaX=(double)(xTo-xFrom)/N;
+    const double deltaY=(double)(yTo-yFrom)/N;
+    CreateVector(xFrom, xTo, deltaX, X);
+    CreateVector(yFrom, yTo, deltaY, Y);
+    saveFile(name+"mu.txt", X);
+    saveFile(name+"E.txt", Y);
+    Trapezoidal(N, xFrom, xTo, yFrom, yTo);
+    subs(result, name);
+  }
+
 public:
-  Tape *tape=nullptr;
-  vector<vector<double>> d2sigmadmudE;
+  vector<vector<double>> result;
+  vector<double> X;
+  vector<double> Y;
 
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
-  virtual double Getdsigma(const double E, const double mu)=0;
+  virtual double Getdsigma(const double E, const double mu, const double E1)=0;
+  virtual double GetE(const double E)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){}
 };
@@ -40,10 +127,16 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 {
  private:
   Section *incoherentFunction=nullptr;
+  Section *incoherent=nullptr;
 
   double Eprimev(const double E, const double mu)
   {
     return E/(1+(E/m_e)*(1-mu));
+  }
+
+  double GetE(const double E) override
+  {
+    return incoherent->GetLibraryValue(E, 504);
   }
 
   double KleinNishinaCrossSection(const double E, const double mu)
@@ -72,16 +165,31 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return d2sigmadEdmu(E, Eprime, mu, width);
   }
 
-  double Getdsigma(const double E, const double mu) override
+  double Getdsigma(const double E, const double mu, const double E1) override
   {
+    // return 2*M_PI*dsigmadmu(E, mu)/incoherent->GetLibraryValue(E, 504);
     return dsigmadmu(E, mu);
   }
 
   IncoherentAngularDistribution(){}
+  IncoherentAngularDistribution(Tape *tape, const double xFrom, const double xTo, const double yFrom, const double yTo, const unsigned N, const string &name)
+  {
+    incoherentFunction=tape->MF27->incoherentFunction;
+    incoherent=tape->MF23->incoherentScattering;
+
+    // const double deltaX=(double)(xTo-xFrom)/N;
+    // const double deltaY=(double)(yTo-yFrom)/N;
+    // CreateVector(xFrom, xTo, deltaX, X);
+    // CreateVector(yFrom, yTo-deltaY, deltaY, Y);
+    // saveFile(name+"mu.txt", X);
+    // saveFile(name+"E.txt", Y);
+    // // Trapezoidal(N, deltaX, deltaY);
+    // subs(result, name);
+  }
   IncoherentAngularDistribution(Tape *tape)
   {
-    this->tape=tape;
     incoherentFunction=tape->MF27->incoherentFunction;
+    incoherent=tape->MF23->incoherentScattering;
   }
   ~IncoherentAngularDistribution(){}
 };
@@ -92,6 +200,12 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
   Section *coherentFactor=nullptr;
   Section *imaginaryFactor=nullptr;
   Section *realFactor=nullptr;
+  Section *coherent=nullptr;
+
+  double GetE(const double E) override
+  {
+    return coherent->GetLibraryValue(E, 502);
+  }
 
   double ThomsonCrossSection(const double mu)
   {
@@ -117,18 +231,29 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     return d2sigmadEdmu(E, Eprime, mu, width);
   }
 
-  double Getdsigma(const double E, const double mu) override
+  double Getdsigma(const double E, const double mu, const double E1) override
   {
+    // return 2*M_PI*dsigmadmu(E, mu)/coherent->GetLibraryValue(E, 502);
+    // cout<<coherent->GetLibraryValue(E, 502)<<'\n';
     return dsigmadmu(E, mu);
   }
 
   CoherentAngularDistribution(){}
-  CoherentAngularDistribution(Tape *tape)
+  CoherentAngularDistribution(Tape *tape, const double xFrom, const double xTo, const double yFrom, const double yTo, const unsigned N, const string &name)
   {
-    this->tape=tape;
     coherentFactor=tape->MF27->coherentFactor;
     imaginaryFactor=tape->MF27->imaginaryFactor;
     realFactor=tape->MF27->realFactor;
+    coherent=tape->MF23->coherentScattering;
+
+    Create(xFrom, xTo, yFrom, yTo, N, name);
+  }
+  CoherentAngularDistribution(Tape *tape)
+  {
+    coherentFactor=tape->MF27->coherentFactor;
+    imaginaryFactor=tape->MF27->imaginaryFactor;
+    realFactor=tape->MF27->realFactor;
+    coherent=tape->MF23->coherentScattering;
   }
   ~CoherentAngularDistribution(){}
 };

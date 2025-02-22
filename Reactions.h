@@ -20,7 +20,7 @@ class PairFormationReaction: public Reactions
 public:
   void GetReaction(Photon photon) override
   {
-  std::queue<Photon> b;
+    std::queue<Photon> b;
   }
 };
 
@@ -29,7 +29,7 @@ class PhotoElectricEffectReaction: public Reactions
 public:
   void GetReaction(Photon photon) override
   {
-  std::queue<Photon> b;
+    std::queue<Photon> b;
   }
 };
 
