@@ -20,7 +20,7 @@ protected:
       }
   }
 
-  void saveFile(const string &file, vector<double> v)
+  void saveFile(const string &file, const vector<double> &v)
   {
     std::ofstream file1;
     file1.open(file);
@@ -32,11 +32,12 @@ protected:
       }
   }
 
-  void subs(vector<vector<double>> &m, const string &name)
+  void subs(const vector<vector<double>> &m, const string &name)
   {
+    unsigned k=0;
     std::ofstream file;
     file.open(name+"centraldifference.txt");
-    unsigned k=0;
+
     for(const auto &i: m)
       {
 	for(const auto &j: i)
@@ -77,11 +78,8 @@ protected:
     const double deltaY=(double)(yTo-yFrom)/N;
     double x=xFrom;
     row.reserve(N);
-    result.reserve(N);
-    // xFrom+=deltaX;
-    // yFrom+=deltaY;
 
-      while(yFrom<yTo)
+    while(yFrom<yTo)
       {
 	y=GetE(yFrom);
 
@@ -103,6 +101,7 @@ protected:
   {
     const double deltaX=(double)(xTo-xFrom)/N;
     const double deltaY=(double)(yTo-yFrom)/N;
+    result.reserve(N);
     CreateVector(xFrom, xTo, deltaX, X);
     CreateVector(yFrom, yTo, deltaY, Y);
     saveFile(name+"mu.txt", X);
@@ -224,8 +223,7 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
 
   double Getdsigma(const double E, const double mu, const double E1) override
   {
-    // return 2*M_PI*dsigmadmu(E, mu)/E1;
-    return dsigmadmu(E, mu);
+    return 2*M_PI*dsigmadmu(E, mu)/E1;
   }
 
   CoherentAngularDistribution(){}
