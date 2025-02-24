@@ -116,7 +116,7 @@ public:
   vector<double> Y;
 
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
-  virtual double Getdsigma(const double E, const double mu, const double E1)=0;
+  virtual double Getdsigma(const double E, const double mu, const double sigma)=0;
   virtual double GetE(const double E)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){}
@@ -164,9 +164,9 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return d2sigmadEdmu(E, Eprime, mu, width);
   }
 
-  double Getdsigma(const double E, const double mu, const double E1) override
+  double Getdsigma(const double E, const double mu, const double sigma) override
   {
-    return 2*M_PI*dsigmadmu(E, mu)/E1;
+    return 2*M_PI*dsigmadmu(E, mu)/sigma;
   }
 
   IncoherentAngularDistribution(){}
@@ -221,9 +221,9 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     return d2sigmadEdmu(E, Eprime, mu, width);
   }
 
-  double Getdsigma(const double E, const double mu, const double E1) override
+  double Getdsigma(const double E, const double mu, const double sigma) override
   {
-    return 2*M_PI*dsigmadmu(E, mu)/E1;
+    return 2*M_PI*dsigmadmu(E, mu)/sigma;
   }
 
   CoherentAngularDistribution(){}
