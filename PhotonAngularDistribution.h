@@ -233,7 +233,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     imaginaryFactor=tape->MF27->imaginaryFactor;
     realFactor=tape->MF27->realFactor;
     coherent=tape->MF23->coherentScattering;
-
     Create(xFrom, xTo, yFrom, yTo, N, name);
   }
   CoherentAngularDistribution(Tape *tape)
