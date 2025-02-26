@@ -187,7 +187,6 @@ int main()
   // Material *sodium=new Sodium("./cross-sections/photoat-011_Na_000.endf", 2e6, 2e3, "sodium");
   // Material *titanium=new Titanium("./cross-sections/photoat-022_Ti_000.endf", 2e6, 1e4, "titanium");
   // Material *iodine=new Iodine("./cross-sections/photoat-053_I_000.endf", 2e6, 1e5, "iodine");
-
   delete steel;
   // delete nitrogen;
   // delete sodium;
