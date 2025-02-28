@@ -31,7 +31,6 @@ protected:
   // void AngularDistribution(PhotonAngularDistribution *d, const string name, const double lim, const double accuracy, const double deltaX, const double deltaY, const unsigned N)
   // {
   //   incoherent=new IncoherentAngularDistribution(endf);
-
   //   CentralDifference cd(incoherent, -1, 1, 1, lim, N, name, accuracy);
   //   GaussSeidel gs(cd.discretized, deltaX*deltaY, N, name, accuracy);
   //   // incoherent->d2sigmadmudE=gs.result;
