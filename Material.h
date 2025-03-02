@@ -36,7 +36,7 @@ protected:
   //   // incoherent->d2sigmadmudE=gs.result;
   // }
 
-  void CreateAngularDistribution(const double limIncoherent, const double limCoherent, const double accuracyIncoherent, const double accuracyCoherent)
+  void CreateAngularDistribution(const double limIncoherent, const double limCoherent)
   {
     const unsigned N=100;
     // incoherent=new IncoherentAngularDistribution(endf, -1, 1, 2, limIncoherent, N, name+"incoherent");
@@ -85,7 +85,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-32);
+    CreateAngularDistribution(limIncoherent, limCoherent);
     density=1;
     muMap=muMapSodium;
   }
@@ -98,7 +98,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-32);
+    CreateAngularDistribution(limIncoherent, limCoherent);
     density=1;
     muMap=muMapTitanium;
   }
@@ -111,7 +111,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-32);
+    CreateAngularDistribution(limIncoherent, limCoherent);
     density=1;
     muMap=muMapNitrogen;
   }
@@ -124,7 +124,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent, 1e-32, 1e-35);
+    CreateAngularDistribution(limIncoherent, limCoherent);
     density=1;
     muMap=muMapIodine;
   }
