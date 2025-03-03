@@ -173,7 +173,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 
   double GetAngle(const double E) override
   {
-    return 0
+    return 0;
   }
 
   IncoherentAngularDistribution(){}
@@ -235,22 +235,25 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
 
   double GetAngle(const double E) override
   {
+    unsigned i=0;
+    double x=0;
     double v1=0;
     double v2=0;
-    vector<double> Amax={};
+    vector<double> Amax={0};
     Amax.reserve(100);
     const double xMax=E/(h*c);
-    const deltaX=xMax/100;
+    const double deltaX=xMax/100;
 
     while(x<xMax)
       {
 	v1=coherentFactor->GetLibraryValue(xMax-deltaX, 502);
 	v2=coherentFactor->GetLibraryValue(xMax, 502);
-	Amax+=0.5*deltaX*(v1*v1+v2*v2);
+	Amax.emplace_back(Amax[i]+0.5*deltaX*(v1*v1+v2*v2));
 	x+=deltaX;
+	i+=1;
       }
-    const double Aprime=RNG(0, 1)*Amax;
-    return 0
+    // const double Aprime=RNG(0, 1)*Amax;
+    return 0;
   }
 
 
