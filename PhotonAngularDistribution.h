@@ -2,9 +2,12 @@
 #define PHOTONANGULARDISTRIBUTION_H
 
 #include "Tape.h"
+#include "math.h"
 
 const double m_e=0.51099895069E+06;
 const double r_e=2.8179403227E-15;
+const double h=4.135667696e-15;
+const double c=299792458;
 
 class PhotonAngularDistribution
 {
@@ -65,8 +68,6 @@ protected:
 
   double x(const double E, const double mu)
   {
-    const double h=4.135667696e-15;
-    const double c=299792458;
     return (E/(h*c))*sqrt((1-mu)/2);
   }
   void Trapezoidal(const unsigned N, double xFrom, const double xTo, double yFrom, const double yTo)
@@ -117,6 +118,7 @@ public:
 
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getdsigma(const double E, const double mu, const double sigma)=0;
+  virtual double GetAngle(const double E)=0;
   virtual double GetE(const double E)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){}
@@ -167,6 +169,11 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
   double Getdsigma(const double E, const double mu, const double sigma) override
   {
     return 2*M_PI*dsigmadmu(E, mu)/sigma;
+  }
+
+  double GetAngle(const double E) override
+  {
+    return 0
   }
 
   IncoherentAngularDistribution(){}
@@ -225,6 +232,27 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
   {
     return 2*M_PI*dsigmadmu(E, mu)/sigma;
   }
+
+  double GetAngle(const double E) override
+  {
+    double v1=0;
+    double v2=0;
+    vector<double> Amax={};
+    Amax.reserve(100);
+    const double xMax=E/(h*c);
+    const deltaX=xMax/100;
+
+    while(x<xMax)
+      {
+	v1=coherentFactor->GetLibraryValue(xMax-deltaX, 502);
+	v2=coherentFactor->GetLibraryValue(xMax, 502);
+	Amax+=0.5*deltaX*(v1*v1+v2*v2);
+	x+=deltaX;
+      }
+    const double Aprime=RNG(0, 1)*Amax;
+    return 0
+  }
+
 
   CoherentAngularDistribution(){}
   CoherentAngularDistribution(Tape *tape, const double xFrom, const double xTo, const double yFrom, const double yTo, const unsigned N, const string &name)

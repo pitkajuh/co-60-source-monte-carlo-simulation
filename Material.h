@@ -70,7 +70,7 @@ public:
   {
     this->name=name;
     this->endf=new Tape(endfTape);
-    CreateAngularDistribution(limIncoherent, limCoherent, 1e-24, 1e-26);
+    CreateAngularDistribution(limIncoherent, limCoherent);
     density=7.874;
     muMap=muMapSteel;
     microscopic=new MicroscopicCrossSection(endf);
