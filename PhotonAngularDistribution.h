@@ -183,11 +183,6 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     incoherent=tape->MF23->incoherentScattering;
     Create(xFrom, xTo, yFrom, yTo, N, name);
   }
-  IncoherentAngularDistribution(Tape *tape)
-  {
-    incoherentFunction=tape->MF27->incoherentFunction;
-    incoherent=tape->MF23->incoherentScattering;
-  }
   ~IncoherentAngularDistribution(){}
 };
 
@@ -236,23 +231,25 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
   double GetAngle(const double E) override
   {
     unsigned i=0;
-    double x=0;
+    double x=E/(E*h*c);
     double v1=0;
     double v2=0;
     vector<double> Amax={0};
-    Amax.reserve(100);
+    Amax.reserve(E);
     const double xMax=E/(h*c);
-    const double deltaX=xMax/100;
+    const double deltaX=x;
 
     while(x<xMax)
       {
-	v1=coherentFactor->GetLibraryValue(xMax-deltaX, 502);
-	v2=coherentFactor->GetLibraryValue(xMax, 502);
-	Amax.emplace_back(Amax[i]+0.5*deltaX*(v1*v1+v2*v2));
+	v1=coherentFactor->GetLibraryValue(x-deltaX, 502);
+	v2=coherentFactor->GetLibraryValue(x, 502);
+	// Amax.emplace_back(Amax[i]+0.5*deltaX*(v1*v1+v2*v2));
+	Amax.emplace_back(0.5*deltaX*(v1*v1+v2*v2));
 	x+=deltaX;
 	i+=1;
       }
     // const double Aprime=RNG(0, 1)*Amax;
+    saveFile("coherent.txt", Amax);
     return 0;
   }
 
@@ -264,14 +261,8 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     imaginaryFactor=tape->MF27->imaginaryFactor;
     realFactor=tape->MF27->realFactor;
     coherent=tape->MF23->coherentScattering;
-    Create(xFrom, xTo, yFrom, yTo, N, name);
-  }
-  CoherentAngularDistribution(Tape *tape)
-  {
-    coherentFactor=tape->MF27->coherentFactor;
-    imaginaryFactor=tape->MF27->imaginaryFactor;
-    realFactor=tape->MF27->realFactor;
-    coherent=tape->MF23->coherentScattering;
+    // Create(xFrom, xTo, yFrom, yTo, N, name);
+    GetAngle(100);
   }
   ~CoherentAngularDistribution(){}
 };
