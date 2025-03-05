@@ -218,6 +218,8 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     return dsigmadmu(E, mu)*DiracDelta(Eprime-E, width);
   }
  public:
+  vector<double> cumulativeFormFactor;
+
   double Getd2sigma(const double E, const double Eprime, const double mu, const double width) override
   {
     return d2sigmadEdmu(E, Eprime, mu, width);
@@ -250,7 +252,7 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
       }
     // const double Aprime=RNG(0, 1)*Amax;
     // saveFile("coherent.txt", Amax);
-    return 0;
+    return Amax;
   }
 
   double GetAngle(const double E) override
@@ -268,14 +270,14 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
       {
 	v1=coherentFactor->GetLibraryValue(x-deltaX, 502);
 	v2=coherentFactor->GetLibraryValue(x, 502);
-	// Amax.emplace_back(Amax[i]+0.5*deltaX*(v1*v1+v2*v2));
-	Amax.emplace_back(0.5*deltaX*(v1*v1+v2*v2));
+	Amax.emplace_back(Amax[i]+0.5*deltaX*(v1*v1+v2*v2));
+	// Amax.emplace_back(0.5*deltaX*(v1*v1+v2*v2));
 	x+=deltaX;
 	i+=1;
       }
     // const double Aprime=RNG(0, 1)*Amax;
     saveFile("coherent.txt", Amax);
-    return 0;
+    return Amax;
   }
 
 
@@ -287,7 +289,7 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     realFactor=tape->MF27->realFactor;
     coherent=tape->MF23->coherentScattering;
     // Create(xFrom, xTo, yFrom, yTo, N, name);
-    GetAngle(100);
+    cumulativeFormFactor=GetAngle(100);
   }
   ~CoherentAngularDistribution(){}
 };
