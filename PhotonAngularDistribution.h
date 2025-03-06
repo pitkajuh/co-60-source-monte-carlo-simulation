@@ -253,7 +253,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     return Amax;
   }
 
-
   CoherentAngularDistribution(){}
   CoherentAngularDistribution(Tape *tape, const double xFrom, const double xTo, const double yFrom, const double yTo, const unsigned N, const string &name)
   {
