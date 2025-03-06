@@ -230,31 +230,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     return 2*M_PI*dsigmadmu(E, mu)/sigma;
   }
 
-  double plt(const double E)
-  {
-    unsigned i=0;
-    double x=E/(E*h*c);
-    double v1=0;
-    double v2=0;
-    vector<double> Amax={0};
-    Amax.reserve(E);
-    const double xMax=E/(h*c);
-    const double deltaX=x;
-
-    while(x<xMax)
-      {
-	v1=coherentFactor->GetLibraryValue(x-deltaX, 502);
-	v2=coherentFactor->GetLibraryValue(x, 502);
-	// Amax.emplace_back(Amax[i]+0.5*deltaX*(v1*v1+v2*v2));
-	Amax.emplace_back(0.5*deltaX*(v1*v1+v2*v2));
-	x+=deltaX;
-	i+=1;
-      }
-    // const double Aprime=RNG(0, 1)*Amax;
-    // saveFile("coherent.txt", Amax);
-    return Amax;
-  }
-
   double CreateCumulative(const double E, const unsigned N) override
   {
     unsigned i=0;
