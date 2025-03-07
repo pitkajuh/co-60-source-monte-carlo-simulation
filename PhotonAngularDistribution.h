@@ -118,7 +118,7 @@ public:
 
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getdsigma(const double E, const double mu, const double sigma)=0;
-  virtual double GetAngle(const double E)=0;
+  virtual double CreateCumulative(const double E, const unsigned N)=0;
   virtual double GetE(const double E)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){}
@@ -171,7 +171,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return 2*M_PI*dsigmadmu(E, mu)/sigma;
   }
 
-  double GetAngle(const double E) override
+  double CreateCumulative(const double E, const unsigned N) override
   {
     return 0;
   }
@@ -250,7 +250,7 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
 	i+=1;
       }
     saveFile("coherent.txt", Amax);
-    return Amax;
+    return 0;
   }
 
   CoherentAngularDistribution(){}
@@ -261,7 +261,8 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     realFactor=tape->MF27->realFactor;
     coherent=tape->MF23->coherentScattering;
     // Create(xFrom, xTo, yFrom, yTo, N, name);
-    cumulativeFormFactor=CreateCumulative(100, N);
+    // cumulativeFormFactor=CreateCumulative(100, N);
+    CreateCumulative(100, N);
     // set Aprime=aA_max where a is RNG
     // find x^2 corresponding Aprime A'=A(x^2, Z)
 
