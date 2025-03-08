@@ -38,7 +38,7 @@ protected:
 
   void CreateAngularDistribution(const double limIncoherent, const double limCoherent)
   {
-    const unsigned N=100;
+    const unsigned N=1e5;
     // incoherent=new IncoherentAngularDistribution(endf, -1, 1, 2, limIncoherent, N, name+"incoherent");
     coherent=new CoherentAngularDistribution(endf, -1, 1, 2, limCoherent, N, name+"coherent");
   }

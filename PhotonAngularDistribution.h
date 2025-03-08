@@ -118,7 +118,7 @@ public:
 
   virtual double Getd2sigma(const double E, const double Eprime, const double mu, const double width)=0;
   virtual double Getdsigma(const double E, const double mu, const double sigma)=0;
-  virtual double CreateCumulative(const double E, const unsigned N)=0;
+  virtual void CreateCumulative(const double E, const unsigned N)=0;
   virtual double GetE(const double E)=0;
   PhotonAngularDistribution(){}
   virtual ~PhotonAngularDistribution(){}
@@ -171,9 +171,8 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
     return 2*M_PI*dsigmadmu(E, mu)/sigma;
   }
 
-  double CreateCumulative(const double E, const unsigned N) override
+  void CreateCumulative(const double E, const unsigned N) override
   {
-    return 0;
   }
 
   IncoherentAngularDistribution(){}
@@ -193,6 +192,46 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
   Section *imaginaryFactor=nullptr;
   Section *realFactor=nullptr;
   Section *coherent=nullptr;
+  double xMax=0;
+  double aMax=0;
+  map<double, double> cumulative;
+
+  double GetAngle()
+  {
+    const double a=RNG(0, 1)*aMax;
+    double aprev=0;
+    double acurrent=0;
+    double xprev=0;
+    double xcurrent=0;
+
+    // for(const auto& [x1, x2]: cumulative)
+    //   {
+    // 	cout<<"Show "<<x1<<" "<<x2<<'\n';
+    //   }
+
+    // if(a<=cumulative.begin()->second)
+    //   {
+    // 	cout<<"a<=cumulative.begin()->second"<<'\n';
+    // 	double r=xprev+((xcurrent-xprev)*(a-aprev))/(acurrent);
+    //   }
+
+    for(const auto& [x, A]: cumulative)
+      {
+	cout<<"i "<<a<<" "<<A<<" max "<<aMax<<'\n';
+	if(A>=a)
+	  {
+	    acurrent=A;
+	    xcurrent=x;
+	    break;
+	  }
+	aprev=A;
+	xprev=x;
+      }
+    double r=xprev+((xcurrent-xprev)*(a-aprev))/(acurrent-aprev);
+    cout<<xprev<<" "<<r<<" "<<xcurrent<<'\n';
+    cout<<aprev<<" "<<a<<" "<<acurrent<<'\n';
+    return r;
+  }
 
   double GetE(const double E) override
   {
@@ -230,27 +269,24 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     return 2*M_PI*dsigmadmu(E, mu)/sigma;
   }
 
-  double CreateCumulative(const double E, const unsigned N) override
+  void CreateCumulative(const double E, const unsigned N) override
   {
     unsigned i=0;
-    double x=E/(N*h*c);
+    double x=xMax/N;
     double v1=0;
     double v2=0;
-    vector<double> Amax={0};
-    Amax.reserve(N);
-    const double xMax=E/(h*c);
     const double deltaX=x;
 
     while(x<xMax)
       {
 	v1=coherentFactor->GetLibraryValue(x-deltaX, 502);
 	v2=coherentFactor->GetLibraryValue(x, 502);
-	Amax.emplace_back(Amax[i]+0.5*deltaX*(v1*v1+v2*v2));
+	cumulative[x]=cumulative.end()->second+0.5*deltaX*(v1*v1+v2*v2);
 	x+=deltaX;
 	i+=1;
       }
-    saveFile("coherent.txt", Amax);
-    return 0;
+    aMax=cumulative[x-deltaX];
+    // saveFile("coherent.txt", Amax);
   }
 
   CoherentAngularDistribution(){}
@@ -262,7 +298,10 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     coherent=tape->MF23->coherentScattering;
     // Create(xFrom, xTo, yFrom, yTo, N, name);
     // cumulativeFormFactor=CreateCumulative(100, N);
-    CreateCumulative(100, N);
+    xMax=yTo/(h*c);
+    CreateCumulative(yTo, N);
+    GetAngle();
+    // cout<<mu<<'\n';
     // set Aprime=aA_max where a is RNG
     // find x^2 corresponding Aprime A'=A(x^2, Z)
   }
