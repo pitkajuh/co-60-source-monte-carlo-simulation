@@ -265,7 +265,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     CreateCumulative(100, N);
     // set Aprime=aA_max where a is RNG
     // find x^2 corresponding Aprime A'=A(x^2, Z)
-
   }
   ~CoherentAngularDistribution(){}
 };
