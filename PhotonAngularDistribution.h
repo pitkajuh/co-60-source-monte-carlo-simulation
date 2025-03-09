@@ -271,19 +271,17 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
 
   void CreateCumulative(const double E, const unsigned N) override
   {
-    unsigned i=0;
     double x=xMax/N;
     double v1=0;
     double v2=0;
-    const double deltaX=x;
+    const double deltaX=1000;
 
     while(x<xMax)
       {
 	v1=coherentFactor->GetLibraryValue(x-deltaX, 502);
 	v2=coherentFactor->GetLibraryValue(x, 502);
-	cumulative[x]=cumulative.end()->second+0.5*deltaX*(v1*v1+v2*v2);
+	cumulative[x]=cumulative[x-deltaX]+0.5*deltaX*(v1*v1+v2*v2);
 	x+=deltaX;
-	i+=1;
       }
     aMax=cumulative[x-deltaX];
     // saveFile("coherent.txt", Amax);
