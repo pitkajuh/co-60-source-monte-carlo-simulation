@@ -208,7 +208,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     //   {
     // 	cout<<"Show "<<x1<<" "<<x2<<'\n';
     //   }
-
     // if(a<=cumulative.begin()->second)
     //   {
     // 	cout<<"a<=cumulative.begin()->second"<<'\n';
