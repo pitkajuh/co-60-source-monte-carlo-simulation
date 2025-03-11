@@ -203,7 +203,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     double acurrent=0;
     double xprev=0;
     double xcurrent=0;
-
     // for(const auto& [x1, x2]: cumulative)
     //   {
     // 	cout<<"Show "<<x1<<" "<<x2<<'\n';
