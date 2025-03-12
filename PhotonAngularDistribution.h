@@ -212,7 +212,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     // 	cout<<"a<=cumulative.begin()->second"<<'\n';
     // 	double r=xprev+((xcurrent-xprev)*(a-aprev))/(acurrent);
     //   }
-
     for(const auto& [x, A]: cumulative)
       {
 	cout<<"i "<<a<<" "<<A<<" max "<<aMax<<'\n';
