@@ -296,7 +296,6 @@ class CoherentAngularDistribution: public PhotonAngularDistribution
     xMax=yTo/(h*c);
     CreateCumulative(yTo, N);
     GetAngle();
-    // cout<<mu<<'\n';
     // set Aprime=aA_max where a is RNG
     // find x^2 corresponding Aprime A'=A(x^2, Z)
   }
