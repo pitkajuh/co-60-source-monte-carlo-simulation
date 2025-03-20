@@ -173,6 +173,7 @@ class IncoherentAngularDistribution: public PhotonAngularDistribution
 
   void CreateCumulative(const double E, const unsigned N) override
   {
+
   }
 
   IncoherentAngularDistribution(){}
